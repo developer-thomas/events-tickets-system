@@ -1,0 +1,13 @@
+<app-page-header [title]="title" [pageSession]="pageSession" />
+
+<section>
+  <app-filter-table (filter)="filter($event)">
+    <app-base-button label="Nova Categoria" (click)="newCategory()"></app-base-button>
+  </app-filter-table>
+
+  <app-commom-table
+    [data]="categoryData"
+    [displayedColumns]="displayedColumns"
+    (delete)="deleteCategory($event)"
+  ></app-commom-table>
+</section>
