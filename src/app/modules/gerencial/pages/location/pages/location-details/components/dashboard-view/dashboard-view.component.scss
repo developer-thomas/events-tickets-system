@@ -1,0 +1,30 @@
+.dashboard-container {
+  padding: 16px 0;
+}
+
+.chart-container {
+  height: 300px;
+  width: 100%;
+}
+
+.status-badge {
+  background-color: #ffc87f;
+  color: #000;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.purchase-item {
+  transition: all 0.2s;
+  
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+}
+
+// Fix for ApexCharts
+::ng-deep .apexcharts-toolbar {
+  display: none !important;
+}
+

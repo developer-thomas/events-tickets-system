@@ -1,0 +1,102 @@
+<div class="step-one-container">
+  <!-- Location Name -->
+  <div class="mb-6">
+    <label class="block text-sm font-medium text-gray-700 mb-2">Nome do local</label>
+    <input 
+      type="text" 
+      class="form-input"
+      placeholder="Nome do tema"
+      [formControl]="getFormControl('locationName')">
+    @if (getFormControl('locationName').invalid && getFormControl('locationName').touched) {
+      <div class="text-red-500 text-sm mt-1">
+        Nome do local é obrigatório
+      </div>
+    }
+  </div>
+  
+  <!-- Description -->
+  <div class="mb-6">
+    <label class="block text-sm font-medium text-gray-700 mb-2">Descrição</label>
+    <textarea 
+      class="form-textarea"
+      rows="5"
+      placeholder="Descreva o conteúdo"
+      [formControl]="getFormControl('description')"></textarea>
+    @if (getFormControl('description').invalid && getFormControl('description').touched) {
+      <div class="text-red-500 text-sm mt-1">
+        Descrição é obrigatória
+      </div>
+    }
+  </div>
+  
+  <!-- Categories -->
+  <div class="mb-6">
+    <label class="block text-sm font-medium text-gray-700 mb-2">Selecione as categorias</label>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      @for (category of categories; track category.id) {
+        <div 
+          class="category-item"
+          [class.selected]="isCategorySelected(category.id)"
+          (click)="toggleCategory(category.id)">
+          <div class="radio-circle" [class.active]="isCategorySelected(category.id)">
+            @if (isCategorySelected(category.id)) {
+              <div class="inner-circle"></div>
+            }
+          </div>
+          <span>{{ category.name }}</span>
+        </div>
+      }
+    </div>
+  </div>
+  
+  <!-- Images -->
+  <div class="mb-6">
+    <label class="block text-sm font-medium text-gray-700 mb-2">Imagens</label>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Cover Image Upload -->
+      <div class="upload-container" [class.has-file]="coverImageFile">
+        <input 
+          type="file" 
+          id="coverImage" 
+          accept="image/jpeg,image/png" 
+          class="hidden"
+          (change)="onCoverImageSelected($event)">
+        <label for="coverImage" class="upload-label">
+          <mat-icon>file_upload</mat-icon>
+          <div class="text-center mt-2">
+            <p>Faça upload da imagem da capa 20x20 px</p>
+            <p class="text-xs text-gray-500">JPEG, PNG</p>
+          </div>
+        </label>
+      </div>
+      
+      <!-- Logo Image Upload -->
+      <div class="upload-container" [class.has-file]="logoImageFile">
+        <input 
+          type="file" 
+          id="logoImage" 
+          accept="image/jpeg,image/png" 
+          class="hidden"
+          (change)="onLogoImageSelected($event)">
+        <label for="logoImage" class="upload-label">
+          <mat-icon>file_upload</mat-icon>
+          <div class="text-center mt-2">
+            <p>Faça upload da logo 20x20 px</p>
+            <p class="text-xs text-gray-500">JPEG, PNG</p>
+          </div>
+        </label>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Location Link -->
+  <div class="mb-6">
+    <label class="block text-sm font-medium text-gray-700 mb-2">Link da localização</label>
+    <input 
+      type="text" 
+      class="form-input"
+      placeholder="www.link.com"
+      [formControl]="getFormControl('locationLink')">
+  </div>
+</div>
+
