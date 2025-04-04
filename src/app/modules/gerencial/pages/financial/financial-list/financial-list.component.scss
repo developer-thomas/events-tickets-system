@@ -1,0 +1,37 @@
+.period-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  color: #333;
+  
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.view-toggle {
+  display: flex;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.view-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  
+  &.active {
+    background-color: #192554;
+    color: white;
+  }
+}
+
