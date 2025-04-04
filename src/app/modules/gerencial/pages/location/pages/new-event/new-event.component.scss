@@ -1,0 +1,64 @@
+.step-active {
+  background-color: #192554;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.step-inactive {
+  background-color: #f5f5f5;
+  color: #707070;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.step-completed {
+  background-color: #f5f5f5;
+  color: #192554;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.step-line {
+  position: absolute;
+  top: 50%;
+  height: 1px;
+  background-color: #e0e0e0;
+  width: 33%;
+  
+  &.right {
+    right: 0;
+  }
+  
+  &.left {
+    left: 0;
+  }
+}
+
+.cancel-button {
+  border: 1px solid #e0e0e0;
+  color: #707070;
+  padding: 15px;
+  width: 300px;
+}
+
+.back-button {
+  border: 1px solid #e0e0e0;
+  color: #707070;
+  padding: 15px;
+  width: 300px;
+}
+
+.continue-button {
+  background-color: #192554;
+  color: white;
+  padding: 15px;
+  width: 300px;
+}
+

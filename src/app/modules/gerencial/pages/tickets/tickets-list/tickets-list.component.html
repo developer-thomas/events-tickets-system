@@ -1,0 +1,39 @@
+<app-page-header title="Ingressos" pageSession="Ingressos" />
+
+<div>
+  <div class="flex justify-between items-center mb-6">
+    <button class="period-button">
+      <mat-icon>calendar_today</mat-icon>
+      <span>Período</span>
+    </button>
+    
+    <div class="view-toggle">
+      <button 
+        class="view-button" 
+        [class.active]="viewMode === 'list'"
+        (click)="toggleView('list')">
+        <mat-icon>format_list_bulleted</mat-icon>
+      </button>
+      <button 
+        class="view-button" 
+        [class.active]="viewMode === 'dashboard'"
+        (click)="toggleView('dashboard')">
+        <mat-icon>dashboard</mat-icon>
+      </button>
+    </div>
+  </div>
+  
+  @if (viewMode === 'list') {
+    <app-filter-table (filter)="filter($event)"></app-filter-table>
+  
+    <app-commom-table
+      [data]="eventData"
+      [displayedColumns]="displayedColumns"
+      (detail)="gotoDetailPage($event)"
+      (delete)="deleteEvent($event)"
+    ></app-commom-table>
+  } @else {
+    <app-dashboard-view></app-dashboard-view>
+  }
+</div>
+

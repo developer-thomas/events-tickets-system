@@ -1,0 +1,66 @@
+.form-input, .form-textarea, .form-select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background-color: #f5f5f5;
+  
+  &:focus {
+    outline: none;
+    border-color: #192554;
+  }
+}
+
+.upload-container {
+  border: 1px dashed #e0e0e0;
+  border-radius: 6px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+  cursor: pointer;
+  transition: all 0.2s;
+  
+  &:hover {
+    border-color: #192554;
+    background-color: rgba(25, 37, 84, 0.02);
+  }
+  
+  &.has-file {
+    border-color: #4caf50;
+    background-color: rgba(76, 175, 80, 0.05);
+  }
+  
+  .upload-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    
+    mat-icon {
+      font-size: 24px;
+      height: 24px;
+      width: 24px;
+      color: #707070;
+    }
+  }
+}
+
+.cancel-button {
+  border: 1px solid #e0e0e0;
+  color: #707070;
+  height: 50px;
+  padding: 15px;
+  width: 300px;
+}
+
+.save-button {
+  background-color: #192554;
+  color: white;
+  height: 50px;
+  padding: 15px;
+  width: 300px;
+}
+

@@ -1,0 +1,14 @@
+<app-page-header [title]="title" [pageSession]="pageSession" />
+
+<section>
+  <app-filter-table (filter)="filter($event)">
+    <app-base-button label="Novo Evento" routerLink="cadastrar"></app-base-button>
+  </app-filter-table>
+
+  <app-commom-table
+    [data]="eventData"
+    [displayedColumns]="displayedColumns"
+    (detail)="gotoDetailPage($event)"
+    (delete)="deleteEvent($event)"
+  ></app-commom-table>
+</section>

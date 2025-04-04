@@ -1,0 +1,160 @@
+<div class="step-one-container">
+  <!-- Event Name -->
+  <div class="mb-6">
+    <label class="block text-sm font-medium text-gray-700 mb-2">Nome do evento</label>
+    <input 
+      type="text" 
+      class="form-input"
+      placeholder="Nome do evento"
+      [formControl]="getFormControl('eventName')">
+    @if (getFormControl('eventName').invalid && getFormControl('eventName').touched) {
+      <div class="text-red-500 text-sm mt-1">
+        Nome do evento é obrigatório
+      </div>
+    }
+  </div>
+  
+  <!-- Location -->
+  <div class="mb-6">
+    <label class="block text-sm font-medium text-gray-700 mb-2">Nome do local</label>
+    <select 
+      class="form-select"
+      [formControl]="getFormControl('locationId')">
+      <option value="" disabled selected>Nome do local</option>
+      @for (location of locations; track location.id) {
+        <option [value]="location.id">{{ location.name }}</option>
+      }
+    </select>
+    @if (getFormControl('locationId').invalid && getFormControl('locationId').touched) {
+      <div class="text-red-500 text-sm mt-1">
+        Local é obrigatório
+      </div>
+    }
+  </div>
+  
+  <!-- Description -->
+  <div class="mb-6">
+    <label class="block text-sm font-medium text-gray-700 mb-2">Descrição</label>
+    <textarea 
+      class="form-textarea"
+      rows="5"
+      placeholder="Descreva o conteúdo"
+      [formControl]="getFormControl('description')"></textarea>
+    @if (getFormControl('description').invalid && getFormControl('description').touched) {
+      <div class="text-red-500 text-sm mt-1">
+        Descrição é obrigatória
+      </div>
+    }
+  </div>
+  
+  <!-- Date, Price and Quantity -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+    <!-- Start Date -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Data inicial</label>
+      <input 
+        type="text" 
+        class="form-input"
+        placeholder="00/00/00"
+        mask="00/00/00"
+        [formControl]="getFormControl('startDate')">
+      @if (getFormControl('startDate').invalid && getFormControl('startDate').touched) {
+        <div class="text-red-500 text-sm mt-1">
+          Data inicial é obrigatória
+        </div>
+      }
+    </div>
+    
+    <!-- End Date -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Data final</label>
+      <input 
+        type="text" 
+        class="form-input"
+        placeholder="00/00/00"
+        mask="00/00/00"
+        [formControl]="getFormControl('endDate')">
+      @if (getFormControl('endDate').invalid && getFormControl('endDate').touched) {
+        <div class="text-red-500 text-sm mt-1">
+          Data final é obrigatória
+        </div>
+      }
+    </div>
+    
+    <!-- Price -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Valor</label>
+      <input 
+        type="text" 
+        class="form-input"
+        placeholder="R$ 00,00"
+        prefix="R$ "
+        mask="separator.2"
+        thousandSeparator="."
+        decimalMarker=","
+        [formControl]="getFormControl('price')">
+      @if (getFormControl('price').invalid && getFormControl('price').touched) {
+        <div class="text-red-500 text-sm mt-1">
+          Valor é obrigatório
+        </div>
+      }
+    </div>
+    
+    <!-- Ticket Quantity -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Qt ingressos</label>
+      <input 
+        type="text" 
+        class="form-input"
+        placeholder="00000000"
+        mask="0*"
+        [formControl]="getFormControl('ticketQuantity')">
+      @if (getFormControl('ticketQuantity').invalid && getFormControl('ticketQuantity').touched) {
+        <div class="text-red-500 text-sm mt-1">
+          Quantidade de ingressos é obrigatória
+        </div>
+      }
+    </div>
+  </div>
+  
+  <!-- Categories -->
+  <div class="mb-6">
+    <label class="block text-sm font-medium text-gray-700 mb-2">Selecione as categorias</label>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      @for (category of categories; track category.id) {
+        <div 
+          class="category-item"
+          [class.selected]="isCategorySelected(category.id)"
+          (click)="toggleCategory(category.id)">
+          <div class="radio-circle" [class.active]="isCategorySelected(category.id)">
+            @if (isCategorySelected(category.id)) {
+              <div class="inner-circle"></div>
+            }
+          </div>
+          <span>{{ category.name }}</span>
+        </div>
+      }
+    </div>
+  </div>
+  
+  <!-- Image -->
+  <div class="mb-6">
+    <label class="block text-sm font-medium text-gray-700 mb-2">Imagem</label>
+    <div class="upload-container" [class.has-file]="coverImageFile">
+      <input 
+        type="file" 
+        id="coverImage" 
+        accept="image/jpeg,image/png" 
+        class="hidden"
+        (change)="onCoverImageSelected($event)">
+      <label for="coverImage" class="upload-label">
+        <mat-icon>file_upload</mat-icon>
+        <div class="text-center mt-2">
+          <p>Faça upload da imagem da capa 20x20 px</p>
+          <p class="text-xs text-gray-500">JPEG, PNG</p>
+        </div>
+      </label>
+    </div>
+  </div>
+</div>
+

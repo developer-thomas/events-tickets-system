@@ -1,0 +1,101 @@
+<div class="step-two-container">
+  <!-- Representative Data Section -->
+  <div class="mb-8">
+    <h2 class="text-xl font-medium mb-6">Dados do representante</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Name -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Nome</label>
+        <input 
+          type="text" 
+          class="form-input"
+          placeholder="Nome"
+          [formControl]="getFormControl('name')">
+        @if (getFormControl('name').invalid && getFormControl('name').touched) {
+          <div class="text-red-500 text-sm mt-1">
+            Nome é obrigatório
+          </div>
+        }
+      </div>
+      
+      <!-- Tax ID (CNPJ/CPF) -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">CNPJ/CPF</label>
+        <input 
+          type="text" 
+          class="form-input"
+          placeholder="0000000"
+          mask="CPF_CNPJ" 
+          [formControl]="getFormControl('taxId')">
+        @if (getFormControl('taxId').invalid && getFormControl('taxId').touched) {
+          <div class="text-red-500 text-sm mt-1">
+            CNPJ/CPF é obrigatório
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+  
+  <!-- App Access Section -->
+  <div>
+    <h2 class="text-xl font-medium mb-6">Acesso do app</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Email -->
+      <div class="relative">
+        <label class="block text-sm font-medium text-gray-700 mb-2">E-mail</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <mat-icon class="text-gray-500">person</mat-icon>
+          </div>
+          <input 
+            type="email" 
+            class="form-input px-10"
+            placeholder="mail@email.com"
+            [formControl]="getFormControl('email')">
+        </div>
+        @if (getFormControl('email').invalid && getFormControl('email').touched) {
+          <div class="text-red-500 text-sm mt-1">
+            @if (getFormControl('email').errors?.['required']) {
+              E-mail é obrigatório
+            } @else if (getFormControl('email').errors?.['email']) {
+              E-mail inválido
+            }
+          </div>
+        }
+      </div>
+      
+      <!-- Password -->
+      <div class="relative">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Senha</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <mat-icon class="text-gray-500">lock</mat-icon>
+          </div>
+          <input 
+            [type]="hidePassword ? 'password' : 'text'" 
+            class="form-input pl-10 pr-10"
+            placeholder="**********"
+            [formControl]="getFormControl('password')">
+          <button 
+            type="button"
+            class="absolute inset-y-0 right-0 flex items-center pr-3"
+            (click)="togglePasswordVisibility()">
+            <mat-icon class="text-gray-500">{{ hidePassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+          </button>
+        </div>
+        @if (getFormControl('password').invalid && getFormControl('password').touched) {
+          <div class="text-red-500 text-sm mt-1">
+            @if (getFormControl('password').errors?.['required']) {
+              Senha é obrigatória
+            } @else if (getFormControl('password').errors?.['minlength']) {
+              Senha deve ter pelo menos 6 caracteres
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+

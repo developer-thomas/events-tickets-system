@@ -1,0 +1,28 @@
+<div class="qr-codes-container shadow-lg">
+  @for (ticket of tickets; track ticket.id) {
+    <div class="ticket-card">
+      <div class="flex items-center">
+        <div class="qr-code-image">
+          <!-- QR Code Image -->
+           <img src="../../../../../../../assets/images/qr-code.png" alt="qr code">
+        </div>
+        <div class="ticket-info">
+          <h3 class="ticket-title">{{ ticket.title }}</h3>
+          <p class="ticket-code">COD: {{ ticket.code }}</p>
+        </div>
+        <div class="ticket-actions">
+          <span class="status-badge">{{ ticket.status }}</span>
+          <div class="action-buttons">
+            <button class="action-button" (click)="viewTicket(ticket.id)">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button class="action-button" (click)="downloadTicket(ticket.id)">
+              <mat-icon>download</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+

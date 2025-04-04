@@ -1,0 +1,12 @@
+<app-page-header [title]="title" [pageSession]="pageSession" />
+
+<section>
+  <app-filter-table (filter)="filter($event)"></app-filter-table>
+
+  <app-commom-table
+    [data]="clients"
+    [displayedColumns]="displayedColumns"
+    (detail)="gotoDetailPage($event)"
+    (delete)="deleteClient($event)"
+  ></app-commom-table>
+</section>

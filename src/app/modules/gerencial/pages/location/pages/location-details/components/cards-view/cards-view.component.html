@@ -1,0 +1,9 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <app-event-card 
+    *ngFor="let event of events" 
+    [event]="event"
+    (delete)="onDeleteEvent($event)"
+    (edit)="onEditEvent($event)"
+    (toggleActive)="onToggleEvent($event)">
+  </app-event-card>
+</div>

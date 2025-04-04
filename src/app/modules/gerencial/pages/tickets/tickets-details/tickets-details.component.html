@@ -1,0 +1,49 @@
+<app-page-header title="Ingressos" pageSession="Detalhes do Ingresso" />
+
+<div class="container">
+  <!-- Ticket Header Card -->
+  <div class="bg-white rounded-lg p-6 mb-6 shadow-lg">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+      <div>
+        <h1 class="text-xl font-bold">{{ ticketDetails.title }}</h1>
+        <p class="text-gray-600 mt-1">
+          Data: {{ ticketDetails.date }} | {{ ticketDetails.time }}
+        </p>
+        <p class="text-gray-600">
+          Quantidade: {{ ticketDetails.quantity }}
+        </p>
+      </div>
+      <div class="flex flex-col items-end mt-4 md:mt-0">
+        <span class="status-badge mb-2">{{ ticketDetails.status }}</span>
+        <span class="text-xl font-bold">{{ ticketDetails.price }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Tabs -->
+  <div class="custom-tabs mb-6">
+    <div class="tab-header">
+      <button 
+        class="tab-button" 
+        [class.active]="selectedTabIndex === 0"
+        (click)="selectTab(0)">
+        QR Codes
+      </button>
+      <button 
+        class="tab-button" 
+        [class.active]="selectedTabIndex === 1"
+        (click)="selectTab(1)">
+        Detalhes do evento
+      </button>
+    </div>
+    
+    <div class="tab-content">
+      @if (selectedTabIndex === 0) {
+        <app-ticket-qr-codes></app-ticket-qr-codes>
+      } @else if (selectedTabIndex === 1) {
+        <app-event-details></app-event-details>
+      }
+    </div>
+  </div>
+</div>
+

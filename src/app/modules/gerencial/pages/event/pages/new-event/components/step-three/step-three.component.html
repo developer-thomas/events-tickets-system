@@ -1,0 +1,94 @@
+<div class="step-three-container">
+  <h2 class="text-xl font-medium mb-6">Adicione os patrocinadores</h2>
+  
+  <div [formGroup]="sponsorsForm">
+    <div formArrayName="items">
+      @for (item of sponsorItems.controls; track $index) {
+        <div [formGroupName]="$index" class="sponsor-item mb-6 pb-6 border-b border-gray-200 last:border-0">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <!-- Name -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Nome</label>
+              <input 
+                type="text" 
+                class="form-input"
+                placeholder="Nome do patrocinador"
+                formControlName="name">
+              @if (item.get('name')?.invalid && item.get('name')?.touched) {
+                <div class="text-red-500 text-sm mt-1">
+                  Nome é obrigatório
+                </div>
+              }
+            </div>
+            
+            <!-- Category -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Categoria</label>
+              <select 
+                class="form-select"
+                formControlName="categoryId">
+                <option value="" disabled selected>Categoria</option>
+                @for (category of sponsorCategories; track category.id) {
+                  <option [value]="category.id">{{ category.name }}</option>
+                }
+              </select>
+              @if (item.get('categoryId')?.invalid && item.get('categoryId')?.touched) {
+                <div class="text-red-500 text-sm mt-1">
+                  Categoria é obrigatória
+                </div>
+              }
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="flex items-end gap-2">
+              @if ($index > 0) {
+                <button 
+                  type="button" 
+                  class="upload-button"
+                  (click)="fileInput.click()">
+                  <mat-icon>image</mat-icon>
+                  <input 
+                    #fileInput
+                    type="file" 
+                    accept="image/*" 
+                    class="hidden"
+                    (change)="uploadSponsorLogo($event, $index)">
+                </button>
+              }
+              
+              <button 
+                type="button" 
+                class="add-button"
+                (click)="addSponsorItem()">
+                <mat-icon>add</mat-icon>
+              </button>
+              
+              <button 
+                type="button" 
+                class="delete-button"
+                (click)="removeSponsorItem($index)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Description -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Descrição</label>
+            <textarea 
+              class="form-textarea"
+              rows="4"
+              placeholder="Descreva o conteúdo"
+              formControlName="description"></textarea>
+            @if (item.get('description')?.invalid && item.get('description')?.touched) {
+              <div class="text-red-500 text-sm mt-1">
+                Descrição é obrigatória
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,13 @@
+<app-page-header [title]="title" [pageSession]="pageSession" />
+
+<section>
+  <app-filter-table (filter)="filter($event)">
+    <app-base-button label="CADASTRAR" (click)="newCoupon()"></app-base-button>
+  </app-filter-table>
+
+  <app-commom-table
+    [data]="couponData"
+    [displayedColumns]="displayedColumns"
+    (delete)="deleteCoupon($event)"
+  ></app-commom-table>
+</section>

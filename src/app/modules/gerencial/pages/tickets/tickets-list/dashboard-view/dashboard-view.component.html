@@ -1,0 +1,67 @@
+<div class="dashboard-container">
+  <!-- Metric Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    @for (card of metricCards; track $index) {
+      <div class="metric-card">
+        <div class="flex justify-between items-start">
+          <div>
+            <h2 class="text-2xl font-bold">{{ card.value }}</h2>
+            <p class="text-gray-600 text-sm">{{ card.label }}</p>
+          </div>
+          <div class="flex items-center">
+            <span [class]="card.isPositive ? 'text-green-500' : 'text-red-500'" class="mr-2">
+              {{ card.isPositive ? '↑' : '↓' }} {{ card.percentage }}
+            </span>
+            <div class="icon-circle" [style.background-color]="card.iconBgColor">
+              <mat-icon class="text-white">
+                {{ $index === 0 ? 'attach_money' : ($index === 1 ? 'person' : 'person') }}
+              </mat-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Revenue Chart -->
+    <div class="chart-card md:col-span-2">
+      <h3 class="text-lg font-medium mb-4">Faturamento por dia</h3>
+      <div class="chart-container">
+        <apx-chart
+          [series]="chartOptions.series!"
+          [chart]="chartOptions.chart!"
+          [dataLabels]="chartOptions.dataLabels!"
+          [plotOptions]="chartOptions.plotOptions!"
+          [xaxis]="chartOptions.xaxis!"
+          [yaxis]="chartOptions.yaxis!"
+          [stroke]="chartOptions.stroke!"
+          [grid]="chartOptions.grid!"
+          [colors]="chartOptions.colors!"
+          [tooltip]="chartOptions.tooltip!"
+        ></apx-chart>
+      </div>
+    </div>
+    
+    <!-- Recent Purchases -->
+    <div class="purchases-card">
+      <h3 class="text-lg font-medium mb-4">Últimas compras</h3>
+      <div class="recent-purchases">
+        @for (purchase of recentPurchases; track $index) {
+          <div class="purchase-item">
+            <div class="purchase-header">
+              <h4 class="font-medium">{{ purchase.eventTitle }}</h4>
+              <span class="status-badge">{{ purchase.status }}</span>
+            </div>
+            <p class="text-sm text-gray-600">{{ purchase.userName }}</p>
+            <div class="purchase-footer">
+              <span class="text-sm">Quantidade: {{ purchase.quantity }}</span>
+              <span class="font-medium">{{ purchase.price }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+

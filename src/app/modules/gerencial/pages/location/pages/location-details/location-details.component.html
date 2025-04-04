@@ -1,0 +1,86 @@
+<app-page-header title="Local" pageSession="Detalhes do Local" />
+
+<!-- Header Banner -->
+<div class="relative w-full h-44 bg-cover bg-center" style="background-image: url('../../../../../../../assets/images/local-details-header.png')">
+  <div class="absolute top-0 right-0 p-2 flex gap-2">
+    <button mat-icon-button>
+      <mat-icon class="text-white">delete</mat-icon>
+    </button>
+    <button mat-icon-button>
+      <mat-icon class="text-white">edit</mat-icon>
+    </button>
+    <mat-slide-toggle color="primary"></mat-slide-toggle>
+  </div>
+</div>
+
+<!-- Location Info -->
+<div class="container mx-auto px-4 mt-6">
+  <div class="flex items-center gap-4 mb-4">
+    <div class="w-24 h-24 rounded-full bg-[#f5f5f5] border-4 border-white flex items-center justify-center">
+      <img src="../../../../../../../assets/images/local-details-header.png" class="rounded-full border-green-600 border-4" alt="">
+    </div>
+    
+    <div class="flex-1">
+      <h1 class="text-2xl font-bold">{{ locationName }}</h1>
+      <div class="flex gap-2 mt-2">
+        <div *ngFor="let category of categories" 
+             class="w-6 h-6 rounded-full flex items-center justify-center" 
+             [style.background-color]="category.color">
+          <mat-icon class="text-white text-sm ml-1 mt-1">{{ category.icon }}</mat-icon>
+        </div>
+      </div>
+    </div>
+    
+    <div class="max-w-md">
+      <p class="text-sm text-gray-900">{{ locationDescription }}</p>
+    </div>
+  </div>
+  
+  <!-- Tabs and Action Buttons Container -->
+  <div class="tab-header-container">
+    <div class="tab-labels">
+      <div class="tab-label" [class.active]="selectedTab === 0" (click)="selectTab(0)">Eventos</div>
+      <div class="tab-label" [class.active]="selectedTab === 1" (click)="selectTab(1)">Localização</div>
+    </div>
+    
+    <div class="action-buttons gap-3">
+      <button mat-raised-button color="primary" class="bg-[#192554] rounded-xl p-2 text-white text-sm w-40" (click)="createNewEvent()">
+        NOVO EVENTO
+      </button>
+      <button mat-icon-button class="ml-2" [class.active-view]="currentView === 'cards'" (click)="switchView('cards')">
+        <mat-icon>view_module</mat-icon>
+      </button>
+      <button mat-icon-button [class.active-view]="currentView === 'dashboard'" (click)="switchView('dashboard')">
+        <mat-icon>dashboard</mat-icon>
+      </button>
+    </div>
+  </div>
+  
+  <!-- Tab Content -->
+  <div [hidden]="selectedTab !== 0">
+    <div class="py-4">
+      <!-- Filter and Event Types Row -->
+      <div class="filter-row">
+        <app-filter-table (filter)="onFilter($event)"></app-filter-table>
+        
+        <div class="event-types">
+          <div *ngFor="let type of eventTypes" 
+               class="event-type-chip">
+            {{ type }}
+          </div>
+        </div>
+      </div>
+      
+      <!-- View Components -->
+      <app-cards-view *ngIf="currentView === 'cards'" [events]="events"></app-cards-view>
+      <app-dashboard-view *ngIf="currentView === 'dashboard'" [events]="events"></app-dashboard-view>
+    </div>
+  </div>
+  
+  <div [hidden]="selectedTab !== 1">
+    <div class="py-4">
+      <p>Conteúdo da aba de localização</p>
+    </div>
+  </div>
+</div>
+

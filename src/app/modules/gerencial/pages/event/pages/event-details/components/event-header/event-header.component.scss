@@ -1,0 +1,10 @@
+// Override Angular Material styles
+::ng-deep .mat-mdc-slide-toggle.mat-primary {
+  --mdc-switch-selected-track-color: #192554;
+  --mdc-switch-selected-handle-color: #192554;
+  --mdc-switch-selected-hover-track-color: #192554;
+  --mdc-switch-selected-hover-handle-color: #192554;
+  --mdc-switch-selected-focus-track-color: #192554;
+  --mdc-switch-selected-focus-handle-color: #192554;
+}
+

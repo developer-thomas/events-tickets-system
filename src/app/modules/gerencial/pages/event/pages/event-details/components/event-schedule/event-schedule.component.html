@@ -1,0 +1,20 @@
+<!-- Schedule Section -->
+<div class="mb-8">
+  <h2 class="text-xl font-semibold mb-4">Cronograma do evento</h2>
+  
+  <div class="space-y-4">
+    @for (item of scheduleItems; track $index) {
+      <div class="schedule-item p-4 bg-gray-50 rounded-lg">
+        <div class="flex items-center mb-2">
+          <div class="schedule-icon mr-3">
+            <mat-icon>calendar_today</mat-icon>
+          </div>
+          <div class="font-medium">{{ item.date }} | {{ item.day }}</div>
+          <div class="ml-auto text-sm text-gray-500">{{ item.time }}</div>
+        </div>
+        <p class="text-gray-700 ml-10">{{ item.description }}</p>
+      </div>
+    }
+  </div>
+</div>
+

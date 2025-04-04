@@ -1,0 +1,70 @@
+.form-input, .form-textarea, .form-select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background-color: #f5f5f5;
+  
+  &:focus {
+    outline: none;
+    border-color: #192554;
+  }
+}
+
+.add-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #192554;
+  color: white;
+  border-radius: 4px;
+  transition: all 0.2s;
+  
+  &:hover {
+    background-color: darken(#192554, 10%);
+  }
+}
+
+.delete-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #ff5252;
+  color: white;
+  border-radius: 4px;
+  transition: all 0.2s;
+  
+  &:hover {
+    background-color: darken(#ff5252, 10%);
+  }
+}
+
+.upload-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #e0e0e0;
+  color: #333;
+  border-radius: 4px;
+  transition: all 0.2s;
+  
+  &:hover {
+    background-color: darken(#e0e0e0, 10%);
+  }
+}
+
+.sponsor-item {
+  transition: all 0.3s ease;
+  
+  &:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+}
+
