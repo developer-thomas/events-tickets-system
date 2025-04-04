@@ -1,0 +1,120 @@
+<div class="modal-container">
+  <h1 class="text-2xl font-medium mb-6">Adicionar cupom</h1>
+  
+  <form [formGroup]="couponForm" (ngSubmit)="onSubmit()">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <!-- Code -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Código</label>
+        <input 
+          type="text" 
+          class="form-input"
+          placeholder="Exemplo Preenchido"
+          formControlName="code">
+        @if (couponForm.get('code')?.invalid && couponForm.get('code')?.touched) {
+          <div class="text-red-500 text-sm mt-1">
+            Código é obrigatório
+          </div>
+        }
+      </div>
+      
+      <!-- Start Date -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Data início</label>
+        <input 
+          type="text" 
+          class="form-input"
+          placeholder="00/00/00"
+          mask="00/00/00"
+          formControlName="startDate">
+        @if (couponForm.get('startDate')?.invalid && couponForm.get('startDate')?.touched) {
+          <div class="text-red-500 text-sm mt-1">
+            Data início é obrigatória
+          </div>
+        }
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <!-- Expiration Date -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Vencimento</label>
+        <input 
+          type="text" 
+          class="form-input"
+          placeholder="00/00/00"
+          mask="00/00/00"
+          formControlName="expirationDate">
+        @if (couponForm.get('expirationDate')?.invalid && couponForm.get('expirationDate')?.touched) {
+          <div class="text-red-500 text-sm mt-1">
+            Vencimento é obrigatório
+          </div>
+        }
+      </div>
+      
+      <!-- Discount -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Desconto</label>
+        <input 
+          type="text" 
+          class="form-input"
+          placeholder="00%"
+          suffix="%"
+          mask="percent"
+          formControlName="discount">
+        @if (couponForm.get('discount')?.invalid && couponForm.get('discount')?.touched) {
+          <div class="text-red-500 text-sm mt-1">
+            Desconto é obrigatório e deve estar entre 0 e 100
+          </div>
+        }
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <!-- Available Quantity -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Quantidade disponível</label>
+        <input 
+          type="text" 
+          class="form-input"
+          placeholder="00000"
+          mask="00000"
+          formControlName="quantity">
+        @if (couponForm.get('quantity')?.invalid && couponForm.get('quantity')?.touched) {
+          <div class="text-red-500 text-sm mt-1">
+            Quantidade é obrigatória e deve ser maior que 0
+          </div>
+        }
+      </div>
+      
+      <!-- Select Event -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Selecionar evento</label>
+        <select 
+          class="form-select"
+          formControlName="eventId">
+          @for (event of events; track event.id) {
+            <option [value]="event.id">{{ event.name }}</option>
+          }
+        </select>
+      </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="flex justify-end gap-4 mt-8">
+      <button 
+        type="button" 
+        class="cancel-button"
+        (click)="onCancel()">
+        CANCELAR
+      </button>
+      
+      <button 
+        type="submit" 
+        class="save-button">
+        SALVAR
+      </button>
+    </div>
+  </form>
+</div>
+
