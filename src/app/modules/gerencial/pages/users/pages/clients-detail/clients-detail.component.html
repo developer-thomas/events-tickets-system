@@ -1,0 +1,35 @@
+<app-page-header [title]="title" [pageSession]="pageSession" />
+
+<section>
+  <mat-card>
+    <mat-card-content>
+      <div class="text-right">
+        <mat-slide-toggle
+          color="primary"
+          [checked]="client?.active"
+          (change)="changeStatus()"
+        />
+      </div>
+      <div class="grid md:grid-cols-[auto_1fr_1fr_1fr] gap-3">
+        <div class="rounded-full h-24 w-24 overflow-hidden md:row-span-2">
+          <img [src]="client?.avatar" alt="">
+        </div>
+        <app-label-and-info label="Nome" [info]="client?.name"></app-label-and-info>
+        <app-label-and-info label="Idade" [info]="client?.age"></app-label-and-info>
+        <app-label-and-info label="Status" [info]="client?.status | booleanStatus"></app-label-and-info>
+        <app-label-and-info label="Email" [info]="client?.email"></app-label-and-info>
+        <app-label-and-info label="Telefone" [info]="client?.phone"></app-label-and-info>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-tab-group class="mt-4">
+    <mat-tab label="Financeiro">
+      <app-financial-tab></app-financial-tab>
+    </mat-tab>
+
+    <mat-tab label="Ingressos">
+      <app-tickets-tab></app-tickets-tab>
+    </mat-tab>
+  </mat-tab-group>
+</section>
