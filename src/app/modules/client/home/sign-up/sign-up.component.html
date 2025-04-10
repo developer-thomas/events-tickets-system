@@ -1,0 +1,193 @@
+<app-client-header></app-client-header>
+<div class="signup-container">
+  <div class="signup-content">
+    <h1 class="page-title">Criar uma conta</h1>
+    
+    <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
+      <!-- Personal Data Section -->
+      <div class="section-title">Dados</div>
+      
+      <div class="form-grid">
+        <div class="form-fields">
+          <!-- Full Name -->
+          <div class="form-field">
+            <label for="fullName">Nome completo</label>
+            <input 
+              type="text" 
+              id="fullName" 
+              class="form-input" 
+              placeholder="Exemplo preenchido"
+              formControlName="fullName">
+            <div *ngIf="signUpForm.get('fullName')?.invalid && signUpForm.get('fullName')?.touched" class="error-message">
+              Nome completo é obrigatório
+            </div>
+          </div>
+          
+          <!-- Email -->
+          <div class="form-field">
+            <label for="email">E-mail</label>
+            <div class="input-with-icon">
+              <span class="input-icon">
+                <mat-icon>person</mat-icon>
+              </span>
+              <input 
+                type="email" 
+                id="email" 
+                class="form-input with-icon" 
+                placeholder="mail@email.com"
+                formControlName="email">
+            </div>
+            <div *ngIf="signUpForm.get('email')?.invalid && signUpForm.get('email')?.touched" class="error-message">
+              E-mail inválido
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <!-- Birth Date -->
+            <div class="form-field">
+              <label for="birthDate">Data de nascimento</label>
+              <input 
+                type="text" 
+                id="birthDate" 
+                class="form-input" 
+                placeholder="00/00/00"
+                mask="00/00/00"
+                formControlName="birthDate">
+              <div *ngIf="signUpForm.get('birthDate')?.invalid && signUpForm.get('birthDate')?.touched" class="error-message">
+                Data de nascimento é obrigatória
+              </div>
+            </div>
+            
+            <!-- Phone -->
+            <div class="form-field">
+              <label for="phone">Telefone</label>
+              <input 
+                type="text" 
+                id="phone" 
+                class="form-input" 
+                placeholder="(00)00000-0000"
+                mask="(00)00000-0000"
+                formControlName="phone">
+              <div *ngIf="signUpForm.get('phone')?.invalid && signUpForm.get('phone')?.touched" class="error-message">
+                Telefone é obrigatório
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <!-- CPF -->
+            <div class="form-field">
+              <label for="cpf">CPF</label>
+              <input 
+                type="text" 
+                id="cpf" 
+                class="form-input" 
+                placeholder="00000000-00"
+                mask="00000000-00"
+                formControlName="cpf">
+              <div *ngIf="signUpForm.get('cpf')?.invalid && signUpForm.get('cpf')?.touched" class="error-message">
+                CPF é obrigatório
+              </div>
+            </div>
+            
+            <!-- Gender -->
+            <div class="form-field">
+              <label for="gender">Sexo</label>
+              <select 
+                id="gender" 
+                class="form-select"
+                formControlName="gender">
+                <option value="" disabled selected>Masculino</option>
+                <option *ngFor="let option of genderOptions" [value]="option.value">
+                  {{ option.label }}
+                </option>
+              </select>
+              <div *ngIf="signUpForm.get('gender')?.invalid && signUpForm.get('gender')?.touched" class="error-message">
+                Sexo é obrigatório
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Profile Photo Upload -->
+        <div class="photo-upload">
+          <div class="photo-container" [class.has-image]="profileImage">
+            <div class="photo-placeholder" *ngIf="!profileImage">
+              <mat-icon>person</mat-icon>
+            </div>
+            <img *ngIf="profileImage" [src]="profileImage" alt="Profile Photo" class="profile-image">
+          </div>
+          <div class="upload-button-container">
+            <button type="button" class="upload-button" (click)="fileInput.click()">
+              <mat-icon>photo_camera</mat-icon>
+              <span>Adicione uma foto</span>
+            </button>
+            <input 
+              #fileInput 
+              type="file" 
+              accept="image/*" 
+              class="hidden-input" 
+              (change)="onFileSelected($event)">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Password Section -->
+      <div class="section-title">Senha</div>
+      
+      <div class="form-row">
+        <!-- New Password -->
+        <div class="form-field">
+          <label for="password">Nova senha</label>
+          <input 
+            type="password" 
+            id="password" 
+            class="form-input" 
+            placeholder="Exemplo preenchido"
+            formControlName="password">
+          <div *ngIf="signUpForm.get('password')?.invalid && signUpForm.get('password')?.touched" class="error-message">
+            Senha inválida
+          </div>
+        </div>
+        
+        <!-- Confirm Password -->
+        <div class="form-field">
+          <label for="confirmPassword">Confirmar senha</label>
+          <input 
+            type="password" 
+            id="confirmPassword" 
+            class="form-input" 
+            placeholder="Exemplo preenchido"
+            formControlName="confirmPassword">
+          <div *ngIf="signUpForm.get('confirmPassword')?.invalid && signUpForm.get('confirmPassword')?.touched" class="error-message">
+            As senhas não coincidem
+          </div>
+        </div>
+      </div>
+      
+      <!-- Password Requirements -->
+      <div class="password-requirements">
+        <div class="requirement">
+          <div class="requirement-bullet"></div>
+          <span>A senha deve ter no mínimo 8 caracteres;</span>
+        </div>
+        <div class="requirement">
+          <div class="requirement-bullet"></div>
+          <span>Use números e letras;</span>
+        </div>
+        <div class="requirement">
+          <div class="requirement-bullet"></div>
+          <span>Utilize pelo menos uma letra maiúscula.</span>
+        </div>
+      </div>
+      
+      <!-- Submit Button -->
+      <div class="button-container">
+        <button type="submit" class="submit-button">CRIAR CONTA</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<app-client-footer></app-client-footer>
+
