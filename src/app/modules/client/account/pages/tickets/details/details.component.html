@@ -1,0 +1,61 @@
+<div class="ticket-detail-container">
+  <app-page-header title="Ingressos" pageSession="Detalhes do Ingresso"></app-page-header>
+
+  <div class="ticket-detail-content">
+    <!-- Back button -->
+    <div class="back-button-container">
+      <button class="back-button" (click)="goBack()">
+        <mat-icon>chevron_left</mat-icon>
+        <span>VOLTAR</span>
+      </button>
+    </div>
+
+    <!-- Ticket Details Header -->
+    <h1 class="detail-title">Detalhes do ingresso</h1>
+
+    <!-- Ticket Summary Card -->
+    <div class="ticket-summary-card">
+      <div class="ticket-info">
+        <h2 class="ticket-title">{{ ticket.title }}</h2>
+        <p class="ticket-date">Data: {{ ticket.date }} | {{ ticket.time }}</p>
+        <p class="ticket-quantity">Quantidade: {{ ticket.quantity }}</p>
+      </div>
+      <div class="ticket-status-price">
+        <span class="ticket-status">{{ ticket.status }}</span>
+        <span class="ticket-price">{{ ticket.price }}</span>
+      </div>
+    </div>
+
+    <!-- Custom Tabs -->
+    <div class="custom-tabs">
+      <div class="tab-header">
+        <button 
+          class="tab-button" 
+          [class.active]="selectedTabIndex === 0"
+          (click)="selectTab(0)">
+          QR Codes
+        </button>
+        <button 
+          class="tab-button" 
+          [class.active]="selectedTabIndex === 1"
+          (click)="selectTab(1)">
+          Detalhes do evento
+        </button>
+      </div>
+      
+      <div class="tab-content">
+        <!-- QR Codes Tab -->
+        <app-qr-codes-view 
+          *ngIf="selectedTabIndex === 0" 
+          [qrCodes]="ticket.qrCodes">
+        </app-qr-codes-view>
+        
+        <!-- Event Details Tab -->
+        <app-event-view 
+          *ngIf="selectedTabIndex === 1" 
+          [ticket]="ticket">
+        </app-event-view>
+      </div>
+    </div>
+  </div>
+</div>
