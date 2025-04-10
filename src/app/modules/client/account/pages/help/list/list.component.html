@@ -1,0 +1,89 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <!-- Back Button -->
+  <div class="flex justify-end mb-4">
+    <button 
+      class="flex items-center text-gray-700 hover:text-gray-900"
+      (click)="goBack()">
+      <mat-icon class="mr-1">chevron_left</mat-icon>
+      <span class="uppercase text-sm font-medium">Voltar</span>
+    </button>
+  </div>
+
+  <!-- Help Center Title -->
+  <h1 class="text-2xl font-bold text-gray-900 mb-6">Central de ajuda</h1>
+
+  <!-- Search Bar -->
+  <div class="relative mb-8">
+    <input
+      type="text"
+      class="w-full py-3 px-4 bg-gray-100 rounded-md focus:outline-none"
+      placeholder="Buscar"
+      [(ngModel)]="searchQuery"
+      (keyup.enter)="search()">
+    <button 
+      class="absolute right-3 top-1/2 transform -translate-y-1/2"
+      (click)="search()">
+      <mat-icon class="text-gray-500">search</mat-icon>
+    </button>
+  </div>
+
+  <!-- FAQ Accordion -->
+  <div class="space-y-4">
+    <div 
+      *ngFor="let item of faqItems" 
+      class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+      
+      <!-- FAQ Header -->
+      <div 
+        class="flex items-center justify-between p-4 cursor-pointer"
+        (click)="toggleFaqItem(item)">
+        <div class="flex items-center">
+          <div class="w-6 h-6 rounded-full bg-[#192554] flex items-center justify-center mr-3">
+            <mat-icon class="text-white text-sm">help_outline</mat-icon>
+          </div>
+          <h3 class="font-medium text-gray-900">{{ item.title }}</h3>
+        </div>
+        <mat-icon class="text-gray-500 transition-transform duration-200" 
+                 [class.transform]="item.isExpanded" 
+                 [class.rotate-180]="item.isExpanded">
+          {{ item.isExpanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
+        </mat-icon>
+      </div>
+      
+      <!-- FAQ Content -->
+      <div 
+        class="px-4 pb-4 pt-0" 
+        [class.hidden]="!item.isExpanded">
+        <div class="pl-9">
+          <p class="text-gray-700">{{ item.content }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-center items-center mt-8 space-x-2">
+    <button 
+      class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100"
+      (click)="prevPage()">
+      <mat-icon class="text-gray-500">chevron_left</mat-icon>
+    </button>
+    
+    <button 
+      *ngFor="let page of [1, 2, 3]" 
+      class="w-8 h-8 flex items-center justify-center rounded-full text-sm"
+      [class.bg-[#192554]]="currentPage === page"
+      [class.text-white]="currentPage === page"
+      [class.bg-gray-100]="currentPage !== page"
+      [class.text-gray-700]="currentPage !== page"
+      (click)="goToPage(page)">
+      {{ page }}
+    </button>
+    
+    <button 
+      class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100"
+      (click)="nextPage()">
+      <mat-icon class="text-gray-500">chevron_right</mat-icon>
+    </button>
+  </div>
+</div>
