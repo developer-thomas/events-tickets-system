@@ -1,0 +1,39 @@
+<!-- Events Tab -->
+<div class="events-tab">
+  <!-- Search and Filter -->
+  <div class="search-filter-container">
+    <app-filter-table (filter)="onFilter($event)">
+      <div class="filter-buttons">
+        <button mat-icon-button class="filter-button">
+          <mat-icon>tune</mat-icon>
+        </button>
+      </div>
+    </app-filter-table>
+  </div>
+
+  <!-- Event Type Filters -->
+  <div class="event-type-filters">
+    <button *ngFor="let type of eventTypes" class="event-type-button">
+      {{ type }}
+    </button>
+  </div>
+
+  <!-- Events Grid -->
+  <div class="events-grid">
+    <div *ngFor="let event of events" class="event-card" (click)="navigateToEventDetail(event.id)">
+      <div class="event-image">
+        <img [src]="event.image" alt="{{ event.title }}">
+        <button class="favorite-button" (click)="toggleFavorite(event); $event.stopPropagation()">
+          <mat-icon>{{ event.isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+        </button>
+      </div>
+      <div class="event-info">
+        <h3 class="event-title">{{ event.title }}</h3>
+        <div class="event-category">
+          <div class="category-dot" style="background-color: #cc3131;"></div>
+        </div>
+        <p class="event-description">{{ event.description }}</p>
+      </div>
+    </div>
+  </div>
+</div>

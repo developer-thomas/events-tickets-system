@@ -1,0 +1,37 @@
+<div class="account-home-container">
+  <!-- Search and Filter Bar -->
+  <div class="search-filter-container w-full">
+    <app-filter-table  (filter)="onFilter($event)"></app-filter-table>
+    <div class="category-filters">
+      <div 
+        *ngFor="let category of categories" 
+        class="category-item"
+        [class.active]="selectedCategory === category.id"
+        [style.--category-color]="category.color"
+        (click)="selectCategory(category.id)">
+        <div class="category-icon">
+          <mat-icon>{{ category.icon }}</mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Category Filters -->
+  
+  
+  <!-- Map View -->
+  <div class="map-container" *ngIf="viewMode === 'map'">
+    <img src="../../../../../../../assets/images/map.png" alt="Map" class="map-image">
+  </div>
+  
+  <!-- List View (Hidden by default) -->
+  <div class="list-container" *ngIf="viewMode === 'list'">
+    <app-list></app-list>
+  </div>
+  
+  <!-- View Toggle Button -->
+  <button class="view-toggle-button" (click)="toggleView()">
+    <mat-icon>{{ viewMode === 'map' ? 'format_list_bulleted' : 'map' }}</mat-icon>
+  </button>
+</div>
+
