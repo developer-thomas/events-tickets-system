@@ -1,0 +1,108 @@
+<div class="cart-container">
+  <!-- Header -->
+  <div class="cart-header">
+    <h1 class="cart-title">CARRINHO</h1>
+    <button class="back-button" (click)="goBack()">
+      <mat-icon>chevron_left</mat-icon>
+      <span>VOLTAR</span>
+    </button>
+  </div>
+
+  <div class="cart-content">
+    <!-- Left Column: Cart Items -->
+    <div class="cart-items-container">
+      <div class="cart-section-header">
+        <h2 class="section-title">Ingressos</h2>
+        <button class="remove-all-button" (click)="removeAllItems()" [disabled]="cartItems.length === 0">
+          <mat-icon>delete</mat-icon>
+          REMOVER TODOS OS PRODUTOS
+        </button>
+      </div>
+
+      <div class="cart-items-list">
+        <div *ngFor="let item of cartItems" class="cart-item">
+          <div class="item-image">
+            <img [src]="item.image" alt="{{ item.title }}">
+          </div>
+          
+          <div class="item-details">
+            <h3 class="item-title">{{ item.title }}</h3>
+            <p class="item-venue">{{ item.venue }}</p>
+          </div>
+          
+          <div class="item-quantity">
+            <span class="quantity-label">Quantidade</span>
+            <div class="quantity-controls">
+              <button class="quantity-button" (click)="decreaseQuantity(item)">
+                <mat-icon>remove</mat-icon>
+              </button>
+              <span class="quantity-value">{{ item.quantity }}</span>
+              <button class="quantity-button" (click)="increaseQuantity(item)">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+            <button class="remove-item-button" (click)="removeItem(item.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+          
+          <div class="item-price">
+            <span class="price-label">Valor</span>
+            <span class="price-value">R$ {{ (item.price * item.quantity).toFixed(2).replace('.', ',') }}</span>
+          </div>
+        </div>
+
+        <!-- Empty cart message -->
+        <div *ngIf="cartItems.length === 0" class="empty-cart">
+          <p>Seu carrinho está vazio</p>
+        </div>
+      </div>
+
+      <!-- Coupon Section -->
+      <div class="coupon-section">
+        <div class="coupon-label">Cupom de desconto</div>
+        <div class="coupon-input-container">
+          <input type="text" class="coupon-input" [(ngModel)]="couponCode" placeholder="Digite seu cupom">
+          <button class="coupon-button" (click)="applyCoupon()">APLICAR CUPOM</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Summary -->
+    <div class="cart-summary-container">
+      <h2 class="section-title">Resumo</h2>
+      
+      <div class="summary-content">
+        <div class="summary-row">
+          <span class="summary-label">Valor dos Ingressos:</span>
+          <span class="summary-value">{{ formattedTotalTicketsValue }}</span>
+        </div>
+        
+        <div class="summary-box">
+          <div class="summary-row">
+            <span class="summary-label">Total à prazo:</span>
+            <span class="summary-value">{{ installmentTotal }}</span>
+          </div>
+          <div class="summary-tax">(em até 12x de {{ installmentTax }})</div>
+        </div>
+        
+        <div class="summary-box highlight">
+          <div class="summary-row">
+            <span class="summary-label">À vista:</span>
+            <span class="summary-value">{{ cashTotal }}</span>
+          </div>
+          <div class="summary-tax">(Economize: {{ cashSavings }})</div>
+        </div>
+        
+        <div class="summary-actions">
+          <button class="checkout-button" (click)="checkout()" [disabled]="cartItems.length === 0">
+            FINALIZAR COMPRA
+          </button>
+          <button class="continue-button" (click)="continueShopping()">
+            CONTINUAR COMPRANDO
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
