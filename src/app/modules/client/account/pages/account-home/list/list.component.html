@@ -1,0 +1,55 @@
+<div class="location-list-container">
+  <!-- Header with back button -->
+  <div class="list-header">
+    <button class="back-button" (click)="goBack()">
+      <mat-icon>chevron_left</mat-icon>
+      <span>VOLTAR</span>
+    </button>
+  </div>
+
+  <!-- Search and Filter Bar -->
+  <div class="search-filter-container">
+    <app-filter-table (filter)="onFilter($event)">
+      <div class="filter-buttons">
+        <button mat-icon-button class="filter-button">
+          <mat-icon>tune</mat-icon>
+        </button>
+      </div>
+    </app-filter-table>
+  </div>
+
+  <!-- Category Filters -->
+  <div class="category-filters">
+    <div 
+      *ngFor="let category of categories" 
+      class="category-item"
+      [class.active]="selectedCategory === category.id"
+      [style.--category-color]="category.color">
+      <div class="category-icon">
+        <mat-icon>{{ category.icon }}</mat-icon>
+      </div>
+    </div>
+  </div>
+
+  <!-- Locations Grid -->
+  <div class="locations-grid">
+    <div *ngFor="let location of locations" class="location-card" (click)="navigateToLocationDetail(location.id)">
+      <div class="location-image">
+        <img [src]="location.image" alt="{{ location.name }}">
+      </div>
+      <div class="location-info">
+        <h3 class="location-name">{{ location.name }}</h3>
+        <div class="location-distance">
+          <mat-icon class="distance-icon">place</mat-icon>
+          <span>{{ location.distance }} km de você - {{ location.duration }} min</span>
+        </div>
+        <div class="location-categories">
+          <div *ngFor="let categoryId of location.categories.slice(0, 5)" 
+               class="category-dot"
+               [style.background-color]="getCategoryColor(categoryId)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
