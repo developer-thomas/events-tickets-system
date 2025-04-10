@@ -23,6 +23,6 @@ export class ForgotPasswordComponent {
   }
 
   gotoLogin() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/admin']);
   }
 }

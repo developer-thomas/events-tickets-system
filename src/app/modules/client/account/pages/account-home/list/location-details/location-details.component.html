@@ -1,0 +1,78 @@
+<div class="location-detail-container">
+  <!-- Header Image -->
+  <div class="header-image">
+    <img src="../../../../../../../../assets/images/local-details-header.png" alt="Event Header">
+    <button class="back-button" (click)="goBack()">
+      <mat-icon>chevron_left</mat-icon>
+      <span>VOLTAR</span>
+    </button>
+  </div>
+
+  <!-- Location Profile -->
+  <div class="location-profile ">
+    <div class="profile-image">
+      <img [src]="location.image" alt="{{ location.name }}">
+    </div>
+    <div class="profile-info">
+      <h1 class="location-name">{{ location.name }}</h1>
+      <div class="location-meta">
+        <div class="distance">
+          <mat-icon>place</mat-icon>
+          <span>{{ location.distance }} km</span>
+        </div>
+        <div class="categories">
+          <div class="category-dot" style="background-color: #cc3131;"></div>
+          <div class="category-dot" style="background-color: #ffcc00;"></div>
+          <div class="category-dot" style="background-color: #209db3;"></div>
+          <div class="category-dot" style="background-color: #4728a2;"></div>
+          <div class="category-dot" style="background-color: #a148bf;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Location Description -->
+  <div class="location-description">
+    <p>{{ location.description }}</p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-container">
+    <div class="tabs-header">
+      <button 
+        class="tab-button" 
+        [class.active]="activeTab === 0" 
+        (click)="selectTab(0)">
+        Eventos
+      </button>
+      <button 
+        class="tab-button" 
+        [class.active]="activeTab === 1" 
+        (click)="selectTab(1)">
+        Localização
+      </button>
+    </div>
+  </div>
+
+  <!-- Tab Content -->
+  <div class="tab-content">
+    <!-- Events Tab -->
+    <div *ngIf="activeTab === 0" class="events-tab">
+      <app-events
+        [events]="events"
+        [eventTypes]="eventTypes"
+        (filterChange)="onFilterChange($event)"
+        (favoriteToggle)="onFavoriteToggle($event)" 
+      >
+
+      </app-events>
+    </div>
+
+    <!-- Location Tab -->
+    <div *ngIf="activeTab === 1" class="location-tab">
+      <div class="map-placeholder">
+        <p>Mapa da localização será exibido aqui</p>
+      </div>
+    </div>
+  </div>
+</div>

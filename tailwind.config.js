@@ -13,4 +13,10 @@ module.exports = {
     },
   },
   plugins: [],
+  safelist: [
+    'bg-red-500',
+    'text-center',
+    'p-4',
+    /^bg-/,
+  ]
 }

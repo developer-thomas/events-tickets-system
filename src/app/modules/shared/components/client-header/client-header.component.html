@@ -1,0 +1,40 @@
+<header class="client-header">
+  <div class="container">
+    <div class="header-content">
+      <!-- Logo -->
+      <a routerLink="/" class="logo">
+        <img src="../../../../../assets/images/logo-header.png" alt="Cidade da Cultura">
+      </a>
+      
+      <!-- Right Side Actions -->
+      <div class="header-actions">
+        <button mat-icon-button class="action-button">
+          <mat-icon>calendar_today</mat-icon>
+        </button>
+        
+        <button mat-icon-button class="action-button">
+          <mat-icon>shopping_cart</mat-icon>
+        </button>
+        
+        <div class="user-menu">
+          <div mat-button [matMenuTriggerFor]="userMenu" class="user-button">
+            <div class="user-avatar">
+              <mat-icon>person</mat-icon>
+            </div>
+            <div class="user-info text-white">
+              <span class="user-label">Faça seu</span>
+              <span class="user-action">Login ou Cadastro</span>
+              <mat-icon class="dropdown-icon" style="cursor: pointer;">keyboard_arrow_down</mat-icon>
+            </div>
+          </div>
+          
+          <mat-menu #userMenu="matMenu" xPosition="before">
+            <button mat-menu-item routerLink="/client/meus-dados">Meus Dados</button>
+            <button mat-menu-item routerLink="/home">Sair</button>
+          </mat-menu>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+

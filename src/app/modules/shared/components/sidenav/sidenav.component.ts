@@ -8,6 +8,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterModule } from '@angular/router';
 import { map, shareReplay } from 'rxjs';
+import { ClientHeaderComponent } from '../client-header/client-header.component';
+import { ClientFooterComponent } from '../client-footer/client-footer.component';
 
 export interface ISidenavRoute {
   label: string;
@@ -28,6 +30,8 @@ export interface ISidenavRoute {
     MatToolbarModule,
     MatListModule,
     CommonModule,
+    ClientHeaderComponent,
+    ClientFooterComponent
   ],
 })
 export class SidenavComponent {
@@ -35,6 +39,7 @@ export class SidenavComponent {
   private router = inject(Router);
 
   @Input() routes: ISidenavRoute[] = [];
+  @Input() useLogo: boolean = true;
 
   isHandset$ = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
     map(result => result.matches),

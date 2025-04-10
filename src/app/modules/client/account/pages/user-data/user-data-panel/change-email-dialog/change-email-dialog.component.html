@@ -1,0 +1,37 @@
+<h2 mat-dialog-title>Alterar Email</h2>
+    <div mat-dialog-content>
+      <form [formGroup]="emailForm">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Email atual</mat-label>
+          <input matInput [value]="data.currentEmail" disabled>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Novo email</mat-label>
+          <input matInput formControlName="newEmail" type="email">
+          <mat-error *ngIf="emailForm.get('newEmail')?.hasError('required')">
+            Email é obrigatório
+          </mat-error>
+          <mat-error *ngIf="emailForm.get('newEmail')?.hasError('email')">
+            Email inválido
+          </mat-error>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Confirmar novo email</mat-label>
+          <input matInput formControlName="confirmEmail" type="email">
+          <mat-error *ngIf="emailForm.get('confirmEmail')?.hasError('required')">
+            Confirmação de email é obrigatória
+          </mat-error>
+          <mat-error *ngIf="emailForm.get('confirmEmail')?.hasError('mismatch')">
+            Os emails não coincidem
+          </mat-error>
+        </mat-form-field>
+      </form>
+    </div>
+    <div mat-dialog-actions align="end">
+      <button mat-button (click)="onCancel()">Cancelar</button>
+      <button mat-raised-button color="primary" [disabled]="emailForm.invalid" (click)="onSubmit()">
+        Salvar
+      </button>
+    </div>

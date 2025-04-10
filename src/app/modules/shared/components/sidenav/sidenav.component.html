@@ -4,7 +4,7 @@
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
       [opened]="(isHandset$ | async) === false">
     <mat-toolbar>
-      <img class="p-5" src="../../../../../assets/images/logo-home.png" alt="">
+      <img *ngIf="useLogo" class="p-5" src="../../../../../assets/images/logo-home.png" alt="">
     </mat-toolbar>
     <mat-nav-list>
       @for (item of routes; track $index) {

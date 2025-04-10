@@ -1,0 +1,9 @@
+
+:host {
+  display: block;
+}
+
+// Override Material styles
+::ng-deep .mat-mdc-dialog-container {
+  --mdc-dialog-container-color: white;
+}
