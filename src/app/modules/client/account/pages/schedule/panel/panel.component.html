@@ -1,0 +1,102 @@
+<div class="schedule-panel">
+  <!-- Calendar View -->
+  <div class="calendar-container">
+    <!-- Month Navigation -->
+    <div class="month-navigation">
+      <button class="nav-button" (click)="previousMonth()">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <h2 class="month-title">{{ currentMonth }}</h2>
+      <button class="nav-button" (click)="nextMonth()">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+
+    <!-- Calendar Header -->
+    <div class="calendar-header">
+      <div *ngFor="let day of daysOfWeek" class="calendar-header-cell">
+        {{ day }}
+      </div>
+    </div>
+
+    <!-- Calendar Grid -->
+    <div class="calendar-grid">
+      <div 
+        *ngFor="let day of calendarDays" 
+        class="calendar-day"
+        [class.current-month]="day.isCurrentMonth"
+        [class.selected]="day.isSelected"
+        (click)="selectDay(day)">
+        <span class="day-number">{{ day.date }}</span>
+        <div *ngIf="day.hasEvents" class="event-indicators">
+          <span 
+            *ngFor="let type of day.eventTypes" 
+            class="event-dot"
+            [class.primary]="type === 'primary'"
+            [class.secondary]="type === 'secondary'"
+            [class.tertiary]="type === 'tertiary'">
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Weekly Schedule View -->
+  <div class="schedule-container">
+    <!-- Week Days Header -->
+    <div class="week-header">
+      <div 
+        *ngFor="let day of weekDays" 
+        class="week-day"
+        [class.selected]="day.isSelected">
+        <div class="day-number">{{ day.dayNum }}</div>
+        <div class="day-name">{{ day.dayAbbr }}</div>
+      </div>
+    </div>
+
+    <!-- Time Slots -->
+    <div class="time-slots-container">
+      <div class="time-slots">
+        <div *ngFor="let time of timeSlots" class="time-slot">
+          <div class="time-label">{{ time }}</div>
+          <div class="time-line"></div>
+        </div>
+      </div>
+
+      <!-- Events -->
+      <div class="events-container">
+        <div *ngFor="let time of timeSlots" class="event-slot">
+          <div *ngIf="getEventForTimeSlot(time) as event" class="event-card" [class.has-buy-button]="event.canBuy">
+            <div class="event-content">
+              <h3 class="event-title">{{ event.title }}</h3>
+              
+              <!-- Event with location and distance -->
+              <ng-container *ngIf="event.distance">
+                <p class="event-location">{{ event.location }}</p>
+                <p class="event-distance">{{ event.distance }}</p>
+              </ng-container>
+              
+              <!-- Event with date, quantity, and price -->
+              <ng-container *ngIf="event.date">
+                <p class="event-date">Data: {{ event.date }} | {{ event.time }}</p>
+                <p class="event-quantity">Quantidade: {{ event.quantity }}</p>
+                <div class="event-status-price">
+                  <span class="event-status">{{ event.status }}</span>
+                  <span class="event-price">{{ event.price }}</span>
+                </div>
+              </ng-container>
+            </div>
+            
+            <!-- Buy Button -->
+            <button 
+              *ngIf="event.canBuy" 
+              class="buy-button"
+              (click)="buyTicket(event.id)">
+              Comprar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,289 @@
+.schedule-panel {
+  display: flex;
+  gap: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+/* Calendar View Styles */
+.calendar-container {
+  flex: 1;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  min-width: 280px;
+}
+
+.month-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.nav-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  mat-icon {
+    color: #333;
+  }
+}
+
+.month-title {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 8px;
+}
+
+.calendar-header-cell {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  padding: 8px 0;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  border-radius: 50%;
+  
+  &.selected {
+    background-color: #a3b1f6;
+    color: white;
+  }
+  
+  &:hover:not(.selected) {
+    background-color: #f5f5f5;
+  }
+}
+
+.day-number {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.event-indicators {
+  display: flex;
+  gap: 2px;
+  position: absolute;
+  bottom: 4px;
+}
+
+.event-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  
+  &.primary {
+    background-color: #ff4545;
+  }
+  
+  &.secondary {
+    background-color: #2aaa21;
+  }
+  
+  &.tertiary {
+    background-color: #a3b1f6;
+  }
+}
+
+/* Weekly Schedule View Styles */
+.schedule-container {
+  flex: 2;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.week-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 16px;
+}
+
+.week-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 0;
+  
+  &.selected {
+    .day-number, .day-name {
+      font-weight: 600;
+      color: #192554;
+    }
+  }
+}
+
+.day-number {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.day-name {
+  font-size: 12px;
+  color: #666;
+}
+
+.time-slots-container {
+  display: flex;
+  flex: 1;
+  position: relative;
+}
+
+.time-slots {
+  width: 60px;
+  flex-shrink: 0;
+}
+
+.time-slot {
+  height: 60px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.time-label {
+  font-size: 12px;
+  color: #666;
+  position: absolute;
+  top: -10px;
+  left: 0;
+}
+
+.time-line {
+  position: absolute;
+  left: 60px;
+  right: -16px;
+  height: 1px;
+  background-color: #e0e0e0;
+}
+
+.events-container {
+  flex: 1;
+  position: relative;
+  margin-left: 60px;
+}
+
+.event-slot {
+  height: 60px;
+  position: relative;
+}
+
+.event-card {
+  position: absolute;
+  top: -30px;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 12px;
+  z-index: 1;
+  display: flex;
+  
+  &.has-buy-button {
+    padding-right: 100px;
+  }
+}
+
+.event-content {
+  flex: 1;
+}
+
+.event-title {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 4px 0;
+  color: #333;
+}
+
+.event-location {
+  font-size: 14px;
+  margin: 0 0 2px 0;
+  color: #666;
+}
+
+.event-distance {
+  font-size: 12px;
+  margin: 0;
+  color: #999;
+}
+
+.event-date, .event-quantity {
+  font-size: 14px;
+  margin: 0 0 4px 0;
+  color: #666;
+}
+
+.event-status-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.event-status {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: #dfc593;
+  color: #333;
+  font-size: 12px;
+  border-radius: 12px;
+}
+
+.event-price {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.buy-button {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #192554;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: darken(#192554, 10%);
+  }
+}
