@@ -8,7 +8,7 @@
   </div>
 
   <!-- Search and Filter Bar -->
-  <div class="search-filter-container">
+  <!-- <div class="search-filter-container">
     <app-filter-table (filter)="onFilter($event)">
       <div class="filter-buttons">
         <button mat-icon-button class="filter-button">
@@ -16,7 +16,7 @@
         </button>
       </div>
     </app-filter-table>
-  </div>
+  </div> -->
 
   <!-- Category Filters -->
   <div class="category-filters">
@@ -33,7 +33,7 @@
 
   <!-- Locations Grid -->
   <div class="locations-grid">
-    <div *ngFor="let location of locations" class="location-card" (click)="navigateToLocationDetail(location.id)">
+    <div *ngFor="let location of locations" class="location-card cursor-pointer" (click)="navigateToLocationDetail(location.id)">
       <div class="location-image">
         <img [src]="location.image" alt="{{ location.name }}">
       </div>
