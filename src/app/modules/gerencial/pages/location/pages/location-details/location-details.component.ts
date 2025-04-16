@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -7,6 +7,7 @@ import { FilterTableComponent } from '../../../../../shared/components/filter-ta
 import { CardsViewComponent } from './components/cards-view/cards-view.component';
 import { DashboardViewComponent } from './components/dashboard-view/dashboard-view.component';
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -17,6 +18,7 @@ import { PageHeaderComponent } from '../../../../../shared/components/page-heade
   styleUrl: './location-details.component.scss'
 })
 export class LocationDetailsComponent {
+  private router = inject(Router);
   locationName = "NOME DO LOCAL"
   locationDescription =
     "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard"
@@ -38,7 +40,7 @@ export class LocationDetailsComponent {
       subtitle: "Título do evento",
       description:
         "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      image: "../../../../../../../assets/png/home-bg.jpg",
+      image: "/assets/png/home-bg.jpg",
       active: true,
     },
     {
@@ -47,7 +49,7 @@ export class LocationDetailsComponent {
       subtitle: "Título do evento",
       description:
         "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      image: "../../../../../../../assets/png/home-bg.jpg",
+      image: "/assets/png/home-bg.jpg",
       active: true,
     },
     {
@@ -56,7 +58,7 @@ export class LocationDetailsComponent {
       subtitle: "Título do evento",
       description:
         "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      image: "../../../../../../../assets/png/home-bg.jpg",
+      image: "/assets/png/home-bg.jpg",
       active: false,
     },
   ]
@@ -83,6 +85,6 @@ export class LocationDetailsComponent {
 
   createNewEvent(): void {
     console.log("Creating new event")
-    // Implement new event creation logic
+    this.router.navigate(['/gerencial/local/cadastrar'])
   }
 }
