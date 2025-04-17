@@ -38,7 +38,7 @@ export class ListComponent {
       name: "Nome do local",
       distance: 5,
       duration: 8,
-      image: "/assets/images/location-placeholder.jpg",
+      image: "assets/images/location-placeholder.jpg",
       categories: ["theater", "music", "dance", "art", "cinema"],
     },
     {
@@ -46,7 +46,7 @@ export class ListComponent {
       name: "Nome do local",
       distance: 5,
       duration: 8,
-      image: "/assets/images/location-placeholder.jpg",
+      image: "assets/images/location-placeholder.jpg",
       categories: ["theater", "music", "dance", "art", "cinema"],
     },
     {
@@ -54,7 +54,7 @@ export class ListComponent {
       name: "Nome do local",
       distance: 5,
       duration: 8,
-      image: "/assets/images/location-placeholder.jpg",
+      image: "assets/images/location-placeholder.jpg",
       categories: ["theater", "music", "dance", "art", "cinema"],
     },
     {
@@ -62,7 +62,7 @@ export class ListComponent {
       name: "Nome do local",
       distance: 5,
       duration: 8,
-      image: "/assets/images/location-placeholder.jpg",
+      image: "assets/images/location-placeholder.jpg",
       categories: ["theater", "music", "dance", "art", "cinema"],
     },
     {
@@ -70,7 +70,7 @@ export class ListComponent {
       name: "Nome do local",
       distance: 5,
       duration: 8,
-      image: "/assets/images/location-placeholder.jpg",
+      image: "assets/images/location-placeholder.jpg",
       categories: ["theater", "music", "dance", "art", "cinema"],
     },
     {
@@ -78,7 +78,7 @@ export class ListComponent {
       name: "Nome do local",
       distance: 5,
       duration: 8,
-      image: "/assets/images/location-placeholder.jpg",
+      image: "assets/images/location-placeholder.jpg",
       categories: ["theater", "music", "dance", "art", "cinema"],
     },
   ]

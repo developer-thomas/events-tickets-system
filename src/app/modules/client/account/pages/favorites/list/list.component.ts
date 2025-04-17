@@ -47,7 +47,7 @@ export class ListComponent {
       location: "Nome do local",
       description:
         "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      image: "/assets/images/event-placeholder.jpg",
+      image: "//images/event-placeholder.jpg",
       isFavorite: true,
     },
     {
@@ -56,7 +56,7 @@ export class ListComponent {
       location: "Nome do local",
       description:
         "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      image: "/assets/images/event-placeholder.jpg",
+      image: "assets/images/event-placeholder.jpg",
       isFavorite: true,
     },
     {
@@ -65,7 +65,7 @@ export class ListComponent {
       location: "Nome do local",
       description:
         "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      image: "/assets/images/event-placeholder.jpg",
+      image: "assets/images/event-placeholder.jpg",
       isFavorite: true,
     },
     {
@@ -74,7 +74,7 @@ export class ListComponent {
       location: "Nome do local",
       description:
         "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      image: "/assets/images/event-placeholder.jpg",
+      image: "assets/images/event-placeholder.jpg",
       isFavorite: true,
     },
     {
@@ -83,7 +83,7 @@ export class ListComponent {
       location: "Nome do local",
       description:
         "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      image: "/assets/images/event-placeholder.jpg",
+      image: "assets/images/event-placeholder.jpg",
       isFavorite: true,
     },
     {
@@ -92,7 +92,7 @@ export class ListComponent {
       location: "Nome do local",
       description:
         "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      image: "/assets/images/event-placeholder.jpg",
+      image: "assets/images/event-placeholder.jpg",
       isFavorite: true,
     },
   ]

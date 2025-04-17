@@ -49,7 +49,7 @@ export class ClientsDetailComponent implements OnInit {
 
   private getClient(): void {
     this.client = {
-      avatar: '../../../../../../../assets/images/client-photo.jpeg',
+      avatar: 'assets/images/client-photo.jpeg',
       name: 'Ricardo Gonçalves',
       age: '28 Anos',
       status: 'Ativo',

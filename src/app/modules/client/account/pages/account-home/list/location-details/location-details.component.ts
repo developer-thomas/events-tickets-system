@@ -33,7 +33,7 @@ export class LocationDetailsComponent implements OnInit{
     id: 1,
     name: "NOME DO LOCAL",
     distance: 30,
-    image: "/assets/images/location-placeholder.jpg",
+    image: "assets/images/location-placeholder.jpg",
     description:
       "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
     categories: ["theater", "music", "dance", "art", "cinema"],
@@ -43,7 +43,7 @@ export class LocationDetailsComponent implements OnInit{
     {
       id: 1,
       title: "Título do evento",
-      image: "/assets/images/event-placeholder.jpg",
+      image: "assets/images/event-placeholder.jpg",
       category: "theater",
       description:
         "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
@@ -52,7 +52,7 @@ export class LocationDetailsComponent implements OnInit{
     {
       id: 2,
       title: "Título do evento",
-      image: "/assets/images/event-placeholder.jpg",
+      image: "assets/images/event-placeholder.jpg",
       category: "theater",
       description:
         "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
@@ -61,7 +61,7 @@ export class LocationDetailsComponent implements OnInit{
     {
       id: 3,
       title: "Título do evento",
-      image: "/assets/images/event-placeholder.jpg",
+      image: "assets/images/event-placeholder.jpg",
       category: "theater",
       description:
         "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
@@ -70,7 +70,7 @@ export class LocationDetailsComponent implements OnInit{
     {
       id: 4,
       title: "Título do evento",
-      image: "/assets/images/event-placeholder.jpg",
+      image: "assets/images/event-placeholder.jpg",
       category: "theater",
       description:
         "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
@@ -79,7 +79,7 @@ export class LocationDetailsComponent implements OnInit{
     {
       id: 5,
       title: "Título do evento",
-      image: "/assets/images/event-placeholder.jpg",
+      image: "assets/images/event-placeholder.jpg",
       category: "theater",
       description:
         "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
@@ -88,7 +88,7 @@ export class LocationDetailsComponent implements OnInit{
     {
       id: 6,
       title: "Título do evento",
-      image: "/assets/images/event-placeholder.jpg",
+      image: "assets/images/event-placeholder.jpg",
       category: "theater",
       description:
         "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
