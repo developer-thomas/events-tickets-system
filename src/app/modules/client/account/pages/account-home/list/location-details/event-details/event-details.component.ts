@@ -38,10 +38,10 @@ export class EventDetailsComponent {
     location: "Nome do local",
     price: "R$ 1500,00",
     dateRange: "17-22 de mar",
-    image: "/assets/images/event-details.png",
+    image: "assets/images/event-details.png",
     description:
       "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-    sponsorLogo: "/assets/images/imf-brasil.png",
+    sponsorLogo: "assets/images/imf-brasil.png",
     address: "Avenida Salvador, Bairro, cidade",
   }
 

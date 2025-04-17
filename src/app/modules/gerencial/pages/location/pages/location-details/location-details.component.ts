@@ -40,7 +40,7 @@ export class LocationDetailsComponent {
       subtitle: "Título do evento",
       description:
         "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      image: "/assets/png/home-bg.jpg",
+      image: "assets/png/home-bg.jpg",
       active: true,
     },
     {
@@ -49,7 +49,7 @@ export class LocationDetailsComponent {
       subtitle: "Título do evento",
       description:
         "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      image: "/assets/png/home-bg.jpg",
+      image: "assets/png/home-bg.jpg",
       active: true,
     },
     {
@@ -58,7 +58,7 @@ export class LocationDetailsComponent {
       subtitle: "Título do evento",
       description:
         "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      image: "/assets/png/home-bg.jpg",
+      image: "assets/png/home-bg.jpg",
       active: false,
     },
   ]
