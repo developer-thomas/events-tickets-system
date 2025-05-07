@@ -1,4 +1,4 @@
-<mat-card appearance="outlined" class="event-card">
+<mat-card appearance="outlined" class="event-card" (click)="onClick(event)">
   <div class="relative">
     <img [src]="event.image || '/placeholder.svg?height=200&width=400'" alt="{{ event.title }}" class="w-full h-48 object-cover">
     <div class="absolute top-2 right-2 flex gap-2">

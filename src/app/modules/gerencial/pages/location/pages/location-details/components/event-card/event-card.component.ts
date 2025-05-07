@@ -16,6 +16,7 @@ export class EventCardComponent {
   @Output() delete = new EventEmitter<number>()
   @Output() edit = new EventEmitter<number>()
   @Output() toggleActive = new EventEmitter<{ id: number; active: boolean }>()
+  @Output() goToDetails = new EventEmitter();
 
   onDelete(): void {
     this.delete.emit(this.event.id)
@@ -30,5 +31,11 @@ export class EventCardComponent {
       id: this.event.id,
       active: event.checked,
     })
+  }
+
+  // Método para enviar os dados do evento para o component pai, a intenção é redirecionar para os detalhes
+  // do evento através do ID
+  onClick(event: any): void {
+    this.goToDetails.emit(event);
   }
 }
