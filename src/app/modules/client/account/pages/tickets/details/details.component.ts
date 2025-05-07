@@ -80,7 +80,7 @@ export class DetailsComponent {
   }
 
   goBack(): void {
-    this.router.navigate(["/tickets/list"])
+    this.router.navigate(["/client/ingressos"])
   }
 
   selectTab(index: number): void {
