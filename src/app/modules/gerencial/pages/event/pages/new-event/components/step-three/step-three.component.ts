@@ -67,9 +67,9 @@ export class StepThreeComponent implements OnInit {
   // Create a new sponsor item form group
   createSponsorItem(): FormGroup {
     return this.fb.group({
-      name: ["", Validators.required],
-      categoryId: ["", Validators.required],
-      description: ["", Validators.required],
+      name: [""],
+      categoryId: [""],
+      description: [""],
       logoImage: [null],
     })
   }
