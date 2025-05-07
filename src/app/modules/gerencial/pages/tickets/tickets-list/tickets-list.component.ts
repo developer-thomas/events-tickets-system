@@ -8,13 +8,14 @@ import { FilterTableComponent } from '../../../../shared/components/filter-table
 import { CommomTableComponent, TableColumn } from '../../../../shared/components/commom-table/commom-table.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { MatMenuModule } from '@angular/material/menu';
 
 type ViewMode = "list" | "dashboard"
 
 @Component({
   selector: 'app-tickets-list',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, PageHeaderComponent, DashboardViewComponent, FilterTableComponent, CommomTableComponent],
+  imports: [CommonModule, MatButtonModule, MatIconModule, PageHeaderComponent, DashboardViewComponent, FilterTableComponent, CommomTableComponent, MatMenuModule, MatButtonModule, MatIconModule],
   templateUrl: './tickets-list.component.html',
   styleUrl: './tickets-list.component.scss'
 })
@@ -75,4 +76,8 @@ export class TicketsListComponent implements OnInit{
     this.getEvents(search);
   }
 
+  // Aqui trata o filtro de acordo com o tipo
+  applyFilter(tipo: string) {
+    console.log('Filtro selecionado:', tipo);
+  }
 }
