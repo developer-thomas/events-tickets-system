@@ -29,11 +29,19 @@ export class LocationDetailsComponent implements OnInit{
   locationId: string | null = null
   activeTab = 0
 
+  categories = [
+    { color: "#cc3131", icon: "local_movies" },
+    { color: "#ffcc00", icon: "music_note" },
+    { color: "#209db3", icon: "theater_comedy" },
+    { color: "#4728a2", icon: "palette" },
+    { color: "#a148bf", icon: "celebration" },
+  ]
+
   location = {
     id: 1,
     name: "NOME DO LOCAL",
     distance: 30,
-    image: "assets/images/location-placeholder.jpg",
+    image: "assets/images/location-placeholder.svg",
     description:
       "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
     categories: ["theater", "music", "dance", "art", "cinema"],
