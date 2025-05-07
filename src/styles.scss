@@ -2,6 +2,27 @@
 @use '@angular/material' as mat;
 @include mat.core();
 
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow-y: auto; // um scroll só
+}
+
+.layout-container {
+  height: 100vh; // faz o container preencher a tela
+}
+
+mat-sidenav-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  padding: 1rem; // opcional
+  overflow: visible; // nunca auto aqui
+}
+
 $my-app-primary: (
   50: #294153,
   100: #294153,
