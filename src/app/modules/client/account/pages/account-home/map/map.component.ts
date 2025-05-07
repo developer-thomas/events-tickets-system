@@ -5,12 +5,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { FilterTableComponent } from '../../../../../shared/components/filter-table/filter-table.component';
 import { ListComponent } from '../list/list.component';
+import { MatDialog } from '@angular/material/dialog';
+import { FilterModalComponent } from '../filter-modal/filter-modal.component';
 
 interface Category {
   id: string
   name: string
   icon: string
-  color: string
+  
 }
 
 @Component({
@@ -31,19 +33,16 @@ export class MapComponent {
   viewMode: "map" | "list" = "map"
 
   categories: Category[] = [
-    { id: "all", name: "Todos", icon: "apps", color: "#192554" },
-    { id: "theater", name: "Teatro", icon: "theater_comedy", color: "#cc3131" },
-    { id: "music", name: "Música", icon: "music_note", color: "#ebae13" },
-    { id: "dance", name: "Dança", icon: "nightlife", color: "#c5a25c" },
-    { id: "art", name: "Arte", icon: "palette", color: "#209db3" },
-    { id: "cinema", name: "Cinema", icon: "movie", color: "#ff6633" },
-    { id: "literature", name: "Literatura", icon: "menu_book", color: "#4728a2" },
-    { id: "gastronomy", name: "Gastronomia", icon: "restaurant", color: "#9dcf52" },
+    { id: "all", name: "Todos", icon: "assets/map-icons/jm-icon.png" },
+    { id: "theater", name: "Teatro", icon: "assets/map-icons/arena-icon.png" },
+    { id: "music", name: "Música", icon: "assets/map-icons/arte-icon.png" },
+    { id: "dance", name: "Dança", icon: "assets/map-icons/corpo-icon.png" },
+    { id: "art", name: "Arte", icon: "assets/map-icons/rio-icon.png" },
   ]
 
   selectedCategory = "all"
 
-  constructor() {}
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {}
 
@@ -56,7 +55,18 @@ export class MapComponent {
   }
 
   onFilter(searchTerm: string): void {
-    console.log("Filtering by:", searchTerm)
-    // Implement filtering logic
+    // Open the filter modal
+    const dialogRef = this.dialog.open(FilterModalComponent, {
+      width: "90%",
+      maxWidth: "500px",
+      panelClass: "filter-dialog",
+    })
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log("Filtering by:", searchTerm, "with options:", result)
+        // Implement filtering logic with both search term and filter options
+      }
+    })
   }
 }
