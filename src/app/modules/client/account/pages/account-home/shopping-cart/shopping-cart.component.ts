@@ -109,7 +109,7 @@ export class ShoppingCartComponent {
   }
 
   continueShopping(): void {
-    this.router.navigate(["/home"])
+    this.router.navigate(["/client/inicio"])
   }
 
   checkout(): void {

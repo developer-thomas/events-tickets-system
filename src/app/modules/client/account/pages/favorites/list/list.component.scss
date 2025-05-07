@@ -1,0 +1,41 @@
+.category-filters {
+  z-index: 10;
+  display: flex;
+
+
+  gap: 8px;
+  // padding: 8px;
+  background-color: transparent;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.category-item {  
+  &.active {
+    .category-icon {
+      cursor: pointer;
+      
+      background-color: rgba(57, 42, 153, 0.3);
+      border-radius: 10px;
+      z-index: 999;
+      height: 55px;
+      img {
+        position: relative;
+        z-index: -1;
+      }
+      
+      
+    }
+  }
+}
+
+.category-icon {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+
+}

@@ -1,0 +1,64 @@
+<div class="filter-modal">
+  <div class="filter-header">
+    <h2>Filtro</h2>
+    <button mat-icon-button (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Type Selection -->
+  <div class="filter-section">
+    <h3>Selecione o tipo</h3>
+    <div class="type-options">
+      <div 
+        *ngFor="let type of types" 
+        class="type-option" 
+        [class.selected]="type.selected"
+        (click)="selectType(type.id)">
+        <img [src]="type.logo" [alt]="type.name">
+      </div>
+    </div>
+  </div>
+
+  <!-- Location Selection -->
+  <div class="filter-section">
+    <h3>Selecione o local de referência</h3>
+    <div class="location-options">
+      <div 
+        *ngFor="let location of locations" 
+        class="location-option" 
+        [class.selected]="location.selected"
+        (click)="selectLocation(location.id)">
+        <div class="location-icon">
+          <mat-icon>{{location.icon}}</mat-icon>
+        </div>
+        <p>{{location.name}}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Date Selection -->
+  <div class="filter-section">
+    <h3>Selecione e data</h3>
+    <div class="calendar">
+      <!-- Week days -->
+      <div class="week-days">
+        <div *ngFor="let day of weekDays" class="week-day">{{day}}</div>
+      </div>
+      
+      <!-- Calendar days -->
+      <div class="calendar-days">
+        <div 
+          *ngFor="let date of dates" 
+          class="calendar-day" 
+          [class.selected]="date.selected"
+          (click)="toggleDateSelection(date)">
+          {{date.day < 10 ? '0' + date.day : date.day}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter Button -->
+  <button class="filter-button" (click)="applyFilters()">FILTRAR</button>
+</div>

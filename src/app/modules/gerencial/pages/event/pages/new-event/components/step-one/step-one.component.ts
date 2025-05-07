@@ -59,13 +59,14 @@ export class StepOneComponent implements OnInit{
   }
 
   toggleCategory(categoryId: number): void {
-    const index = this.selectedCategories.indexOf(categoryId)
-    if (index === -1) {
-      this.selectedCategories.push(categoryId)
+    if (this.selectedCategories[0] === categoryId) {
+      // Desmarca se já estiver selecionado (comportamento opcional)
+      this.selectedCategories = [];
+      this.getFormControl("categories").setValue(null);
     } else {
-      this.selectedCategories.splice(index, 1)
+      this.selectedCategories = [categoryId];
+      this.getFormControl("categories").setValue(categoryId);
     }
-    this.getFormControl("categories").setValue([...this.selectedCategories])
   }
 
   isCategorySelected(categoryId: number): boolean {

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { EventCardComponent } from '../event-card/event-card.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cards-view',
@@ -10,6 +11,7 @@ import { EventCardComponent } from '../event-card/event-card.component';
   styleUrl: './cards-view.component.scss'
 })
 export class CardsViewComponent {
+  private router = inject(Router);
   @Input() events: any[] = []
 
   onDeleteEvent(id: number): void {
@@ -25,5 +27,10 @@ export class CardsViewComponent {
   onToggleEvent(data: { id: number; active: boolean }): void {
     console.log("Toggle event:", data)
     // Implement toggle logic
+  }
+
+  goToEventDetails(row: any) {
+    console.log('oi',row)
+    this.router.navigate(['/gerencial/evento/', row.id])
   }
 }

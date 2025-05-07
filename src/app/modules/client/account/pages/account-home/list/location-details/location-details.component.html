@@ -20,21 +20,22 @@
           <mat-icon>place</mat-icon>
           <span>{{ location.distance }} km</span>
         </div>
-        <div class="categories">
-          <div class="category-dot" style="background-color: #cc3131;"></div>
-          <div class="category-dot" style="background-color: #ffcc00;"></div>
-          <div class="category-dot" style="background-color: #209db3;"></div>
-          <div class="category-dot" style="background-color: #4728a2;"></div>
-          <div class="category-dot" style="background-color: #a148bf;"></div>
+        <div class="flex gap-2 mt-2 categories">
+          <div *ngFor="let category of categories" 
+               class="w-6 h-6 rounded-full flex items-center justify-center" 
+               [style.background-color]="category.color">
+            <mat-icon class="text-white text-sm ml-1 mt-1">{{ category.icon }}</mat-icon>
+          </div>
         </div>
       </div>
     </div>
+    <!-- Location Description -->
+    <div class="location-description">
+      <p>{{ location.description }}</p>
+    </div>
   </div>
 
-  <!-- Location Description -->
-  <div class="location-description">
-    <p>{{ location.description }}</p>
-  </div>
+  
 
   <!-- Tabs -->
   <div class="tabs-container">
@@ -64,14 +65,14 @@
         (filterChange)="onFilterChange($event)"
         (favoriteToggle)="onFavoriteToggle($event)" 
       >
-
       </app-events>
     </div>
 
     <!-- Location Tab -->
     <div *ngIf="activeTab === 1" class="location-tab">
       <div class="map-placeholder">
-        <img class="w-full" src="assets/images/map.png" alt="">
+        <h3 class="mb-5">Avenida Salvador, Bairro, Cidade</h3>
+        <img class="w-full max-h-full" src="assets/images/map.png" alt="">
       </div>
     </div>
   </div>

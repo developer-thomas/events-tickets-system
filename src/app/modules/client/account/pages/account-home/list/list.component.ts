@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
@@ -18,19 +18,29 @@ interface Location {
   distance: number
   duration: number
   image: string
+  link: string;
   categories: string[]
 }
 
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, RouterModule, FilterTableComponent],
+  imports: [CommonModule, MatIconModule, MatButtonModule, RouterModule],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
 export class ListComponent {
-  @Input() categories: Category[] = []
+  // @Input() categories: Category[] = []
   @Input() selectedCategory = "all"
+  @Output() backToMapView = new EventEmitter();
+
+  categories = [
+    { color: "#cc3131", icon: "local_movies" },
+    { color: "#ffcc00", icon: "music_note" },
+    { color: "#209db3", icon: "theater_comedy" },
+    { color: "#4728a2", icon: "palette" },
+    { color: "#a148bf", icon: "celebration" },
+  ]
 
   locations: Location[] = [
     {
@@ -38,6 +48,7 @@ export class ListComponent {
       name: "Nome do local",
       distance: 5,
       duration: 8,
+      link: 'https://www.maps.google.com',
       image: "assets/images/location-placeholder.jpg",
       categories: ["theater", "music", "dance", "art", "cinema"],
     },
@@ -48,6 +59,8 @@ export class ListComponent {
       duration: 8,
       image: "assets/images/location-placeholder.jpg",
       categories: ["theater", "music", "dance", "art", "cinema"],
+      link: 'https://www.maps.google.com',
+      
     },
     {
       id: 3,
@@ -56,6 +69,8 @@ export class ListComponent {
       duration: 8,
       image: "assets/images/location-placeholder.jpg",
       categories: ["theater", "music", "dance", "art", "cinema"],
+      link: 'https://www.maps.google.com',
+      
     },
     {
       id: 4,
@@ -64,6 +79,8 @@ export class ListComponent {
       duration: 8,
       image: "assets/images/location-placeholder.jpg",
       categories: ["theater", "music", "dance", "art", "cinema"],
+      link: 'https://www.maps.google.com',
+      
     },
     {
       id: 5,
@@ -72,6 +89,8 @@ export class ListComponent {
       duration: 8,
       image: "assets/images/location-placeholder.jpg",
       categories: ["theater", "music", "dance", "art", "cinema"],
+      link: 'https://www.maps.google.com',
+      
     },
     {
       id: 6,
@@ -80,6 +99,8 @@ export class ListComponent {
       duration: 8,
       image: "assets/images/location-placeholder.jpg",
       categories: ["theater", "music", "dance", "art", "cinema"],
+      link: 'https://www.maps.google.com',
+      
     },
   ]
 
@@ -92,19 +113,19 @@ export class ListComponent {
     // Implement filtering logic
   }
 
-  getCategoryColor(categoryId: string): string {
-    const category = this.categories.find((c) => c.id === categoryId)
-    return category ? category.color : "#192554"
-  }
+  // getCategoryColor(categoryId: string): string {
+  //   const category = this.categories.find((c) => c.id === categoryId)
+  //   return category ? category.color : "#192554"
+  // }
 
-  getCategoryIcon(categoryId: string): string {
-    const category = this.categories.find((c) => c.id === categoryId)
-    return category ? category.icon : "circle"
-  }
+  // getCategoryIcon(categoryId: string): string {
+  //   const category = this.categories.find((c) => c.id === categoryId)
+  //   return category ? category.icon : "circle"
+  // }
 
   goBack(): void {
-    // Implement navigation logic
-    console.log("Going back")
+    this.backToMapView.emit();
+    console.log('back')
   }
 
   navigateToLocationDetail(locationId: number): void {

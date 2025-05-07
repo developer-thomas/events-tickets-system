@@ -50,7 +50,7 @@ export class SignUpComponent {
         email: ["", [Validators.required, Validators.email]],
         birthDate: ["", [Validators.required]],
         phone: ["", [Validators.required]],
-        cpf: ["", [Validators.required]],
+        // cpf: ["", [Validators.required]],
         gender: ["", [Validators.required]],
         password: ["", [Validators.required, Validators.minLength(8), this.passwordValidator]],
         confirmPassword: ["", [Validators.required]],

@@ -27,12 +27,13 @@ export class FinancialListComponent {
   public financialData: any= [];
 
   public displayedColumns: TableColumn[] = [
-      { label: 'Data', key: 'date', type: 'text' },
-      { label: 'Usuário', key: 'user', type: 'text' },
+      { label: 'Nome do Evento', key: 'name', type: 'text' },
       { label: 'Local', key: 'location', type: 'text' },
-      { label: 'Evento', key: 'event', type: 'text' },
-      { label: 'Valor', key: 'price', type: 'text' },
-      { label: 'Status', key: 'status', type: 'text' },
+      { label: 'Data', key: 'date', type: 'text' },
+      { label: 'Ingressos vendidos', key: 'ticketsSold', type: 'text' },
+      { label: 'Valor unitário', key: 'unitPrice', type: 'text' },
+      { label: 'Valor total', key: 'totalValue', type: 'text' },
+      { label: 'Ingressos VIPs', key: 'vipTickets', type: 'text' },
       { label: '', key: 'menu', type: 'menu' },
     ];
 
@@ -45,12 +46,13 @@ export class FinancialListComponent {
     for (let i = 0; i <= 10; i++) {
       financial.push({
         id: i,
-        date: '00/00/00',
-        user: 'Nome',
+        name: 'Nome do evento',
         location: 'Nome do Local',
-        event: 'Nome do Evento',
-        price: 'R$ 00,00',
-        status: 'Ativo'
+        date: '00/00/00',
+        ticketsSold: '00',
+        unitPrice: 'R$ 00,00',
+        totalValue: 'R$ 00,00',
+        vipTickets: '00'
       })
     }
     this.financialData = financial;

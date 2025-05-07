@@ -10,7 +10,12 @@ import { CommonPagesComponent } from './common-pages/common-pages.component';
 
 export const routes: Routes = [
   {
-      path: '',
+    path: '',
+    redirectTo: 'client',
+    pathMatch: 'full'
+  },  
+  {
+      path: 'login',
       component: ClientComponent,
       children: [
         { path: '', component: SigninComponent },

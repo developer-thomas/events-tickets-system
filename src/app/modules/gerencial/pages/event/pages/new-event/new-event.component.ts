@@ -27,7 +27,8 @@ import { StepTwoComponent } from './components/step-two/step-two.component';
 })
 export class NewEventComponent {
   currentStep = 1
-  totalSteps = 3
+  // SE DECIDIREM TER A SEGUNDA STEP NOVAMENTE, ALTERAR O TOTALSTEPS PARA 3
+  totalSteps = 2
   eventForm: FormGroup
 
   constructor(
