@@ -1,4 +1,5 @@
 <mat-sidenav-container class="sidenav-container">
+  <app-client-header />
   <mat-sidenav #drawer class="sidenav py-7" fixedInViewport
       [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
@@ -30,11 +31,10 @@
       <span>Ato Cultural</span>
     </mat-toolbar>
 
-    <!-- <app-client-header /> -->
     <main class="p-5">
       <router-outlet></router-outlet>
     </main>
-    <!-- <app-client-footer></app-client-footer> -->
-
+    
   </mat-sidenav-content>
+  <app-client-footer></app-client-footer>
 </mat-sidenav-container>
