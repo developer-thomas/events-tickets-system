@@ -11,7 +11,7 @@ import { ClientFooterComponent } from '../../shared/components/client-footer/cli
   template: `
   <app-client-header ></app-client-header>
   <app-sidenav [routes]="routes" [useLogo]="false"></app-sidenav>
-  <!-- <app-client-footer></app-client-footer> -->
+  <app-client-footer></app-client-footer>
   `,
 })
 export class AccountComponent {
