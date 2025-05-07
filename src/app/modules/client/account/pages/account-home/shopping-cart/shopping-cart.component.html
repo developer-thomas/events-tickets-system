@@ -70,6 +70,9 @@
 
     <!-- Right Column: Summary -->
     <div class="cart-summary-container">
+      <p class="text-gray-500 mb-5 text-sm">
+        Essa compra é uma parceria com a casa. O ingresso é válido até 30min antes do horário do evento e deverá ser trocado na bilheteria da casa.
+      </p>
       <h2 class="section-title">Resumo</h2>
       
       <div class="summary-content">
@@ -78,17 +81,17 @@
           <span class="summary-value">{{ formattedTotalTicketsValue }}</span>
         </div>
         
-        <div class="summary-box">
+        <!-- <div class="summary-box">
           <div class="summary-row">
             <span class="summary-label">Total à prazo:</span>
             <span class="summary-value">{{ installmentTotal }}</span>
           </div>
           <div class="summary-tax">(em até 12x de {{ installmentTax }})</div>
-        </div>
+        </div> -->
         
         <div class="summary-box highlight">
           <div class="summary-row">
-            <span class="summary-label">À vista:</span>
+            <span class="summary-label">Total:</span>
             <span class="summary-value">{{ cashTotal }}</span>
           </div>
           <div class="summary-tax">(Economize: {{ cashSavings }})</div>
