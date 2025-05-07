@@ -61,12 +61,12 @@ export class DashboardComponent {
     series: [
       {
         name: 'Novos Usuários',
-        data: [50, 44, 55, 57, 56, 61, 58, 63, 60, 66, 82, 73],
+        data: [50, 44, 55, 57, 56, 61, 58],
         color: '#FBBB01',
       },
       {
         name: 'Vendas',
-        data: [79, 76, 85, 101, 98, 87, 105, 91, 114, 94, 84, 96],
+        data: [79, 76, 85, 101, 98, 87, 105],
         color: '#294153',
       },
 
@@ -91,18 +91,13 @@ export class DashboardComponent {
     },
     xaxis: {
       categories: [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
+        'Seg',
+        'Ter',
+        'Qua',
+        'Qui',
+        'Sex',
+        'Sab',
+        'Dom',
       ],
     },
     yaxis: {
