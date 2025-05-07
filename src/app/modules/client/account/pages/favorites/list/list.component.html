@@ -4,10 +4,10 @@
   <!-- Search and Filters -->
   <div class="flex flex-wrap items-center gap-4 mb-6">
     <!-- Search Bar -->
-    <div class="flex flex-1 min-w-[250px] bg-white rounded-lg shadow">
+    <div class="flex bg-white rounded-lg shadow">
       <input 
         type="text" 
-        class="flex-1 border-none py-3 px-4 text-sm focus:outline-none rounded-l-lg" 
+        class="border-none py-3 px-4 text-sm focus:outline-none rounded-l-lg" 
         placeholder="O que você procura?"
         [(ngModel)]="searchQuery"
         (keyup.enter)="filterEvents()">
@@ -24,16 +24,17 @@
     </button>
     
     <!-- Category Filters -->
-    <div class="flex gap-2 overflow-x-auto py-1 scrollbar-hide">
-      <button 
+    <div class="category-filters">
+      <div 
         *ngFor="let category of categories" 
-        class="min-w-12 h-12 flex items-center justify-center rounded-lg transition-colors duration-200"
-        [ngClass]="{'hover:bg-gray-100': !category.isActive}"
-        [style.background-color]="category.isActive ? category.color : '#f5f5f5'"
-        [style.color]="category.isActive ? 'white' : 'inherit'"
+        class="category-item"
+        [class.active]="selectedCategory === category.id"
         (click)="toggleCategory(category)">
-        <span class="text-xl">{{ category.icon }}</span>
-      </button>
+        <div class="category-icon">
+          <!-- <mat-icon>{{ category.icon }}</mat-icon> -->
+           <img [src]="category.icon" alt="ícone da categoria">
+        </div>
+      </div>
     </div>
   </div>
   

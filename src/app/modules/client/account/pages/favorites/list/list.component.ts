@@ -9,7 +9,6 @@ interface Category {
   id: string
   name: string
   icon: string
-  color: string
   isActive?: boolean
 }
 
@@ -32,12 +31,14 @@ interface FavoriteEvent {
 export class ListComponent {
   searchQuery = ""
   private router = inject(Router)
+  selectedCategory = "all"
+
   categories: Category[] = [
-    { id: "jazz", name: "Jazz", icon: "🎷", color: "#a4b3ed", isActive: true },
-    { id: "theater", name: "Teatro", icon: "🎭", color: "#ebae13" },
-    { id: "art", name: "Arte", icon: "🎨", color: "#209db3" },
-    { id: "circus", name: "Circo", icon: "🎪", color: "#ff6633" },
-    { id: "festival", name: "Festival", icon: "🎉", color: "#9dcf52" },
+    { id: "all", name: "Todos", icon: "assets/map-icons/jm-icon.png" },
+    { id: "theater", name: "Teatro", icon: "assets/map-icons/arena-icon.png" },
+    { id: "music", name: "Música", icon: "assets/map-icons/arte-icon.png" },
+    { id: "dance", name: "Dança", icon: "assets/map-icons/corpo-icon.png" },
+    { id: "art", name: "Arte", icon: "assets/map-icons/rio-icon.png" },
   ]
 
   favoriteEvents: FavoriteEvent[] = [
@@ -100,11 +101,8 @@ export class ListComponent {
   ngOnInit(): void {}
 
   toggleCategory(category: Category): void {
-    this.categories.forEach((c) => {
-      if (c.id === category.id) {
-        c.isActive = !c.isActive
-      }
-    })
+    this.selectedCategory = category.id;
+
     this.filterEvents()
   }
 
