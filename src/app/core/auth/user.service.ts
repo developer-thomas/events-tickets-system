@@ -12,8 +12,6 @@ export class UserService {
 
   decodeAndNotify(user: SigninCredentialsResponse) {
     this.storage.saveToken(user?.token);
-    this.storage.setItem('sh_user_logged', user?.user);
-    this.storage.setItem('user_id', user.user.id);
     this.user.set(user.user);
   }
 }

@@ -4,6 +4,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { AuthService } from '../../../../../../core/auth/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-second-step',
@@ -20,6 +22,8 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class SecondStepComponent {
   private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private toastr = inject(ToastrService);
 
   @Output() resetPassword = new EventEmitter<any>();
 
@@ -31,6 +35,21 @@ export class SecondStepComponent {
   });
 
   onSubmit() {
-    this.resetPassword.emit();
+    this.resetPasswordRequest()
+  }
+
+  resetPasswordRequest() {
+    const { code, password, confirmPassword } = this.form.value;
+
+    if(code && password && confirmPassword) {
+      this.authService.reset({ code, password, confirmPassword }).subscribe({
+        next: (_) => {
+          this.toastr.success("Senha alterada com sucesso!");
+          this.resetPassword.emit();
+        }, error: (err) => {
+          console.error(err)
+        }
+      })
+    }
   }
 }

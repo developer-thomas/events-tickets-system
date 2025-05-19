@@ -6,7 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { HomeService } from '../../home.service';
+import { AuthService } from '../../../../core/auth/auth.service';
+import { string } from 'mathjs';
+
 
 @Component({
   selector: 'app-signin',
@@ -24,14 +26,14 @@ import { HomeService } from '../../home.service';
 })
 export class SigninComponent {
   private fb = inject(FormBuilder);
-  private homeService = inject(HomeService);
+  private authService = inject(AuthService);
   private router = inject(Router);
   private toastr = inject(ToastrService);
 
   public hide = true;
 
   public form = this.fb.group({
-    credential: ['', [Validators.required]],
+    email: ['', [Validators.required]],
     password: ['', [Validators.required]],
   });
 
@@ -40,13 +42,14 @@ export class SigninComponent {
       return;
     }
 
-    // APAGAR ESTE CÓDIGO AO ATIVAR O BLOCO DE CÓDIGO ABAIXO
-    this.router.navigate(['/gerencial']);
+    const { email , password } = this.form.value;
 
-    // DESATIVAR OS COMENTÁRIOS QUANDO ESTIVER NA ETAPA DE INTEGRAÇÃO
-    // this.homeService.signin(this.form.value).subscribe(() => {
-    //   this.toastr.success('Login realizado com sucesso!');
-    //   this.router.navigate(['/gerencial']);
-    // });
+    if( email && password ) {
+      this.authService.auth(email, password).subscribe(() => {
+        this.toastr.success('Login realizado com sucesso!');
+        this.router.navigate(['/gerencial']);
+      });
+    }
+  
   }
 }

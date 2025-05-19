@@ -15,7 +15,7 @@ export class AuthService {
 
   auth( email: string, password: string ): Observable<SigninCredentialsResponse> {
     return this.http.post<SigninCredentialsResponse>(
-        `${environment.api}/v1/sessions/standard`,
+        `${environment.api}/auth`,
         {
           email,
           password,
@@ -26,7 +26,7 @@ export class AuthService {
 
   forgot(email: string | null): Observable<any> {
     return this.http.post<SigninCredentialsResponse>(
-      `${environment.api}/v1/noAuth/password/forgot`,
+      `${environment.api}/auth/forgot`,
       {
         email,
       }
@@ -35,7 +35,7 @@ export class AuthService {
 
   reset({ code, password, confirmPassword }: any): Observable<any> {
     return this.http.post<SigninCredentialsResponse>(
-      `${environment.api}/v1/noAuth/password/reset`,
+      `${environment.api}/auth/reset`,
       {
         code,
         password,

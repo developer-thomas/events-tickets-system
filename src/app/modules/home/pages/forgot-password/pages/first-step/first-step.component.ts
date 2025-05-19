@@ -3,6 +3,8 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { AuthService } from '../../../../../../core/auth/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-first-step',
@@ -18,15 +20,30 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class FirstStepComponent {
   private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private toastr = inject(ToastrService);
 
   @Output() nextStep = new EventEmitter<any>();
 
   public form = this.fb.group({
-    credential: [''],
+    email: [''],
   });
 
   onSubmit() {
-    // implement login
-    this.nextStep.emit();
+    this.sendForgotPasswordRequest();    
+  }
+
+  sendForgotPasswordRequest() {
+    const { email } = this.form.value;
+
+    if(email) {
+      this.authService.forgot(email).subscribe({
+        next: (res) => {
+          this.toastr.success("Código de alteração de senha enviado para o email.")
+          console.log("Solicitação de reset de senha:", res);
+          this.nextStep.emit();
+        }
+      })
+    }
   }
 }
