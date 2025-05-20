@@ -6,9 +6,13 @@
   </app-filter-table>
 
   <app-commom-table
-    [data]="bannersData"
+    [data]="bannersData()"
     [displayedColumns]="displayedColumns"
     (detail)="gotoDetailPage($event)"
     (delete)="deleteBanner($event)"
+    (pageChange)="handlePageChange($event)"
+    [totalItems]="totalItems()"
+    [page]="currentPage()"
+    [size]="pageSize()"
   ></app-commom-table>
 </section>

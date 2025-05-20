@@ -1,151 +1,155 @@
 <app-page-header title="Banners" pageSession="Adicionar Banner" />
 
-<div class="container mx-auto px-4 py-6">
-  <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-    <form [formGroup]="bannerForm" (ngSubmit)="onSubmit()">
-      <h2 class="text-xl font-medium mb-6">Novo banner</h2>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <!-- Title -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Título</label>
-          <input 
-            type="text" 
-            class="form-input"
-            placeholder="Nome do Banner"
-            formControlName="title">
-          @if (bannerForm.get('title')?.invalid && bannerForm.get('title')?.touched) {
-            <div class="text-red-500 text-sm mt-1">
-              Título é obrigatório
+    <div class="container mx-auto px-4 py-6">
+      <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <form [formGroup]="bannerForm" (ngSubmit)="onSubmit()">
+          <h2 class="text-xl font-medium mb-6">Novo banner</h2>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- Title -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Título</label>
+              <input 
+                type="text" 
+                class="form-input w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+                placeholder="Nome do Banner"
+                formControlName="title">
+              @if (bannerForm.get('title')?.invalid && bannerForm.get('title')?.touched) {
+                <div class="text-red-500 text-sm mt-1">
+                  Título é obrigatório
+                </div>
+              }
             </div>
-          }
-        </div>
-        
-        <!-- Location -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Local</label>
-          <select 
-            class="form-select"
-            formControlName="locationId">
-            <option value="" disabled selected>Selecione um local</option>
-            @for (location of locations; track location.id) {
-              <option [value]="location.id">{{ location.name }}</option>
-            }
-          </select>
-          @if (bannerForm.get('locationId')?.invalid && bannerForm.get('locationId')?.touched) {
-            <div class="text-red-500 text-sm mt-1">
-              Local é obrigatório
-            </div>
-          }
-        </div>
-      </div>
-      
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <!-- Media Type -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Tipo</label>
-          <select 
-            class="form-select"
-            formControlName="mediaType">
-            @for (type of mediaTypes; track type.value) {
-              <option [value]="type.value">{{ type.label }}</option>
-            }
-          </select>
-        </div>
-        
-        <!-- Start Date -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Data de fim</label>
-          <input 
-            type="text" 
-            class="form-input"
-            placeholder="00/00/00"
-            mask="00/00/00"
-            formControlName="startDate">
-          @if (bannerForm.get('startDate')?.invalid && bannerForm.get('startDate')?.touched) {
-            <div class="text-red-500 text-sm mt-1">
-              Data inicial é obrigatória
-            </div>
-          }
-        </div>
-        
-        <!-- End Date -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Data de fim</label>
-          <input 
-            type="text" 
-            class="form-input"
-            placeholder="00/00/00"
-            mask="00/00/00"
-            formControlName="endDate">
-          @if (bannerForm.get('endDate')?.invalid && bannerForm.get('endDate')?.touched) {
-            <div class="text-red-500 text-sm mt-1">
-              Data final é obrigatória
-            </div>
-          }
-        </div>
-      </div>
-      
-      <!-- Conditional Media Section -->
-      @if (isImageType) {
-        <div class="mb-6">
-          <label class="block text-sm font-medium text-gray-700 mb-2">Imagem</label>
-          <div 
-            class="upload-container" 
-            [class.has-file]="bannerImage"
-            (click)="fileInput.click()">
-            <input 
-              #fileInput
-              type="file" 
-              accept="image/jpeg,image/png" 
-              class="hidden"
-              (change)="onImageSelected($event)">
-            <div class="upload-content">
-              <mat-icon>file_upload</mat-icon>
-              <p class="mt-2">Faça upload da imagem da capa 20x20 px</p>
-              <p class="text-xs text-gray-500">JPEG, PNG</p>
+            
+            <!-- Location -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Local</label>
+              <select 
+                class="form-select w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+                formControlName="locationId">
+                <option value="" disabled selected>Selecione um local</option>
+                @for (location of locations(); track location.id) {
+                  <option [value]="location.id">{{ location.name }}</option>
+                }
+              </select>
+              @if (bannerForm.get('locationId')?.invalid && bannerForm.get('locationId')?.touched) {
+                <div class="text-red-500 text-sm mt-1">
+                  Local é obrigatório
+                </div>
+              }
             </div>
           </div>
-          @if (bannerForm.get('image')?.invalid && bannerForm.get('image')?.touched) {
-            <div class="text-red-500 text-sm mt-1">
-              Imagem é obrigatória
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <!-- Media Type -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Tipo</label>
+              <select 
+                class="form-select w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+                formControlName="mediaType">
+                @for (type of mediaTypes; track type.value) {
+                  <option [value]="type.value">{{ type.label }}</option>
+                }
+              </select>
+            </div>
+            
+            <!-- Start Date -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Data de início</label>
+              <input 
+                type="text" 
+                class="form-input w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+                placeholder="DD/MM/YYYY"
+                mask="00/00/0000"
+                formControlName="startDate">
+              @if (bannerForm.get('startDate')?.invalid && bannerForm.get('startDate')?.touched) {
+                <div class="text-red-500 text-sm mt-1">
+                  Data inicial é obrigatória
+                </div>
+              }
+            </div>
+            
+            <!-- End Date -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Data de fim</label>
+              <input 
+                type="text" 
+                class="form-input w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+                placeholder="DD/MM/YYYY"
+                mask="00/00/0000"
+                formControlName="endDate">
+              @if (bannerForm.get('endDate')?.invalid && bannerForm.get('endDate')?.touched) {
+                <div class="text-red-500 text-sm mt-1">
+                  Data final é obrigatória
+                </div>
+              }
+            </div>
+          </div>
+          
+          <!-- Conditional Media Section -->
+          @if (isImageType) {
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Imagem</label>
+              <div 
+                class="upload-container border-2 border-dashed border-gray-300 rounded-md p-6 text-center cursor-pointer hover:bg-gray-50"
+                [class.has-file]="bannerImage"
+                [class.border-primary]="bannerImage"
+                (click)="fileInput.click()">
+                <input 
+                  #fileInput
+                  type="file" 
+                  accept="image/jpeg,image/png" 
+                  class="hidden"
+                  (change)="onImageSelected($event)">
+                <div class="upload-content">
+                  <mat-icon>file_upload</mat-icon>
+                  <p class="mt-2">Faça upload da imagem da capa 20x20 px</p>
+                  <p class="text-xs text-gray-500">JPEG, PNG</p>
+                  @if (bannerImage) {
+                    <p class="mt-2 text-green-600">{{ bannerImage.name }}</p>
+                  }
+                </div>
+              </div>
+              @if (bannerForm.get('image')?.invalid && bannerForm.get('image')?.touched) {
+                <div class="text-red-500 text-sm mt-1">
+                  Imagem é obrigatória
+                </div>
+              }
             </div>
           }
-        </div>
-      }
-      
-      @if (isVideoType) {
-        <div class="mb-6">
-          <label class="block text-sm font-medium text-gray-700 mb-2">URL do Vídeo</label>
-          <input 
-            type="text" 
-            class="form-input"
-            placeholder="https://www.youtube.com/watch?v=..."
-            formControlName="videoUrl">
-          @if (bannerForm.get('videoUrl')?.invalid && bannerForm.get('videoUrl')?.touched) {
-            <div class="text-red-500 text-sm mt-1">
-              URL do vídeo é obrigatória
+          
+          @if (isVideoType) {
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">URL do Vídeo</label>
+              <input 
+                type="text" 
+                class="form-input w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+                placeholder="https://www.youtube.com/watch?v=..."
+                formControlName="videoUrl">
+              @if (bannerForm.get('videoUrl')?.invalid && bannerForm.get('videoUrl')?.touched) {
+                <div class="text-red-500 text-sm mt-1">
+                  URL do vídeo é obrigatória
+                </div>
+              }
             </div>
           }
-        </div>
-      }
-      
-      <!-- Form Actions -->
-      <div class="flex justify-end gap-4 mt-8">
-        <button 
-          type="button" 
-          class="cancel-button"
-          (click)="cancel()">
-          CANCELAR
-        </button>
-        
-        <button 
-          type="submit" 
-          class="save-button">
-          SALVAR
-        </button>
+          
+          <!-- Form Actions -->
+          <div class="flex justify-end gap-4 mt-8">
+            <button 
+              type="button" 
+              class="cancel-button px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              (click)="cancel()">
+              CANCELAR
+            </button>
+            
+            <button 
+              type="submit" 
+              class="save-button px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark"
+              [disabled]="bannerForm.invalid">
+              SALVAR
+            </button>
+          </div>
+        </form>
       </div>
-    </form>
-  </div>
-</div>
-
+    </div>
