@@ -9,6 +9,7 @@ import { routes } from './app.routes';
 import { bearerTokenInterceptor } from './modules/shared/interceptors/bearer-token/bearer-token.interceptor';
 import { globalErrorInterceptor } from './modules/shared/interceptors/global-error/global-error.interceptor';
 import { loadingInterceptor } from './modules/shared/interceptors/loading/loading.interceptor';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -30,7 +31,7 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([
         globalErrorInterceptor,
         bearerTokenInterceptor,
-        loadingInterceptor
+        loadingInterceptor,
       ]),
     ),
   ],
