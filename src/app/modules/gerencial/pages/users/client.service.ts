@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../../environments/environment.development';
 import { Pagination } from '../../../shared/models/pagination.model';
 import { Observable } from 'rxjs';
+import { GetAllClients } from './models/GetAllClients.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ import { Observable } from 'rxjs';
 export class ClientService {
   private http = inject(HttpClient);
 
-  getClients(page?: number, size?: number, search?: string) {
+  getClients(page?: number, size?: number, search?: string): Observable<GetAllClients[]> {
     let params = new HttpParams();
     if (page) {
       params = params.append('page', page);
@@ -22,27 +23,27 @@ export class ClientService {
       params = params.append('search', search);
     }
 
-    return this.http.get<Pagination<ClientResponse>>(`${environment.api}/client`, { params });
+    return this.http.get<GetAllClients[]>(`${environment.api}/users`, { params });
   }
 
   getClientById(id: string) {
-    return this.http.get<ClientResponse>(`${environment.api}/client/${id}`);
+    return this.http.get<ClientResponse>(`${environment.api}/users/${id}`);
   }
 
   save(data: any) {
-    return this.http.post(`${environment.api}/client`, data);
+    return this.http.post(`${environment.api}/users`, data);
   }
 
   changeStatus(id: string) {
-    return this.http.patch<ClientResponse>(`${environment.api}/client/${id}/status`, {});
+    return this.http.patch<ClientResponse>(`${environment.api}/users/${id}/status`, {});
   }
 
   updateClient(id: string, client: any): Observable<ClientResponse> {
-    return this.http.patch<ClientResponse>(`${environment.api}/${id}`, client)
+    return this.http.patch<ClientResponse>(`${environment.api}/users/${id}`, client)
   }
 
   deleteClient(id: any): void {
-    this.http.delete(`${environment.api}/${id}`)
+    this.http.delete(`${environment.api}/users/${id}`)
   }
 }
 

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommomTableComponent, TableColumn } from '../../../../../shared/components/commom-table/commom-table.component';
 import { FilterTableComponent } from '../../../../../shared/components/filter-table/filter-table.component';
@@ -22,18 +22,25 @@ export class ClientsListComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
   private clientService = inject(ClientService);
   private toastr = inject(ToastrService);
+
   public title = 'Clientes';
   public pageSession = 'Clientes';
 
   // TIRAR O ANY QUANDO ESTIVER NA FASE DE INTEGRAÇÃO
-  public clients: ClientResponse[] | any= [];
+  public clients = signal<any[]>([]);
 
+  // paginação
+  public totalItems = signal<number>(0);
+  public currentPage = signal<number>(1);
+  public pageSize = signal<number>(10);
+  public searchTerm = signal<string | undefined>(undefined);
+  
   public displayedColumns: TableColumn[] = [
     { label: 'Nome', key: 'name', type: 'text' },
     { label: 'CPF/CNPJ', key: 'document', type: 'text' },
     { label: 'Telefone', key: 'phone', type: 'text' },
     { label: 'E-mail', key: 'email', type: 'text' },
-    { label: 'Status', key: 'status', type: 'status' },
+    { label: 'Status', key: 'active', type: 'status' },
     { label: '', key: 'menu', type: 'menu' },
   ];
 
@@ -42,29 +49,24 @@ export class ClientsListComponent implements OnInit {
   }
 
   private getClients(search?: string) {
-    let users = [];
-    for (let i = 0; i <= 10; i++) {
-      users.push({
-        id: i,
-        name: 'Nome',
-        document: '012.345.678-90',
-        phone: '(00)00000-0000',
-        email: 'mail@mail.com',
-        status: 'Ativo'
-      })
-    }
-    this.clients = users;
-
     // DESCOMENTAR QUANDO ESTIVER NA FASE DE INTEGRAÇÃO
-    // this.clientService.getClients(1, 10, search).subscribe((response) => {
-    //   console.log(response);
+    this.clientService.getClients(this.currentPage(), this.pageSize(), this.searchTerm()).subscribe((response) => {
+      console.log(response);
       
-    //   this.clients = response.data;
-    // });
+      this.clients.set(response);
+    });
   }
 
   public filter(search: string) {
+    this.currentPage.set(1);
     this.getClients(search);
+  }
+
+  // Manipular mudanças de página
+  public handlePageChange(event: {page: number, size: number}) {
+    this.currentPage.set(event.page);
+    this.pageSize.set(event.size);
+    this.getClients();
   }
 
   public gotoDetailPage(row: any) {

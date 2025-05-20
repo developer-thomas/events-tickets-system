@@ -4,9 +4,13 @@
   <app-filter-table (filter)="filter($event)"></app-filter-table>
 
   <app-commom-table
-    [data]="clients"
+    [data]="clients()"
     [displayedColumns]="displayedColumns"
     (detail)="gotoDetailPage($event)"
     (delete)="deleteClient($event)"
+    (pageChange)="handlePageChange($event)"
+    [totalItems]="totalItems()"
+    [page]="currentPage()"
+    [size]="pageSize()"
   ></app-commom-table>
 </section>
