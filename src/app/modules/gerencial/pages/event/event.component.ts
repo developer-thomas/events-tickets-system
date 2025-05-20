@@ -5,8 +5,7 @@ import { RouterModule } from '@angular/router';
   selector: 'app-event',
   standalone: true,
   imports: [RouterModule],
-  templateUrl: './event.component.html',
-  styleUrl: './event.component.scss'
+  template: '<router-outlet></router-outlet>',
 })
 export class EventComponent {
 
