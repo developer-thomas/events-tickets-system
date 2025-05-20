@@ -8,7 +8,7 @@
       <input 
         type="text" 
         id="name"
-        class="form-input"
+        class="form-input w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
         placeholder="Exemplo Preenchido"
         formControlName="name">
       @if (categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched) {
@@ -22,8 +22,9 @@
     <div class="mb-6">
       <label class="block text-sm font-medium text-gray-700 mb-2">Imagem</label>
       <div 
-        class="upload-container" 
+        class="upload-container border-2 border-dashed border-gray-300 rounded-md p-6 text-center cursor-pointer hover:bg-gray-50"
         [class.has-file]="categoryImage"
+        [class.border-primary]="categoryImage"
         (click)="fileInput.click()">
         <input 
           #fileInput
@@ -35,6 +36,9 @@
           <mat-icon>file_upload</mat-icon>
           <p class="mt-2">Faça upload da imagem da capa 20x20 px</p>
           <p class="text-xs text-gray-500">JPEG, PNG</p>
+          @if (categoryImage) {
+            <p class="mt-2 text-green-600">{{ categoryImage.name }}</p>
+          }
         </div>
       </div>
       @if (categoryForm.get('image')?.invalid && categoryForm.get('image')?.touched) {
@@ -48,17 +52,17 @@
     <div class="flex justify-end gap-4 mt-8">
       <button 
         type="button" 
-        class="cancel-button"
+        class="cancel-button px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
         (click)="onCancel()">
         CANCELAR
       </button>
       
       <button 
         type="submit" 
-        class="save-button">
+        class="save-button px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark"
+        [disabled]="categoryForm.invalid">
         SALVAR
       </button>
     </div>
   </form>
 </div>
-

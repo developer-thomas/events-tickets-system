@@ -6,8 +6,12 @@
   </app-filter-table>
 
   <app-commom-table
-    [data]="categoryData"
+    [data]="categoryData()"
     [displayedColumns]="displayedColumns"
     (delete)="deleteCategory($event)"
+    (pageChange)="handlePageChange($event)"
+    [totalItems]="totalItems()"
+    [page]="currentPage()"
+    [size]="pageSize()"
   ></app-commom-table>
 </section>
