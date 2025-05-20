@@ -6,9 +6,14 @@
   </app-filter-table>
 
   <app-commom-table
-    [data]="location"
+    [data]="locationsData()"
     [displayedColumns]="displayedColumns"
     (detail)="gotoDetailPage($event)"
     (delete)="deleteLocation($event)"
+    (pageChange)="handlePageChange($event)"
+    [totalItems]="totalItems()"
+    [page]="currentPage()"
+    [size]="pageSize()"
   ></app-commom-table>
 </section>
+

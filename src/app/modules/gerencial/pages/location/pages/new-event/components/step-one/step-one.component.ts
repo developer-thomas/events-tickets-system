@@ -1,39 +1,72 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
+import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-step-one',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatInputModule, MatFormFieldModule, MatRadioModule, MatIconModule],
+  imports: [CommonModule, ReactiveFormsModule, MatInputModule, MatFormFieldModule, MatRadioModule, MatIconModule, NgxMaskDirective],
   templateUrl: './step-one.component.html',
   styleUrl: './step-one.component.scss'
 })
 export class StepOneComponent implements OnInit{
   @Input() formGroup!: FormGroup
+  @Input() categories: any[] = []
 
-  categories = [
-    { id: 1, name: "Nome da categoria" },
-    { id: 2, name: "Nome da categoria" },
-    { id: 3, name: "Nome da categoria" },
-    { id: 4, name: "Nome da categoria" },
-    { id: 5, name: "Nome da categoria" },
-    { id: 6, name: "Nome da categoria" },
-    { id: 7, name: "Nome da categoria" },
-    { id: 8, name: "Nome da categoria" },
-  ]
+  @Output() coverImageSelected = new EventEmitter<File>()
+  @Output() logoImageSelected = new EventEmitter<File>()
 
   selectedCategories: number[] = []
   coverImageFile: File | null = null
   logoImageFile: File | null = null
 
-  constructor() {}
+  states = [
+    { value: "AC", label: "Acre" },
+    { value: "AL", label: "Alagoas" },
+    { value: "AP", label: "Amapá" },
+    { value: "AM", label: "Amazonas" },
+    { value: "BA", label: "Bahia" },
+    { value: "CE", label: "Ceará" },
+    { value: "DF", label: "Distrito Federal" },
+    { value: "ES", label: "Espírito Santo" },
+    { value: "GO", label: "Goiás" },
+    { value: "MA", label: "Maranhão" },
+    { value: "MT", label: "Mato Grosso" },
+    { value: "MS", label: "Mato Grosso do Sul" },
+    { value: "MG", label: "Minas Gerais" },
+    { value: "PA", label: "Pará" },
+    { value: "PB", label: "Paraíba" },
+    { value: "PR", label: "Paraná" },
+    { value: "PE", label: "Pernambuco" },
+    { value: "PI", label: "Piauí" },
+    { value: "RJ", label: "Rio de Janeiro" },
+    { value: "RN", label: "Rio Grande do Norte" },
+    { value: "RS", label: "Rio Grande do Sul" },
+    { value: "RO", label: "Rondônia" },
+    { value: "RR", label: "Roraima" },
+    { value: "SC", label: "Santa Catarina" },
+    { value: "SP", label: "São Paulo" },
+    { value: "SE", label: "Sergipe" },
+    { value: "TO", label: "Tocantins" },
+  ]
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // Verificar se já existe uma categoria selecionada
+    const categoryId = this.getFormControl("categoryIds").value
+    if (categoryId) {
+      this.selectedCategories = [categoryId]
+    }
+
+    // Definir SP como estado padrão se não estiver definido
+    if (!this.getFormControl("uf").value) {
+      this.getFormControl("uf").setValue("SP")
+    }
+  }
 
   // Helper method to get form control with proper typing
   getFormControl(name: string): FormControl {
@@ -43,11 +76,11 @@ export class StepOneComponent implements OnInit{
   toggleCategory(categoryId: number): void {
     if (this.selectedCategories[0] === categoryId) {
       // Desmarca se já estiver selecionado (comportamento opcional)
-      this.selectedCategories = [];
-      this.getFormControl("categories").setValue(null);
+      this.selectedCategories = []
+      this.getFormControl("categoryIds").setValue(null)
     } else {
-      this.selectedCategories = [categoryId];
-      this.getFormControl("categories").setValue(categoryId);
+      this.selectedCategories = [categoryId]
+      this.getFormControl("categoryIds").setValue([categoryId]) // API espera um array
     }
   }
 
@@ -60,6 +93,7 @@ export class StepOneComponent implements OnInit{
     if (input.files && input.files.length) {
       this.coverImageFile = input.files[0]
       this.getFormControl("coverImage").setValue(this.coverImageFile)
+      this.coverImageSelected.emit(this.coverImageFile)
     }
   }
 
@@ -68,6 +102,7 @@ export class StepOneComponent implements OnInit{
     if (input.files && input.files.length) {
       this.logoImageFile = input.files[0]
       this.getFormControl("logoImage").setValue(this.logoImageFile)
+      this.logoImageSelected.emit(this.logoImageFile)
     }
   }
 }

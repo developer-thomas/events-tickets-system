@@ -5,8 +5,7 @@ import { RouterModule } from '@angular/router';
   selector: 'app-location',
   standalone: true,
   imports: [RouterModule],
-  templateUrl: './location.component.html',
-  styleUrl: './location.component.scss'
+  template: '<router-outlet></router-outlet>',
 })
 export class LocationComponent {
 

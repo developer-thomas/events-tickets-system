@@ -1,10 +1,13 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
 import { FilterTableComponent } from '../../../../../shared/components/filter-table/filter-table.component';
 import { CommomTableComponent, TableColumn } from '../../../../../shared/components/commom-table/commom-table.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { BaseButtonComponent } from '../../../../../shared/components/base-button/base-button.component';
+import { AllLocations, GetAllLocations } from '../../models/GetAllLocations.interface';
+import { LocationService } from '../../location.service';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-location-list',
@@ -17,12 +20,18 @@ export class LocationListComponent {
   private router = inject(Router);
   private toastr = inject(ToastrService);
   private activatedRoute = inject(ActivatedRoute);
+  private locationService = inject(LocationService);
 
   public title = 'Local';
   public pageSession = 'Local';
 
-  // AJUSTAR O ANY QUANDO ESTIVER NA FASE DE INTEGRAÇÃO
-  public location: any= [];
+  public locationsData = signal<AllLocations[]>([]);
+
+  // paginação
+  public totalItems = signal<number>(0);
+  public currentPage = signal<number>(0);
+  public pageSize = signal<number>(0);
+  public searchTerm = signal<string | undefined>(undefined);
 
   public displayedColumns: TableColumn[] = [
     { label: 'Nome', key: 'name', type: 'text' },
@@ -37,21 +46,30 @@ export class LocationListComponent {
   }
 
   private getLocations(search?: string) {
-    let location = [];
-    for (let i = 0; i <= 10; i++) {
-      location.push({
-        id: i,
-        name: 'Nome',
-        categories: 'Categoria',
-        description: 'Descrição do Evento',
-        status: 'Ativo'
+    this.locationService.getAllLocations(this.currentPage(), this.pageSize(), this.searchTerm()).pipe(
+      map((res): any[] => {
+        return res.result.map(loc => ({
+          id: loc.id,
+          name: loc.name,
+          description: loc.description,
+          categories: loc.categories.map(cat => cat.name)
+        }));
       })
-    }
-    this.location = location;
+    ).subscribe({
+      next: (locaisTransformados) => {
+        this.locationsData.set(locaisTransformados); 
+      }
+    });
   }
 
   public filter(search: string) {
     this.getLocations(search);
+  }
+
+  handlePageChange(event: {page: number, size: number}) {
+    this.currentPage.set(event.page);
+    this.pageSize.set(event.size);
+    this.getLocations();
   }
 
   public gotoDetailPage(row: any) {

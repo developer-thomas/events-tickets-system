@@ -6,8 +6,8 @@
       type="text" 
       class="form-input"
       placeholder="Nome do tema"
-      [formControl]="getFormControl('locationName')">
-    @if (getFormControl('locationName').invalid && getFormControl('locationName').touched) {
+      [formControl]="getFormControl('name')">
+    @if (getFormControl('name').invalid && getFormControl('name').touched) {
       <div class="text-red-500 text-sm mt-1">
         Nome do local é obrigatório
       </div>
@@ -49,6 +49,125 @@
     </div>
   </div>
   
+  <!-- Endereço -->
+  <div class="mb-6">
+    <h3 class="text-lg font-medium mb-4">Endereço</h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+      <!-- CEP -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">CEP</label>
+        <input 
+          type="text" 
+          class="form-input"
+          placeholder="00000-000"
+          mask="00000-000"
+          [formControl]="getFormControl('cep')">
+        @if (getFormControl('cep').invalid && getFormControl('cep').touched) {
+          <div class="text-red-500 text-sm mt-1">
+            CEP é obrigatório
+          </div>
+        }
+      </div>
+      
+      <!-- Cidade -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Cidade</label>
+        <input 
+          type="text" 
+          class="form-input"
+          placeholder="Cidade"
+          [formControl]="getFormControl('city')">
+        @if (getFormControl('city').invalid && getFormControl('city').touched) {
+          <div class="text-red-500 text-sm mt-1">
+            Cidade é obrigatória
+          </div>
+        }
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+      <!-- Rua -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Rua</label>
+        <input 
+          type="text" 
+          class="form-input"
+          placeholder="Nome da rua"
+          [formControl]="getFormControl('street')">
+        @if (getFormControl('street').invalid && getFormControl('street').touched) {
+          <div class="text-red-500 text-sm mt-1">
+            Rua é obrigatória
+          </div>
+        }
+      </div>
+      
+      <!-- Número -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Número</label>
+        <input 
+          type="text" 
+          class="form-input"
+          mask="00000000"
+          placeholder="Número"
+          [formControl]="getFormControl('number')">
+        @if (getFormControl('number').invalid && getFormControl('number').touched) {
+          <div class="text-red-500 text-sm mt-1">
+            Número é obrigatório
+          </div>
+        }
+      </div>
+      
+      <!-- Bairro -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Bairro</label>
+        <input 
+          type="text" 
+          class="form-input"
+          placeholder="Bairro"
+          [formControl]="getFormControl('neighborhood')">
+        @if (getFormControl('neighborhood').invalid && getFormControl('neighborhood').touched) {
+          <div class="text-red-500 text-sm mt-1">
+            Bairro é obrigatório
+          </div>
+        }
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Estado -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Estado</label>
+        <select 
+          class="form-select"
+          [formControl]="getFormControl('uf')">
+          <option value="" disabled>Selecione um estado</option>
+          @for (state of states; track state.value) {
+            <option [value]="state.value">{{ state.label }}</option>
+          }
+        </select>
+        @if (getFormControl('uf').invalid && getFormControl('uf').touched) {
+          <div class="text-red-500 text-sm mt-1">
+            Estado é obrigatório
+          </div>
+        }
+      </div>
+      
+      <!-- Status -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+        <div class="flex items-center mt-2">
+          <input 
+            type="checkbox" 
+            id="active"
+            class="form-checkbox h-5 w-5 text-primary"
+            [formControl]="getFormControl('active')">
+          <label for="active" class="ml-2">Ativo</label>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <!-- Images -->
   <div class="mb-6">
     <label class="block text-sm font-medium text-gray-700 mb-2">Imagens</label>
@@ -66,6 +185,9 @@
           <div class="text-center mt-2">
             <p>Faça upload da imagem da capa 20x20 px</p>
             <p class="text-xs text-gray-500">JPEG, PNG</p>
+            @if (coverImageFile) {
+              <p class="mt-2 text-green-600">{{ coverImageFile.name }}</p>
+            }
           </div>
         </label>
       </div>
@@ -83,6 +205,9 @@
           <div class="text-center mt-2">
             <p>Faça upload da logo 20x20 px</p>
             <p class="text-xs text-gray-500">JPEG, PNG</p>
+            @if (logoImageFile) {
+              <p class="mt-2 text-green-600">{{ logoImageFile.name }}</p>
+            }
           </div>
         </label>
       </div>
@@ -99,4 +224,3 @@
       [formControl]="getFormControl('locationLink')">
   </div>
 </div>
-

@@ -18,8 +18,6 @@ export class StepTwoComponent implements OnInit {
   @Input() formGroup!: FormGroup
   hidePassword = true
 
-  constructor() {}
-
   ngOnInit(): void {
     // Initialize representative form group if not already done
     if (!this.formGroup.get("representative")) {
@@ -28,6 +26,7 @@ export class StepTwoComponent implements OnInit {
         taxId: new FormControl("", Validators.required),
         email: new FormControl("", [Validators.required, Validators.email]),
         password: new FormControl("", [Validators.required, Validators.minLength(6)]),
+        phone: new FormControl("", Validators.required),
       })
 
       this.formGroup.setControl("representative", representativeGroup)
