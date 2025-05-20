@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class StorageService {
-  private readonly KEY = 'ng-graph-token';
+  private readonly KEY = 'authToken';
 
   public getToken() {
     return localStorage.getItem(this.KEY);
