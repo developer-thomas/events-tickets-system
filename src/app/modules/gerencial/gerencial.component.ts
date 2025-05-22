@@ -15,10 +15,10 @@ export class AdminComponent {
     { label: 'usuários', route: 'clientes', icon: 'group' },
     { label: 'local', route: 'local', icon: 'apartment' },
     { label: 'evento', route: 'evento', icon: 'local_activity' },
-    { label: 'banners', route: 'banners', icon: 'ad_units' },
+    // { label: 'banners', route: 'banners', icon: 'ad_units' },
     { label: 'categorias', route: 'categorias', icon: 'toc' },
     { label: 'ingressos', route: 'ingressos', icon: 'receipt_long' },
-    { label: 'cupons', route: 'cupons', icon: 'article' },
+    // { label: 'cupons', route: 'cupons', icon: 'article' },
     { label: 'financeiro', route: 'financeiro', icon: 'signal_cellular_alt' },
     { label: 'acessos', route: 'acessos', icon: 'settings' },
   ];
