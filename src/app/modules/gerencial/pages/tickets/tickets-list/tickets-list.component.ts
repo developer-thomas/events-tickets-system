@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { DashboardViewComponent } from './dashboard-view/dashboard-view.component';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,6 +9,8 @@ import { CommomTableComponent, TableColumn } from '../../../../shared/components
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { MatMenuModule } from '@angular/material/menu';
+import { TicketsService } from '../tickets.service';
+import { GetAllTickets } from '../models/GetAllTickets.interface';
 
 type ViewMode = "list" | "dashboard"
 
@@ -23,16 +25,18 @@ export class TicketsListComponent implements OnInit{
   private router = inject(Router);
   private toastr = inject(ToastrService);
   private activatedRoute = inject(ActivatedRoute);
+  private ticketsService = inject(TicketsService);
 
   viewMode: ViewMode = "list"
-  public eventData: any= [];
+
+  public eventData = signal<GetAllTickets[]>([]);
 
   public displayedColumns: TableColumn[] = [
-      { label: 'Data', key: 'date', type: 'text' },
-      { label: 'Usuário', key: 'user', type: 'text' },
-      { label: 'Local', key: 'location', type: 'text' },
-      { label: 'Evento', key: 'event', type: 'text' },
-      { label: 'Valor', key: 'price', type: 'text' },
+      { label: 'ID', key: 'id', type: 'text' },
+      { label: 'Usuário', key: 'userName', type: 'text' },
+      { label: 'Nome do evento', key: 'eventName', type: 'text' },
+      { label: 'Nome do local', key: 'eventLocationName', type: 'text' },
+      { label: 'Valor', key: 'value', type: 'text' },
       { label: 'Status', key: 'status', type: 'text' },
       { label: '', key: 'menu', type: 'menu' },
     ];
@@ -42,19 +46,11 @@ export class TicketsListComponent implements OnInit{
   }
 
   private getEvents(search?: string) {
-    let location = [];
-    for (let i = 0; i <= 10; i++) {
-      location.push({
-        id: i,
-        date: '00/00/00',
-        user: 'Nome',
-        location: 'Nome do Local',
-        event: 'Nome do Evento',
-        price: 'R$ 00,00',
-        status: 'Ativo'
-      })
-    }
-    this.eventData = location;
+    this.ticketsService.getAllTickets().subscribe({
+      next: (res) => {
+        this.eventData.set(res);
+      }
+    })
   }
 
   public gotoDetailPage(row: any) {

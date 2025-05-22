@@ -4,7 +4,8 @@ import { environment } from '../../../../../environments/environment.development
 import { Pagination } from '../../../shared/models/pagination.model';
 import { Observable } from 'rxjs';
 import { GetAllClients } from './models/GetAllClients.interface';
-import { GetOneClient } from './models/GetOneClient.interface';
+import { GetClientResponse } from './models/GetOneClient.interface';
+import { GetUserTicket } from './models/GetUserTickets.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -26,51 +27,38 @@ export class ClientService {
       params = params.append('search', search);
     }
 
-    return this.http.get<GetAllClients[]>(`${environment.api}/users`, { params });
+    return this.http.get<GetAllClients[]>(`${this.api}/users`, { params });
   }
 
-  getClientById(id: string):Observable<GetOneClient> {
-    return this.http.get<GetOneClient>(`${this.api}/users/client/${id}`);
+  getClientById(id: string):Observable<GetClientResponse> {
+    return this.http.get<GetClientResponse>(`${this.api}/users/client/${id}`);
   }
 
-  save(data: any) {
-    return this.http.post(`${environment.api}/users`, data);
+  getUserTickets(userId: any):Observable<GetUserTicket[]> {
+    let params = new HttpParams().set(userId, 'userId');
+    return this.http.get<GetUserTicket[]>(`${this.api}/admin/tickets`, { params })
   }
 
-  changeStatus(id: string) {
-    return this.http.patch<ClientResponse>(`${environment.api}/users/${id}/status`, {});
-  }
 
-  updateClient(id: string, client: any): Observable<ClientResponse> {
-    return this.http.patch<ClientResponse>(`${environment.api}/users/${id}`, client)
-  }
+  // save(data: any) {
+  //   return this.http.post(`${environment.api}/users`, data);
+  // }
+
+  // changeStatus(id: string) {
+  //   return this.http.patch<ClientResponse>(`${environment.api}/users/${id}/status`, {});
+  // }
+
+  // updateClient(id: string, client: any): Observable<ClientResponse> {
+  //   return this.http.patch<ClientResponse>(`${environment.api}/users/${id}`, client)
+  // }
 
   deleteClient(id: any): void {
     this.http.delete(`${environment.api}/users/${id}`)
   }
-}
 
-export type ClientResponse = {
-  id: string;
-  name: string;
-  email: string;
-  active: boolean;
-  birthdate: string;
-  document: string;
-  phone: string;
-  avatar: string | null;
-  canAccess: boolean;
-  payment: string;
-  addresses: ClientAddressDto[];
-}
+  getEventById(id: any): Observable<any> {
+    return this.http.get<any>(`${this.api}/events/${id}`);
+  }
 
-export type ClientAddressDto = {
-  id: string;
-  zipCode: string;
-  street: string;
-  number: string;
-  complement: string | null;
-  district: string;
-  city: string;
-  state: string;
+
 }

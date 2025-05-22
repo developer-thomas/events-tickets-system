@@ -1,6 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { CommomTableComponent, TableColumn } from '../../../../../../../shared/components/commom-table/commom-table.component';
+import { ClientService } from '../../../../client.service';
+import { ActivatedRoute } from '@angular/router';
+import { GetUserTicket } from '../../../../models/GetUserTickets.interface';
+
 
 @Component({
   selector: 'app-tickets-tab',
@@ -11,7 +15,7 @@ import { CommomTableComponent, TableColumn } from '../../../../../../../shared/c
         <mat-card>
           <mat-card-content>
             <app-commom-table
-              [data]="ticketsData"
+              [data]="ticketsData()"
               [displayedColumns]="displayedColumns"
             ></app-commom-table>
           </mat-card-content>
@@ -20,36 +24,53 @@ import { CommomTableComponent, TableColumn } from '../../../../../../../shared/c
    `
 })
 export class TicketsTabComponent implements OnInit {
-  ticketsData!: any;
+  private clientService = inject(ClientService);
+  private activatedRoute = inject(ActivatedRoute);
   
+  private userId!: any;
+  ticketsData = signal<GetUserTicket[]>([]);
+
   public displayedColumns: TableColumn[] = [
-    { label: 'Data', key: 'data', type: 'text' },
-    { label: 'Usuário', key: 'user', type: 'text' },
-    { label: 'Local', key: 'location', type: 'text' },
-    { label: 'Evento', key: 'event', type: 'text' },
-    { label: 'Valor', key: 'price', type: 'text' },
+    { label: 'Comprado em', key: 'createdAt', type: 'date' },
+    { label: 'Local', key: 'locationName', type: 'text' },
+    { label: 'Evento', key: 'eventName', type: 'text' },
+    { label: 'Valor', key: 'value', type: 'text' },
     { label: 'Status', key: 'status', type: 'text' },
-    { label: '', key: 'menu', type: 'menu' },
   ];
 
   ngOnInit(): void {
-    this.fetchData()
+    const userId = this.activatedRoute.snapshot.params['id'];
+
+    if(userId) {
+      this.userId = userId;
+      this.fetchData()
+    }
   }
 
   fetchData() {
-    let tickets = [];
-    for (let i = 0; i <= 5; i++) {
-      tickets.push(
-        {
-          data: '00/00/0000',
-          user: 'Nome do usuário',
-          location: 'Nome do Local',
-          event: 'Nome do Evento',
-          price: 'R$: 00,00',
-          status: 'Em aberto',
-        },
-      )
-      this.ticketsData = tickets 
-    }
+    this.clientService.getUserTickets(this.userId).subscribe({
+      next: (tickets) => {
+        const transformedData:any = tickets.map((ticket) => ({
+          ...ticket,
+          locationName: ticket.event.eventLocation.name ?? '',
+          eventName: ticket.event.name,
+          createdAt: this.formatDate(ticket.createdAt)
+
+        }))
+
+        this.ticketsData.set(transformedData);
+      }
+    })
+  }
+
+  formatDate(isoDate: string): string {
+    const date = new Date(isoDate);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Janeiro = 0
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+  
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
   }
 }

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommomTableComponent, TableColumn } from '../../../../../shared/components/commom-table/commom-table.component';
 import { FilterTableComponent } from '../../../../../shared/components/filter-table/filter-table.component';
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
-import { ClientResponse, ClientService } from '../../client.service';
+import { ClientService } from '../../client.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
