@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { EventCardComponent } from '../event-card/event-card.component';
 import { Router } from '@angular/router';
+import { GetOneLocationEvent } from '../../../../models/GetLocationById.interface';
 
 @Component({
   selector: 'app-cards-view',
@@ -12,7 +13,7 @@ import { Router } from '@angular/router';
 })
 export class CardsViewComponent {
   private router = inject(Router);
-  @Input() events: any[] = []
+  @Input() events: GetOneLocationEvent[] | undefined= []
 
   onDeleteEvent(id: number): void {
     console.log("Delete event:", id)

@@ -6,6 +6,7 @@ import { GetAllLocations } from './models/GetAllLocations.interface';
 import { GetCategoriesNames } from './models/GetCategories.interface';
 import { CreateRepresentante } from './models/CreateRepresentante.interface';
 import { CreateLocation } from './models/CreateLocation.interface'
+import { GetOneLocationResponse } from './models/GetLocationById.interface';
 @Injectable({
   providedIn: 'root'
 })
@@ -62,5 +63,14 @@ export class LocationService {
       phone: data.phone,
     }
     return this.http.post<CreateRepresentante>(`${this.api}/users/representative`, payload)
+  }
+
+  /**
+   * Rota para pegar um local pelo ID
+   * @param locationId id do local
+   * @returns 
+   */
+  getLocationById(locationId: any):Observable<GetOneLocationResponse> {
+    return this.http.get<GetOneLocationResponse>(`${this.api}/places/${locationId}`);
   }
 }

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { GetOneLocationEvent } from '../../../../models/GetLocationById.interface';
 
 @Component({
   selector: 'app-event-card',
@@ -11,7 +12,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
   styleUrl: './event-card.component.scss'
 })
 export class EventCardComponent {
-  @Input() event!: any;
+  @Input() event!: GetOneLocationEvent | undefined;
 
   @Output() delete = new EventEmitter<number>()
   @Output() edit = new EventEmitter<number>()
@@ -19,18 +20,18 @@ export class EventCardComponent {
   @Output() goToDetails = new EventEmitter();
 
   onDelete(): void {
-    this.delete.emit(this.event.id)
+    // this.delete.emit(this.event.id)
   }
 
   onEdit(): void {
-    this.edit.emit(this.event.id)
+    // this.edit.emit(this.event.id)
   }
 
   onToggle(event: any): void {
-    this.toggleActive.emit({
-      id: this.event.id,
-      active: event.checked,
-    })
+    // this.toggleActive.emit({
+    //   id: this.event.id,
+    //   active: event.checked,
+    // })
   }
 
   // Método para enviar os dados do evento para o component pai, a intenção é redirecionar para os detalhes

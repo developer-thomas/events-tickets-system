@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -7,7 +7,9 @@ import { FilterTableComponent } from '../../../../../shared/components/filter-ta
 import { CardsViewComponent } from './components/cards-view/cards-view.component';
 import { DashboardViewComponent } from './components/dashboard-view/dashboard-view.component';
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { LocationService } from '../../location.service';
+import { GetOneLocation, GetOneLocationResponse } from '../../models/GetLocationById.interface';
 
 
 @Component({
@@ -19,17 +21,11 @@ import { Router } from '@angular/router';
 })
 export class LocationDetailsComponent {
   private router = inject(Router);
-  locationName = "NOME DO LOCAL"
-  locationDescription =
-    "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard"
+  private locationService = inject(LocationService);
+  private activatedRoute = inject(ActivatedRoute);
 
-  categories = [
-    { color: "#cc3131", icon: "local_movies" },
-    { color: "#ffcc00", icon: "music_note" },
-    { color: "#209db3", icon: "theater_comedy" },
-    { color: "#4728a2", icon: "palette" },
-    { color: "#a148bf", icon: "celebration" },
-  ]
+  locationId: any;
+  public locationData = signal<GetOneLocation | undefined>(undefined);
 
   eventTypes = ["Tipo do evento", "Tipo do evento", "Tipo do evento"]
 
@@ -68,7 +64,24 @@ export class LocationDetailsComponent {
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const locationId = this.activatedRoute.snapshot.paramMap.get('id');
+
+    if(locationId) {
+      this.locationId = locationId;
+      this.getLocationData();
+    }
+  }
+
+  getLocationData() {
+    this.locationService.getLocationById(this.locationId).subscribe({
+      next: (res: GetOneLocationResponse) => {
+        this.locationData.set(res.result);
+        console.log(this.locationData())
+        
+      }
+    })
+  }
 
   selectTab(index: number): void {
     this.selectedTab = index
