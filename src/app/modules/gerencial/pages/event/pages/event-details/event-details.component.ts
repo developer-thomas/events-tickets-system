@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -7,6 +7,9 @@ import { EventHeaderComponent, EventHeaderData } from './components/event-header
 import { EventLocationComponent, EventLocationData } from './components/event-location/event-location.component';
 import { EventScheduleComponent } from './components/event-schedule/event-schedule.component';
 import { EventSponsorsComponent } from './components/event-sponsors/event-sponsors.component';
+import { EventService } from '../../event.service';
+import { ActivatedRoute } from '@angular/router';
+import { GetOneEvent } from '../../models/GetEventById.interface';
 
 interface ScheduleItem {
   date: string
@@ -29,7 +32,13 @@ interface Sponsor {
   templateUrl: './event-details.component.html',
   styleUrl: './event-details.component.scss'
 })
-export class EventDetailsComponent implements OnInit{
+export class EventDetailsComponent implements OnInit {
+  private eventService = inject(EventService);
+  private activatedRoute = inject(ActivatedRoute);
+  
+  public eventId!: string;
+  public eventData = signal<GetOneEvent | undefined>(undefined);
+
   eventHeaderData: EventHeaderData = {
     id: 1,
     title: "Título do evento",
@@ -88,7 +97,22 @@ export class EventDetailsComponent implements OnInit{
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const eventId = this.activatedRoute.snapshot.paramMap.get('id');
+    if(eventId) {
+      this.eventId = eventId;
+      this.getEventById();
+    }
+  }
+
+  getEventById() {
+    this.eventService.getOneEvent(this.eventId).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.eventData.set(res);
+      }
+    })
+  }
 
   onDeleteEvent(id: number): void {
     console.log("Delete event:", id)

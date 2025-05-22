@@ -4,6 +4,7 @@ import { Observable, map } from "rxjs"
 import { environment } from "../../../../../environments/environment.development"
 import { GetCategoriesNames, GetLocationsNames, CreateEventResponse, CreateEventTimeline, CreateEventTimelines, CreateSponsor } from "./models/CreateEvent.interface"
 import { GetAllEvents } from "./models/GetAllEvents.interface"
+import { GetOneEvent } from "./models/GetEventById.interface"
 
 @Injectable({
   providedIn: 'root'
@@ -104,5 +105,12 @@ export class EventService {
    */
   createSponsor(data: CreateSponsor): Observable<any> {
     return this.http.post<CreateSponsor>(`${this.api}/events/sponsors`, data)
+  }
+
+  /**
+   * Pega o evento baseado em seu ID
+   */
+  getOneEvent(eventId: any): Observable<GetOneEvent> {
+    return this.http.get<GetOneEvent>(`${this.api}/events/${eventId}`);
   }
 }

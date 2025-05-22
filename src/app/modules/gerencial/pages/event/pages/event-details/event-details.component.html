@@ -2,10 +2,12 @@
   <div class="bg-white rounded-lg shadow-sm p-6">
     <!-- Event Header Component -->
     <app-event-header 
-      [eventData]="eventHeaderData"
+      [eventData]="eventData()"
       (delete)="onDeleteEvent($event)"
       (edit)="onEditEvent($event)"
-      (toggleActive)="onToggleEvent($event)">
+      (toggleActive)="onToggleEvent($event)"
+      [eventId]="eventId"
+      >
     </app-event-header>
     
     <!-- Event Location Component -->

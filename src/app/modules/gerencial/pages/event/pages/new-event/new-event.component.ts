@@ -11,6 +11,7 @@ import { StepTwoComponent } from './components/step-two/step-two.component';
 import { EventService } from '../../event.service';
 import { CreateEventResponse, CreateEventTimeline, CreateSponsor } from '../../models/CreateEvent.interface';
 import { parse } from "date-fns"
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-new-event',
@@ -32,6 +33,7 @@ export class NewEventComponent {
   private fb = inject(FormBuilder)
   private router = inject(Router)
   private eventService = inject(EventService)
+  private toastr = inject(ToastrService);
 
   currentStep = 1
   totalSteps = 3
@@ -40,7 +42,6 @@ export class NewEventComponent {
 
   constructor() {
     this.eventForm = this.fb.group({
-      // Step 1 - Event Data
       eventName: ["", Validators.required],
       locationId: ["", Validators.required],
       description: ["", Validators.required],
@@ -78,7 +79,6 @@ export class NewEventComponent {
         }
       }
     } else {
-      // Submit sponsors data and complete the form
       this.submitSponsorsData()
     }
   }
@@ -152,7 +152,6 @@ export class NewEventComponent {
     return valid
   }
 
-  // Método atualizado para lidar com o formato sem barras (DDMMYYYY)
   formatDateToISO(dateString: string): string {
     try {
       if (!dateString || typeof dateString !== "string") {
@@ -160,16 +159,11 @@ export class NewEventComponent {
         return new Date().toISOString()
       }
 
-      console.log("Original date string:", dateString)
-
-      // Verificar se a string tem 8 caracteres (formato DDMMYYYY)
       if (dateString.length === 8 && !dateString.includes("/")) {
-        // Extrair dia, mês e ano
         const day = dateString.substring(0, 2)
         const month = dateString.substring(2, 4)
         const year = dateString.substring(4, 8)
 
-        // Criar uma data no formato YYYY-MM-DD
         const formattedDate = `${year}-${month}-${day}T12:00:00.000Z`
         console.log("Formatted date from DDMMYYYY:", formattedDate)
 
@@ -182,11 +176,10 @@ export class NewEventComponent {
 
         return formattedDate
       }
-      // Se tiver barras, usar o date-fns para parse
+
       else if (dateString.includes("/")) {
         const parsedDate = parse(dateString, "dd/MM/yyyy", new Date())
 
-        // Verificar se a data é válida
         if (isNaN(parsedDate.getTime())) {
           console.error("Invalid date after parsing with date-fns:", dateString)
           return new Date().toISOString()
@@ -194,7 +187,6 @@ export class NewEventComponent {
 
         return parsedDate.toISOString()
       }
-      // Caso não seja nenhum dos formatos esperados
       else {
         console.error("Unrecognized date format:", dateString)
         return new Date().toISOString()
@@ -205,72 +197,49 @@ export class NewEventComponent {
     }
   }
 
-  // Método para formatar horários para o formato HH:MM
   formatTimeWithColon(timeStr: string): string {
     if (!timeStr) return "00:00"
 
-    // Remover qualquer dois pontos existente
     timeStr = timeStr.replace(":", "")
 
-    // Garantir que temos 4 dígitos
     while (timeStr.length < 4) {
       timeStr = "0" + timeStr
     }
 
-    // Formatar como HH:MM
     return timeStr.substring(0, 2) + ":" + timeStr.substring(2, 4)
   }
 
   submitEventData(): void {
-    // Format data for API using FormData for multipart/form-data
     const formData = new FormData()
 
-    // Add text fields
     formData.append("name", this.eventForm.value.eventName)
     formData.append("description", this.eventForm.value.description)
 
-    // Format price - ensure it's always sent with a valid value as string
     const priceValue = this.eventForm.value.price
+
     if (priceValue) {
-      // Check if it's a string and contains R$
       if (typeof priceValue === "string" && priceValue.includes("R$")) {
-        // Remove R$ prefix, replace dots with empty string, and replace comma with dot
         const formattedPrice = priceValue.replace("R$ ", "").replace(/\./g, "").replace(",", ".")
-        console.log("Formatted price:", formattedPrice) // Debug log
         formData.append("value", formattedPrice)
       } else {
-        // Just convert to string if it's a number or already formatted
         formData.append("value", priceValue.toString())
       }
     } else {
-      // Default value if not provided - as string
-      formData.append("value", "50.00")
-      console.log("Using default price: 50.00")
+
+      formData.append("value", "0.00")
     }
 
     // Obter os valores das datas diretamente do formulário
     const startDateValue = this.eventForm.get("startDate")?.value
     const endDateValue = this.eventForm.get("endDate")?.value
 
-    console.log("Raw start date:", startDateValue)
-    console.log("Raw end date:", endDateValue)
-
-    // Formatar as datas para ISO usando o método atualizado
     const eventDate = this.formatDateToISO(startDateValue)
-    const deletedAt = this.formatDateToISO(endDateValue)
 
-    console.log("Formatted event date:", eventDate)
-    console.log("Formatted deleted at:", deletedAt)
-
-    // Adicionar as datas ao FormData
     formData.append("eventDate", eventDate)
-    // formData.append("deletedAt", deletedAt)
 
-    // Add number fields - ensure they are always sent
     formData.append("numberOfTickets", this.eventForm.value.ticketQuantity || "0")
     formData.append("placeId", this.eventForm.value.locationId || "0")
 
-    // Add categories - ensure they are always sent
     const categories = this.eventForm.value.categories
     if (Array.isArray(categories) && categories.length > 0) {
       categories.forEach((categoryId) => {
@@ -289,15 +258,9 @@ export class NewEventComponent {
       formData.append("file", coverImage, coverImage.name)
     }
 
-    // Log the FormData entries for debugging
-    formData.forEach((value, key) => {
-      console.log(`${key}: ${value}`)
-    })
-
     // Send data to API
     this.eventService.createEvent(formData).subscribe({
       next: (response: CreateEventResponse) => {
-        console.log("Event created successfully:", response)
         this.createdEventId = response.result.id
         this.currentStep++
       },
@@ -421,59 +384,44 @@ export class NewEventComponent {
     const items = sponsorsForm.get("items") as FormArray
 
     if (items && items.length > 0) {
-      // Processar cada patrocinador individualmente
-      const sponsorPromises: Promise<any>[] = []
+      // Criar array com todos os patrocinadores
+      const sponsors = items.value
+        .filter((item: any) => item.name && item.categoryId && item.description)
+        .map((item: any) => ({
+          name: item.name,
+          categoryIds: [Number.parseInt(item.categoryId)],
+          description: item.description,
+          imageUrl: item.logoImage || "",
+          eventId: this.createdEventId!
+        }))
 
-      for (let i = 0; i < items.length; i++) {
-        const item = items.at(i).value
-
-        // Verificar se os campos obrigatórios estão preenchidos
-        if (!item.name || !item.categoryId || !item.description) {
-          console.log(`Skipping sponsor at index ${i} due to missing required fields`)
-          continue
-        }
-
-        // Verificar se o base64 é válido
-        const imageUrl = item.logoImage && typeof item.logoImage === 'string' && item.logoImage.length > 0
-          ? item.logoImage
-          : ""
-
-        // Criar o objeto de dados para enviar ao backend
-        const sponsorData: CreateSponsor = {
-          sponsors: [{
-            name: item.name,
-            categoryIds: [Number.parseInt(item.categoryId)],
-            description: item.description,
-            imageUrl: imageUrl,
-            eventId: this.createdEventId!
-          }]
-        }
-
-        console.log(`Submitting sponsor data for ${item.name}:`, {
-          ...sponsorData,
-          sponsors: sponsorData.sponsors.map(s => ({
-            ...s,
-            imageUrl: s.imageUrl ? `${s.imageUrl.substring(0, 50)}...` : ""
-          }))
-        })
-
-        // Enviar os dados para o backend
-        sponsorPromises.push(this.eventService.createSponsor(sponsorData).toPromise())
+      // Criar o objeto de dados para enviar ao backend
+      const sponsorData: CreateSponsor = {
+        sponsors: sponsors
       }
 
-      // Aguardar todas as promessas serem resolvidas
-      Promise.all(sponsorPromises)
-        .then(() => {
-          console.log("All sponsors submitted successfully")
-          this.router.navigate(["/gerencial/events"])
-        })
-        .catch((error) => {
+      console.log(`Submitting ${sponsors.length} sponsors:`, {
+        ...sponsorData,
+        sponsors: sponsorData.sponsors.map(s => ({
+          ...s,
+          imageUrl: s.imageUrl ? `${s.imageUrl.substring(0, 50)}...` : ""
+        }))
+      })
+
+      // Enviar os dados para o backend
+      this.eventService.createSponsor(sponsorData).subscribe({
+        next: () => {
+          this.toastr.success("Patrocinadores criados com sucesso");
+          this.router.navigate(["/gerencial/evento"])
+        },
+        error: (error) => {
           console.error("Error submitting sponsors:", error)
-        })
+        }
+      })
     } else {
       // Se não houver patrocinadores, finalizar o processo
       console.log("No sponsors to submit")
-      this.router.navigate(["/gerencial/events"])
+      this.router.navigate(["/gerencial/evento"])
     }
   }
 
@@ -481,7 +429,7 @@ export class NewEventComponent {
     if (this.eventForm.valid) {
       console.log("Form submitted:", this.eventForm.value)
       // Submit form data to backend
-      this.router.navigate(["/gerencial/events"])
+      this.router.navigate(["/gerencial/evento"])
     } else {
       // Mark all fields as touched to trigger validation messages
       this.markFormGroupTouched(this.eventForm)
@@ -500,6 +448,6 @@ export class NewEventComponent {
   }
 
   cancel(): void {
-    this.router.navigate(["/gerencial/events"])
+    this.router.navigate(["/gerencial/evento"])
   }
 }

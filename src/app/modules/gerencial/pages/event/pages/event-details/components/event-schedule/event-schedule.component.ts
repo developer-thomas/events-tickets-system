@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { GetOneEvent } from '../../../../models/GetEventById.interface';
 
 export interface ScheduleItem {
   date: string
@@ -17,5 +18,5 @@ export interface ScheduleItem {
   styleUrl: './event-schedule.component.scss'
 })
 export class EventScheduleComponent {
-  @Input() scheduleItems: ScheduleItem[] = []
+  @Input() scheduleItems!: GetOneEvent | undefined | any;
 }

@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { GetOneEvent } from '../../../../models/GetEventById.interface';
+import { EventService } from '../../../../event.service';
 
 export interface EventHeaderData {
   id: number
@@ -23,8 +25,11 @@ export interface EventHeaderData {
   templateUrl: './event-header.component.html',
   styleUrl: './event-header.component.scss'
 })
-export class EventHeaderComponent {
-  @Input() eventData!: EventHeaderData
+export class EventHeaderComponent implements OnChanges {
+  private eventService = inject(EventService);
+  
+  @Input() eventId: any;
+  @Input() eventData!: GetOneEvent | any;
 
   @Output() delete = new EventEmitter<number>()
   @Output() edit = new EventEmitter<number>()
@@ -44,4 +49,10 @@ export class EventHeaderComponent {
       active: event.checked,
     })
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('oi', this.eventData)
+  }
+
+
 }
