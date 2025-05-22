@@ -36,7 +36,7 @@ export class ConfigService {
   }
 
   public save(data: any) {
-    return this.http.post(`${environment.api}/admin`, data);
+    return this.http.post(`${environment.api}/users/collaborator`, data);
   }
 
   public updateStatus(id: string) {

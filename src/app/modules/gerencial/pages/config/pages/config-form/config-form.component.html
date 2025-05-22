@@ -1,64 +1,94 @@
 <app-page-header [title]="title" [pageSession]="pageSession" />
 
-<section>
-  <div>
-    <h2 class="font-bold text-xl mb-2">Dados</h2>
-    <div class="grid md:grid-cols-2 gap-3">
-      <div>
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Nome</mat-label>
-          <input matInput type="text" [formControl]="form.controls.name">
-        </mat-form-field>
-      </div>
-      
-      <div>
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label>CPF</mat-label>
-          <input matInput type="text" mask="000.000.000-00" [formControl]="form.controls.cpf" [dropSpecialCharacters]="false">
-        </mat-form-field>
-      </div>
-    </div>
-  </div>
-
-  <div>
-    <h2 class="font-bold text-xl mb-2">Acesso</h2>
-    <div class="grid md:grid-cols-2 gap-3">
-      <div>
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" [formControl]="form.controls.email">
-        </mat-form-field>
-      </div>
-      
-      <div>
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Senha</mat-label>
-          <input matInput [type]="hide ? 'password' : 'text'" [formControl]="form.controls.password">
-          <button type="button" class="mr-3" mat-icon-button matSuffix (click)="hide = !hide">
-            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-          </button>
-        </mat-form-field>
-      </div>
-    </div>
-  </div>
-
-  <div>
-    <h2 class="font-bold text-xl mb-2">Permissão</h2>
-    <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
-      @for (item of permissions; track item.id) {
-        <div class="bg-custom-gray p-2 rounded-md">
-          <mat-checkbox #permission
-            color="primary"
-            [checked]="item.checked"
-            [value]="item.id"
-          >{{item.title}}</mat-checkbox>
+    <section class="container mx-auto p-4">
+      <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div class="mb-6">
+          <h2 class="font-bold text-xl mb-2">Dados</h2>
+          <div class="grid md:grid-cols-2 gap-3">
+            <div>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Nome</mat-label>
+                <input matInput type="text" [formControl]="form.controls.name">
+                @if (form.controls.name.invalid && form.controls.name.touched) {
+                  <mat-error>Nome é obrigatório</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            
+            <div>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>CPF</mat-label>
+                <input matInput type="text" mask="000.000.000-00" [formControl]="form.controls.cpf" [dropSpecialCharacters]="false">
+                @if (form.controls.cpf.invalid && form.controls.cpf.touched) {
+                  <mat-error>CPF é obrigatório</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            
+            <div>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Telefone</mat-label>
+                <input matInput type="text" mask="(00) 00000-0000" [formControl]="form.controls.phone" [dropSpecialCharacters]="false">
+                @if (form.controls.phone.invalid && form.controls.phone.touched) {
+                  <mat-error>Telefone é obrigatório</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
         </div>
-      }
-    </div>
-  </div>
 
-  <div class="flex justify-end items-center gap-3 mt-4">
-    <app-base-button label="Cancelar" styleClass="outlined" (click)="goBack()"></app-base-button>
-    <app-base-button label="Salvar" (click)="submit()"></app-base-button>
-  </div>
-</section>
+        <div class="mb-6">
+          <h2 class="font-bold text-xl mb-2">Acesso</h2>
+          <div class="grid md:grid-cols-2 gap-3">
+            <div>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Email</mat-label>
+                <input matInput type="email" [formControl]="form.controls.email">
+                @if (form.controls.email.invalid && form.controls.email.touched) {
+                  <mat-error>Email é obrigatório</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            
+            <div>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Senha</mat-label>
+                <input matInput [type]="hide ? 'password' : 'text'" [formControl]="form.controls.password">
+                <button type="button" class="mr-3" mat-icon-button matSuffix (click)="hide = !hide">
+                  <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                @if (form.controls.password.invalid && form.controls.password.touched) {
+                  <mat-error>Senha é obrigatória</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <h2 class="font-bold text-xl mb-2">Permissão</h2>
+          <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+            @for (item of permissions; track item.id) {
+              <div class="bg-gray-100 p-2 rounded-md">
+                <mat-checkbox #permission
+                  color="primary"
+                  [checked]="item.checked"
+                  [value]="item.id"
+                  (change)="item.checked = $event.checked"
+                >{{item.title}}</mat-checkbox>
+              </div>
+            }
+          </div>
+          @if (showPermissionError) {
+            <div class="text-red-500 text-sm mt-2">
+              Selecione pelo menos uma permissão
+            </div>
+          }
+        </div>
+
+        <div class="flex justify-end items-center gap-3 mt-4">
+          <app-base-button label="Cancelar" styleClass="outlined" (click)="goBack()"></app-base-button>
+          <app-base-button label="Salvar" (click)="submit()"></app-base-button>
+        </div>
+      </div>
+    </section>

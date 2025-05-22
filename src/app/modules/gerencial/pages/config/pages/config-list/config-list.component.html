@@ -6,7 +6,7 @@
   </app-filter-table>
 
   <app-commom-table
-    [data]="admins"
+    [data]="admins()"
     [displayedColumns]="displayedColumns"
     (edit)="gotoEdit($event)"
     (detail)="gotoDetails($event)"

@@ -1,10 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BaseButtonComponent } from '../../../../../shared/components/base-button/base-button.component';
 import { CommomTableComponent, TableColumn } from '../../../../../shared/components/commom-table/commom-table.component';
 import { FilterTableComponent } from '../../../../../shared/components/filter-table/filter-table.component';
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
 import { ConfigResponse, ConfigService } from '../../config.service';
+import { GetAllCollaborators } from '../../models/GetAllCollaborators.interface';
 
 @Component({
   selector: 'app-config-list',
@@ -28,14 +29,14 @@ export class ConfigListComponent implements OnInit {
   public pageSession = 'Configurações';
 
   // AJUSTAR TIPAGEM NA FASE DE INTEGRAÇÃO
-  public admins: ConfigResponse[] | any = [];
+  public admins = signal<GetAllCollaborators[]>([]);
 
   public displayedColumns: TableColumn[] = [
     { label: 'ID', key: 'id', type: 'text' },
     { label: 'Nome', key: 'name', type: 'text' },
     { label: 'E-mail', key: 'email', type: 'text' },
-    { label: 'Acessos', key: 'access', type: 'text' },
-    { label: 'Status', key: 'status', type: 'status' },
+    { label: 'Acessos', key: 'role', type: 'text' },
+    { label: 'Status', key: 'active', type: 'status' },
     { label: '', key: 'menu', type: 'menu' },
   ];
 
@@ -44,33 +45,22 @@ export class ConfigListComponent implements OnInit {
   }
 
   private getAdmins(search?: string): void {
-    let admin = [];
-    for (let i = 0; i <= 10; i++) {
-      admin.push({
-        id: i,
-        name: 'Nome',
-        email: 'mail@mail.com',
-        access: '012.345.678-90',
-        status: 'Ativo'
-      })
-    }
-    this.admins = admin;
-
-    // DESCOMENTAR NA FASE DE INTEGRAÇÃO
-    // this.configService.getAll(1, 10, search).subscribe((response) => {
-    //   this.admins = response.data;
-    // });
+    this.configService.getAll(1, 10, search).subscribe({
+      next: (res) => {
+        this.admins.set(res);
+      }
+    })
   }
 
   public gotoFormPage(): void {
     this.router.navigate(['form'], { relativeTo: this.activatedRoute });
   }
 
-  public gotoEdit(config: ConfigResponse) {
+  public gotoEdit(config: any) {
     this.router.navigate(['edit', config.id], { relativeTo: this.activatedRoute });
   }
 
-  public gotoDetails(config: ConfigResponse) {
+  public gotoDetails(config: any) {
     this.router.navigate(['edit', config.id], { relativeTo: this.activatedRoute });
   }
 }

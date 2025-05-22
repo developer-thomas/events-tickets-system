@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, inject, OnInit, ViewChildren } from '@angular/core';
+import { Component, inject, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckbox, MatCheckboxModule } from '@angular/material/checkbox';
@@ -34,63 +34,92 @@ import { ConfigPermissionResponse, ConfigService } from '../../config.service';
   ],
 })
 export class ConfigFormComponent implements OnInit {
-  private location = inject(Location);
-  private configService = inject(ConfigService);
-  private fb = inject(FormBuilder);
-  private toastr = inject(ToastrService);
+  private location = inject(Location)
+  private configService = inject(ConfigService)
+  private fb = inject(FormBuilder)
+  private toastr = inject(ToastrService)
 
-  @ViewChildren('permission') checkboxes!: MatCheckbox[];
+  @ViewChildren("permission") checkboxes!: QueryList<MatCheckbox>
 
-  public title = 'Configurações';
-  public pageSession = 'Novo Colaborador';
-  public hide = true;
-  public permissions: ConfigPermissionResponse[] | any= [];
+  public title = "Configurações"
+  public pageSession = "Novo Colaborador"
+  public hide = true
+  public permissions: ConfigPermissionResponse[] = []
+  public showPermissionError = false
 
   public form = this.fb.group({
-    name: ['', [Validators.required]],
-    cpf: ['', [Validators.required]],
-    email: ['', [Validators.required]],
-    password: ['', [Validators.required]],
-  });
+    name: ["", [Validators.required]],
+    cpf: ["", [Validators.required]],
+    email: ["", [Validators.required, Validators.email]],
+    password: ["", [Validators.required]],
+    phone: ["", [Validators.required]],
+  })
 
   ngOnInit(): void {
-    this.getPermissions();
+    this.getPermissions()
   }
 
   private getPermissions(): void {
     this.permissions = [
-      { id: 1, title: 'Dashboard', checked: false },
-      { id: 2, title: 'Usuários', checked: false },
-      { id: 3, title: 'Local', checked: false },
-      { id: 4, title: 'Evento', checked: false },
-      { id: 5, title: 'Banners', checked: false },
-      { id: 6, title: 'Categorias', checked: false },
-      { id: 7, title: 'Ingressos', checked: false },
-      { id: 8, title: 'Cupons', checked: false },
-      { id: 9, title: 'Financeiro', checked: false },
-      { id: 10, title: 'Acessos', checked: false },
+      { id: 1, title: "Dashboard", checked: false },
+      { id: 2, title: "Usuários", checked: false },
+      { id: 3, title: "Local", checked: false },
+      { id: 4, title: "Evento", checked: false },
+      { id: 5, title: "Banners", checked: false },
+      { id: 6, title: "Categorias", checked: false },
+      { id: 7, title: "Ingressos", checked: false },
+      { id: 8, title: "Cupons", checked: false },
+      { id: 9, title: "Financeiro", checked: false },
+      { id: 10, title: "Acessos", checked: false },
     ]
   }
 
   public goBack(): void {
-    this.location.back();
+    this.location.back()
   }
 
   public submit(): void {
-    
-    // DESCOMENTAR NA FASE DE INTEGRAÇÃO
-    // const permissions = this.checkboxes.filter((c) => c.checked).map((c) => c.value);
+    // Obter as permissões selecionadas
+    const permissions = this.permissions.filter((p) => p.checked).map((p) => p.id)
 
-    // if (this.form.invalid || !permissions.length) {
-    //   this.toastr.error('Preencha todos os campos obrigatórios!');
-    //   return;
-    // }
+    // Validar o formulário e as permissões
+    if (this.form.invalid) {
+      this.form.markAllAsTouched()
+      this.toastr.error("Preencha todos os campos obrigatórios!")
+      return
+    }
 
-    // const data = { ...this.form.value, permissions };
+    if (!permissions.length) {
+      this.showPermissionError = true
+      this.toastr.error("Selecione pelo menos uma permissão!")
+      return
+    }
 
-    // this.configService.save(data).subscribe(() => {
-    //   this.toastr.success('Colaborador cadastrado com sucesso!');
-    //   this.goBack();
-    // });
+    this.showPermissionError = false
+
+    // Preparar os dados para envio
+    const data = {
+      name: this.form.value.name || "",
+      email: this.form.value.email || "",
+      password: this.form.value.password || "",
+      cpf: this.form.value.cpf || "",
+      phone: this.form.value.phone || "",
+      permissions: permissions,
+    }
+
+    console.log("Enviando dados:", data)
+
+    // Enviar os dados para o backend
+    this.configService.save(data).subscribe({
+      next: (response) => {
+        console.log("Colaborador cadastrado com sucesso:", response)
+        this.toastr.success("Colaborador cadastrado com sucesso!")
+        this.goBack()
+      },
+      error: (error) => {
+        console.error("Erro ao cadastrar colaborador:", error)
+        this.toastr.error("Erro ao cadastrar colaborador. Tente novamente.")
+      },
+    })
   }
 }
