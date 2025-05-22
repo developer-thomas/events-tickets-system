@@ -25,7 +25,7 @@ export class CategoriesService {
     return this.http.get<GetAllCategories[]>(`${this.api}/categories`, { params });
   }
 
-  create(data: CreateCategory): Observable<any> {
-    return this.http.post<any>(`${this.api}/categories`, data);
+  create(formData: any): Observable<any> {
+    return this.http.post<any>(`${this.api}/categories`, formData);
   }
 }

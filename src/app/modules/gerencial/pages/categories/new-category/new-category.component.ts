@@ -57,10 +57,14 @@ export class NewCategoryComponent implements OnInit {
   onSubmit(): void {
     if (this.categoryForm.valid && this.categoryImage) {
       this.convertBaseFile.convertFileToBase64(this.categoryImage).then((base64) => {
-        const categoryData: CreateCategory = {
-          name: this.categoryForm.value.name,
-          file: base64.split(",")[1], // Remover o prefixo "data:image/jpeg;base64,"
-        }
+        // const categoryData: CreateCategory = {
+        //   name: this.categoryForm.value.name,
+        //   file: base64.split(",")[1], // Remover o prefixo "data:image/jpeg;base64,"
+        // }
+        const categoryData = new FormData();
+
+        categoryData.append('name', this.categoryForm.value.name);
+        categoryData.append('imageCover', base64.split(",")[1]);
 
         this.categoryService.create(categoryData).subscribe({
           next: (_) => {
