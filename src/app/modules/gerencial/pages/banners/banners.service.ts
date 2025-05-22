@@ -63,11 +63,11 @@ export class BannersService {
 
     // Adicionar o arquivo se existir
     if (file) {
-      formData.append("file", file, file.name)
-      formData.append("fileKey", file.name)
+      formData.append("image", file, file.name)
+      // formData.append("fileKey", file.name)
     } else {
-      formData.append("fileKey", "")
-      formData.append("fileUrl", "")
+      formData.append("image", "")
+      // formData.append("fileUrl", "")
     }
 
     console.log("FormData criado com sucesso")
@@ -77,12 +77,14 @@ export class BannersService {
   }
 
   /**
-   * Formata uma data de DD/MM/YY ou DD/MM/YYYY para YYYY/MM/DD
+   * Formata uma data para o formato ISO 8601 (YYYY-MM-DDTHH:mm:ss.sssZ)
    */
   private formatDateToYYYYMMDD(dateString: string): string {
     console.log("Formatando data:", dateString)
 
     try {
+      let date: Date;
+
       // Verificar se a data já está sem barras
       if (dateString.indexOf("/") === -1) {
         // Se a data já estiver sem barras, verificar o formato
@@ -91,44 +93,45 @@ export class BannersService {
           const day = dateString.substring(0, 2)
           const month = dateString.substring(2, 4)
           const year = dateString.substring(4, 8)
-          return `${year}/${month}/${day}`
+          date = new Date(`${year}-${month}-${day}T12:00:00.000Z`)
         } else {
-          // Formato desconhecido, retornar com barras para garantir
-          console.error("Formato de data sem barras desconhecido:", dateString)
-          return dateString
+          // Tentar criar a data diretamente
+          date = new Date(dateString)
         }
+      } else {
+        // Dividir a string da data em partes
+        const parts = dateString.split("/")
+
+        if (parts.length !== 3) {
+          console.error("Formato de data inválido:", dateString)
+          return new Date().toISOString() // Retornar data atual em caso de erro
+        }
+
+        let day = parts[0].padStart(2, "0")
+        let month = parts[1].padStart(2, "0")
+        let year = parts[2]
+
+        // Garantir que o ano tenha 4 dígitos
+        if (year.length === 2) {
+          year = `20${year}` // Assumir que anos de 2 dígitos são do século 21
+        }
+
+        date = new Date(`${year}-${month}-${day}T12:00:00.000Z`)
       }
 
-      // Dividir a string da data em partes
-      const parts = dateString.split("/")
-
-      if (parts.length !== 3) {
-        console.error("Formato de data inválido:", dateString)
-        return dateString // Retornar a data original se o formato for inválido
+      // Verificar se a data é válida
+      if (isNaN(date.getTime())) {
+        console.error("Data inválida após formatação:", dateString)
+        return new Date().toISOString()
       }
 
-      let day = parts[0]
-      let month = parts[1]
-      let year = parts[2]
-
-      // Garantir que o dia e o mês tenham 2 dígitos
-      day = day.padStart(2, "0")
-      month = month.padStart(2, "0")
-
-      // Garantir que o ano tenha 4 dígitos
-      if (year.length === 2) {
-        year = `20${year}` // Assumir que anos de 2 dígitos são do século 21
-      }
-
-      // Montar a data no formato YYYY/MM/DD
-      const formattedDate = `${year}/${month}/${day}`
+      const formattedDate = date.toISOString()
       console.log("Data formatada:", formattedDate)
-
       return formattedDate
+
     } catch (error) {
       console.error("Erro ao formatar data:", error)
-      // Em caso de erro, retornar a data original
-      return dateString
+      return new Date().toISOString()
     }
   }
 

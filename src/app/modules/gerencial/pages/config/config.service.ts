@@ -2,14 +2,17 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../../environments/environment.development';
 import { Pagination } from '../../../shared/models/pagination.model';
+import { Observable } from 'rxjs';
+import { GetAllCollaborators } from './models/GetAllCollaborators.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConfigService {
+  private readonly api = environment.api;
   private http = inject(HttpClient);
 
-  public getAll(page: number = 1, size: number = 10, search?: string) {
+  public getAll(page: number = 1, size: number = 10, search?: string): Observable<GetAllCollaborators[]> {
     let params = new HttpParams();
     if (page) {
       params = params.append('page', page);
@@ -21,7 +24,7 @@ export class ConfigService {
       params = params.append('search', search);
     }
 
-    return this.http.get<Pagination<ConfigResponse>>(`${environment.api}/admin`, { params });
+    return this.http.get<GetAllCollaborators[]>(`${this.api}/access`, { params });
   }
 
   public getById(id: string) {

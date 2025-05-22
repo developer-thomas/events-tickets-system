@@ -4,11 +4,14 @@ import { environment } from '../../../../../environments/environment.development
 import { Pagination } from '../../../shared/models/pagination.model';
 import { Observable } from 'rxjs';
 import { GetAllClients } from './models/GetAllClients.interface';
+import { GetOneClient } from './models/GetOneClient.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ClientService {
+
+  private readonly api = environment.api;
   private http = inject(HttpClient);
 
   getClients(page?: number, size?: number, search?: string): Observable<GetAllClients[]> {
@@ -26,8 +29,8 @@ export class ClientService {
     return this.http.get<GetAllClients[]>(`${environment.api}/users`, { params });
   }
 
-  getClientById(id: string) {
-    return this.http.get<ClientResponse>(`${environment.api}/users/${id}`);
+  getClientById(id: string):Observable<GetOneClient> {
+    return this.http.get<GetOneClient>(`${this.api}/users/client/${id}`);
   }
 
   save(data: any) {
