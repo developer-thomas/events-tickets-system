@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormBuilder, FormControl, FormArray, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { NgxMaskDirective } from 'ngx-mask';
+import { EventService } from '../../../../event.service';
 
 interface ScheduleItem {
   date: string
@@ -32,9 +33,11 @@ export class StepTwoComponent implements OnInit{
   @Input() formGroup!: FormGroup
   scheduleForm!: FormGroup
 
-  constructor(private fb: FormBuilder) {}
+  private fb = inject(FormBuilder)
+  private eventService = inject(EventService)
 
   ngOnInit(): void {
+    // Verificar se o controle schedule já existe no formGroup
     if (!this.formGroup.get("schedule")) {
       this.formGroup.addControl(
         "schedule",
@@ -42,11 +45,20 @@ export class StepTwoComponent implements OnInit{
           items: this.fb.array([this.createScheduleItem()]),
         }),
       )
-    } else if (!this.formGroup.get("schedule")?.get("items")) {
-      (this.formGroup.get("schedule") as FormGroup).addControl("items", this.fb.array([this.createScheduleItem()]))
+      this.scheduleForm = this.formGroup.get("schedule") as FormGroup
+    } else {
+      this.scheduleForm = this.formGroup.get("schedule") as FormGroup
+
+      // Verificar se o controle items já existe
+      if (!this.scheduleForm.get("items")) {
+        this.scheduleForm.addControl("items", this.fb.array([this.createScheduleItem()]))
+      } else if ((this.scheduleForm.get("items") as FormArray).length === 0) {
+        // Se o array estiver vazio, adicione um item
+        ;(this.scheduleForm.get("items") as FormArray).push(this.createScheduleItem())
+      }
     }
 
-    this.scheduleForm = this.formGroup.get("schedule") as FormGroup
+    console.log("Schedule form initialized:", this.scheduleForm)
   }
 
   get scheduleItems(): FormArray {
@@ -56,7 +68,8 @@ export class StepTwoComponent implements OnInit{
   createScheduleItem(): FormGroup {
     return this.fb.group({
       date: ["", Validators.required],
-      time: ["", Validators.required],
+      initHour: ["", Validators.required],
+      finishHour: ["", Validators.required],
       description: ["", Validators.required],
     })
   }

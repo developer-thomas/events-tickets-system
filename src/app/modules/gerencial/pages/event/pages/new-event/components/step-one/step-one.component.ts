@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { NgxMaskDirective } from 'ngx-mask';
+import { EventService } from '../../../../event.service';
+import { GetLocationsNames, GetCategoriesNames } from '../../../../models/CreateEvent.interface';
 
 interface Location {
   id: number
@@ -29,44 +31,77 @@ interface Location {
 export class StepOneComponent implements OnInit{
   @Input() formGroup!: FormGroup
 
-  locations: Location[] = [
-    { id: 1, name: "Nome do local" },
-    { id: 2, name: "Teatro Municipal" },
-    { id: 3, name: "Centro Cultural" },
-    { id: 4, name: "Parque da Cidade" },
-  ]
+  private eventService = inject(EventService)
 
-  categories = [
-    { id: 1, name: "Nome da categoria" },
-    { id: 2, name: "Nome da categoria" },
-    { id: 3, name: "Nome da categoria" },
-    { id: 4, name: "Nome da categoria" },
-    { id: 5, name: "Nome da categoria" },
-    { id: 6, name: "Nome da categoria" },
-    { id: 7, name: "Nome da categoria" },
-    { id: 8, name: "Nome da categoria" },
-  ]
+  locations = signal<GetLocationsNames[]>([])
+  categories = signal<GetCategoriesNames[]>([])
 
   selectedCategories: number[] = []
   coverImageFile: File | null = null
 
-  constructor() {}
+  ngOnInit(): void {
+    this.loadLocations()
+    this.loadCategories()
+  }
 
-  ngOnInit(): void {}
+  loadLocations(): void {
+    this.eventService.getLocationsNames().subscribe({
+      next: (data) => {
+        this.locations.set(data)
+      },
+      error: (error) => {
+        console.error("Error loading locations:", error)
+      },
+    })
+  }
+
+  loadCategories(): void {
+    this.eventService.getCategoriesNames().subscribe({
+      next: (data) => {
+        this.categories.set(data)
+      },
+      error: (error) => {
+        console.error("Error loading categories:", error)
+      },
+    })
+  }
 
   getFormControl(name: string): FormControl {
     return this.formGroup.get(name) as FormControl
   }
 
-  toggleCategory(categoryId: number): void {
-    if (this.selectedCategories[0] === categoryId) {
-      // Desmarca se já estiver selecionado (comportamento opcional)
-      this.selectedCategories = [];
-      this.getFormControl("categories").setValue(null);
-    } else {
-      this.selectedCategories = [categoryId];
-      this.getFormControl("categories").setValue(categoryId);
+  // Método para garantir que as datas tenham o formato correto
+  formatDateInput(controlName: string): void {
+    const control = this.getFormControl(controlName)
+    if (control && control.value) {
+      const value = control.value
+
+      // Se a data não tiver barras, adicione-as
+      if (value.length === 8 && !value.includes("/")) {
+        const day = value.substring(0, 2)
+        const month = value.substring(2, 4)
+        const year = value.substring(4, 8)
+
+        // Formatar como DD/MM/YYYY
+        const formattedDate = `${day}/${month}/${year}`
+        console.log(`Reformatting ${controlName} from ${value} to ${formattedDate}`)
+
+        // Atualizar o valor no controle
+        control.setValue(formattedDate, { emitEvent: false })
+      }
     }
+  }
+
+  toggleCategory(categoryId: number): void {
+    const index = this.selectedCategories.indexOf(categoryId)
+    if (index !== -1) {
+      // Remove if already selected
+      this.selectedCategories.splice(index, 1)
+    } else {
+      // Add if not selected
+      this.selectedCategories.push(categoryId)
+    }
+    this.getFormControl("categories").setValue(this.selectedCategories)
   }
 
   isCategorySelected(categoryId: number): boolean {
