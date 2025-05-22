@@ -9,5 +9,5 @@ import { Component, Input } from '@angular/core';
 })
 export class LabelAndInfoComponent {
   @Input({ required: true }) label!: string;
-  @Input({ required: true }) info?: string;
+  @Input({ required: true }) info?: any;
 }
