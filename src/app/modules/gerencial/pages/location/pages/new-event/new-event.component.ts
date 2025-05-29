@@ -10,9 +10,7 @@ import { Router } from '@angular/router';
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
 import { StepOneComponent } from './components/step-one/step-one.component';
 import { StepTwoComponent } from './components/step-two/step-two.component';
-import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { LocationService } from '../../location.service';
-import { of, forkJoin, switchMap, Observable } from 'rxjs';
 import { CreateRepresentante } from '../../models/CreateRepresentante.interface';
 import { ToastrService } from 'ngx-toastr';
 
@@ -39,7 +37,7 @@ export class NewEventComponent implements OnInit {
   private fb = inject(FormBuilder)
   private router = inject(Router)
   private locationService = inject(LocationService)
-  private toastr = inject(ToastrService);
+  private toastr = inject(ToastrService)
 
   currentStep = 1
   totalSteps = 2
@@ -81,16 +79,19 @@ export class NewEventComponent implements OnInit {
       },
       error: (error) => {
         console.error("Erro ao carregar categorias:", error)
+        this.toastr.error("Erro ao carregar categorias")
       },
     })
   }
 
   onCoverImageSelected(file: File): void {
     this.coverImage = file
+    this.locationForm.patchValue({ coverImage: file })
   }
 
   onLogoImageSelected(file: File): void {
     this.logoImage = file
+    this.locationForm.patchValue({ logoImage: file })
   }
 
   nextStep(): void {
@@ -115,11 +116,11 @@ export class NewEventComponent implements OnInit {
 
   validateCurrentStep(): boolean {
     if (this.currentStep === 1) {
-      const step1Controls = ["name", "description"]
+      const step1Controls = ["name", "description", "street", "number", "neighborhood", "cep", "city", "uf"]
       return this.validateControls(step1Controls)
     } else if (this.currentStep === 2) {
       const representativeGroup = this.locationForm.get("representative") as FormGroup
-      return representativeGroup.valid
+      return representativeGroup ? representativeGroup.valid : false
     }
     return true
   }
@@ -138,23 +139,24 @@ export class NewEventComponent implements OnInit {
 
   submitLocationData(): void {
     if (this.validateCurrentStep()) {
-      this.prepareLocationData().subscribe({
-        next: (formData) => {
-          this.locationService.createLocation(formData).subscribe({
-            next: (response) => {
-              this.createdLocationId = response.result.id
-              this.currentStep++
-              this.toastr.success("Local criado com sucesso")
-            },
-            error: (error) => {
-              console.error("Erro ao criar local:", error)
-          this.toastr.error("Erro ao criar local:", error.error.message)
+      const formData = this.prepareLocationFormData()
 
-            },
-          })
+      // Log para debug (remover em produção)
+      console.log("FormData sendo enviado:")
+      for (const [key, value] of (formData as any).entries()) {
+        console.log(key, value)
+      }
+
+      
+      this.locationService.createLocation(formData).subscribe({
+        next: (response) => {
+          this.createdLocationId = response.result.id
+          this.currentStep++
+          this.toastr.success("Local criado com sucesso")
         },
         error: (error) => {
-          console.error("Erro ao preparar dados do local:", error)
+          console.error("Erro ao criar local:", error)
+          this.toastr.error("Erro ao criar local: " + (error.error?.message || "Erro desconhecido"))
         },
       })
     } else {
@@ -162,37 +164,41 @@ export class NewEventComponent implements OnInit {
     }
   }
 
-  prepareLocationData() {
+  prepareLocationFormData(): FormData {
     const formValue = this.locationForm.value
+    const formData = new FormData()
 
-    // Observables para converter imagens para base64
-    const coverImageObs = this.coverImage ? this.convertFileToBase64(this.coverImage) : of(undefined)
+    // Adicionar campos de texto obrigatórios
+    formData.append("name", formValue.name || "")
+    formData.append("description", formValue.description || "")
+    formData.append("street", formValue.street || "")
+    formData.append("number", formValue.number || "")
+    formData.append("neighborhood", formValue.neighborhood || "")
+    formData.append("cep", formValue.cep || "")
+    formData.append("city", formValue.city || "")
+    formData.append("uf", formValue.uf || "")
+    formData.append("active", formValue.active ? "true" : "false")
 
-    const logoImageObs = this.logoImage ? this.convertFileToBase64(this.logoImage) : of(undefined)
+    // Adicionar link de localização se existir
+    if (formValue.locationLink) {
+      formData.append("locationLink", formValue.locationLink)
+    }
 
-    // Combinar os observables e retornar os dados formatados
-    return forkJoin({
-      coverImage: coverImageObs,
-      logoImage: logoImageObs,
-    }).pipe(
-      switchMap(({ coverImage, logoImage }) => {
-        const locationData = {
-          name: formValue.name,
-          description: formValue.description,
-          categoryIds: formValue.categoryIds,
-          street: formValue.street,
-          number: formValue.number,
-          neighborhood: formValue.neighborhood,
-          cep: formValue.cep,
-          city: formValue.city,
-          uf: formValue.uf,
-          active: formValue.active,
-          coverImage: coverImage ? coverImage.split(",")[1] : undefined, // Remover o prefixo "data:image/jpeg;base64,"
-          logoImage: logoImage ? logoImage.split(",")[1] : undefined, // Remover o prefixo "data:image/jpeg;base64,"
-        }
-        return of(locationData)
-      }),
-    )
+    // Adicionar categorias selecionadas
+    if (formValue.categoryIds && formValue.categoryIds.length > 0) {
+      formData.append("categoryIds", formValue.categoryIds)
+    }
+
+    // Adicionar arquivos de imagem
+    if (this.coverImage) {
+      formData.append("coverImage", this.coverImage, this.coverImage.name)
+    }
+
+    if (this.logoImage) {
+      formData.append("logoImage", this.logoImage, this.logoImage.name)
+    }
+
+    return formData
   }
 
   submitRepresentativeData(): void {
@@ -214,7 +220,7 @@ export class NewEventComponent implements OnInit {
           this.router.navigate(["/gerencial/local"])
         },
         error: (error) => {
-          this.toastr.error("Erro ao criar representante:", error.error.message)
+          this.toastr.error("Erro ao criar representante: " + (error.error?.message || "Erro desconhecido"))
           console.error("Erro ao criar representante", error)
         },
       })
@@ -230,21 +236,6 @@ export class NewEventComponent implements OnInit {
 
       if ((control as any).controls) {
         this.markFormGroupTouched(control as FormGroup)
-      }
-    })
-  }
-
-  // Helper method to convert File to base64 usando Observable
-  private convertFileToBase64(file: File) {
-    return new Observable<string>((observer) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => {
-        observer.next(reader.result as string)
-        observer.complete()
-      }
-      reader.onerror = (error) => {
-        observer.error(error)
       }
     })
   }

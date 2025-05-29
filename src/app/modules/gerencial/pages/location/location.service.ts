@@ -11,17 +11,14 @@ import { GetOneLocationResponse } from './models/GetLocationById.interface';
   providedIn: 'root'
 })
 export class LocationService {
+  private readonly api = environment.api
+  private http = inject(HttpClient)
 
-  private readonly api = environment.api;
-  private http = inject(HttpClient);
+  getAllLocations(page = 10, skip = 1, search?: string): Observable<GetAllLocations> {
+    let params = new HttpParams().set("page", page).set("skip", skip)
 
-  getAllLocations(page = 10, skip = 1, search?: string):Observable <GetAllLocations> {
-    let params = new HttpParams()
-      .set('page', page)
-      .set('skip', skip)
-    
-    if(search) {
-      params = params.set('search', search);
+    if (search) {
+      params = params.set("search", search)
     }
 
     return this.http.get<GetAllLocations>(`${environment.api}/places`, { params })
@@ -30,24 +27,33 @@ export class LocationService {
   /**
    * Método para pegar as categorias e listar na criação de um local
    */
-
-  getCategoriesNames():Observable<GetCategoriesNames[]> {
+  getCategoriesNames(): Observable<GetCategoriesNames[]> {
     return this.http.get<GetCategoriesNames[]>(`${this.api}/categories`).pipe(
       map((res) => {
         return res.map((cat) => ({
           id: cat.id,
-          name: cat.name
+          name: cat.name,
         }))
-      })
+      }),
     )
   }
 
   /**
-   * Método do primeiro step para criação de local, multipart form data
+   * Método do primeiro step para criação de local usando FormData (multipart/form-data)
    */
+  createLocation(formData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.api}/places`, formData)
+  }
 
-  createLocation(data: CreateLocation): Observable<any> {
-    return this.http.post<any>(`${this.api}/places`, data)
+  /**
+   * Método alternativo se você quiser enviar como JSON (sem arquivos)
+   */
+  createLocationJSON(data: CreateLocation): Observable<any> {
+    return this.http.post<any>(`${this.api}/places`, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
   }
 
   /**
@@ -68,9 +74,20 @@ export class LocationService {
   /**
    * Rota para pegar um local pelo ID
    * @param locationId id do local
-   * @returns 
+   * @returns
    */
-  getLocationById(locationId: any):Observable<GetOneLocationResponse> {
-    return this.http.get<GetOneLocationResponse>(`${this.api}/places/${locationId}`);
+  getLocationById(locationId: any): Observable<GetOneLocationResponse> {
+    return this.http.get<GetOneLocationResponse>(`${this.api}/places/${locationId}`)
+  }
+
+  /**
+   * Método para upload de imagem individual (se necessário)
+   */
+  uploadImage(file: File, type: "cover" | "logo"): Observable<any> {
+    const formData = new FormData()
+    formData.append("image", file, file.name)
+    formData.append("type", type)
+
+    return this.http.post<any>(`${this.api}/upload/image`, formData)
   }
 }

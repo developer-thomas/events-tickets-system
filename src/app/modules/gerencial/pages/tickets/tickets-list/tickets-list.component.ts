@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
-import { FilterTableComponent } from '../../../../shared/components/filter-table/filter-table.component';
 import { CommomTableComponent, TableColumn } from '../../../../shared/components/commom-table/commom-table.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -17,7 +16,7 @@ type ViewMode = "list" | "dashboard"
 @Component({
   selector: 'app-tickets-list',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, PageHeaderComponent, DashboardViewComponent, FilterTableComponent, CommomTableComponent, MatMenuModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, PageHeaderComponent, DashboardViewComponent, CommomTableComponent, MatMenuModule, MatButtonModule, MatIconModule],
   templateUrl: './tickets-list.component.html',
   styleUrl: './tickets-list.component.scss'
 })

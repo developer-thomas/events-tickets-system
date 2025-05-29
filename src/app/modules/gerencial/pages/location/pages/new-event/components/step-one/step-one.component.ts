@@ -58,8 +58,8 @@ export class StepOneComponent implements OnInit{
   ngOnInit(): void {
     // Verificar se já existe uma categoria selecionada
     const categoryId = this.getFormControl("categoryIds").value
-    if (categoryId) {
-      this.selectedCategories = [categoryId]
+    if (categoryId && Array.isArray(categoryId) && categoryId.length > 0) {
+      this.selectedCategories = categoryId
     }
 
     // Definir SP como estado padrão se não estiver definido
@@ -77,7 +77,7 @@ export class StepOneComponent implements OnInit{
     if (this.selectedCategories[0] === categoryId) {
       // Desmarca se já estiver selecionado (comportamento opcional)
       this.selectedCategories = []
-      this.getFormControl("categoryIds").setValue(null)
+      this.getFormControl("categoryIds").setValue([])
     } else {
       this.selectedCategories = [categoryId]
       this.getFormControl("categoryIds").setValue([categoryId]) // API espera um array
@@ -104,5 +104,28 @@ export class StepOneComponent implements OnInit{
       this.getFormControl("logoImage").setValue(this.logoImageFile)
       this.logoImageSelected.emit(this.logoImageFile)
     }
+  }
+
+  // Método para validar arquivos de imagem
+  validateImageFile(file: File): boolean {
+    const allowedTypes = ["image/jpeg", "image/png", "image/jpg"]
+    const maxSize = 5 * 1024 * 1024 // 5MB
+
+    if (!allowedTypes.includes(file.type)) {
+      console.error("Tipo de arquivo não permitido. Use JPEG ou PNG.")
+      return false
+    }
+
+    if (file.size > maxSize) {
+      console.error("Arquivo muito grande. Máximo 5MB.")
+      return false
+    }
+
+    return true
+  }
+
+  // Método para preview da imagem (opcional)
+  getImagePreview(file: File): string {
+    return URL.createObjectURL(file)
   }
 }

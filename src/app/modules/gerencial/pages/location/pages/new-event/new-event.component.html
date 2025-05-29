@@ -1,63 +1,64 @@
 <app-page-header title="Local" pageSession="Novo Local" />
 
-    <div class="container mx-auto px-4 py-6">
-      <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-        <!-- Step Indicator -->
-        <div class="flex mb-8 border-b pb-4">
-          <div class="flex-1 text-center relative">
-            <div [class]="currentStep === 1 ? 'step-active' : 'step-completed'">
-              DADOS DO LOCAL
-            </div>
-            <div class="step-line right"></div>
-          </div>
-          <div class="flex-1 text-center relative">
-            <div [class]="currentStep === 2 ? 'step-active' : (currentStep > 2 ? 'step-completed' : 'step-inactive')">
-              REPRESENTANTE
-            </div>
-            <div class="step-line left"></div>
-          </div>
+<div class="container mx-auto px-4 py-6">
+  <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+    <!-- Step Indicator -->
+    <div class="flex mb-8 border-b pb-4">
+      <div class="flex-1 text-center relative">
+        <div [class]="currentStep === 1 ? 'step-active' : 'step-completed'">
+          DADOS DO LOCAL
         </div>
-        
-        <!-- Form Steps -->
-        <form [formGroup]="locationForm">
-          @if (currentStep === 1) {
-            <app-step-one 
-              [formGroup]="locationForm" 
-              [categories]="categories"
-              (coverImageSelected)="onCoverImageSelected($event)"
-              (logoImageSelected)="onLogoImageSelected($event)">
-            </app-step-one>
-          }
-          
-          @if (currentStep === 2) {
-            <app-step-two [formGroup]="locationForm"></app-step-two>
-          }
-          
-          <!-- Form Actions -->
-          <div class="flex justify-end gap-4 mt-8">
-            <button 
-              type="button" 
-              class="cancel-button px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-              (click)="cancel()">
-              CANCELAR
-            </button>
-            
-            @if (currentStep > 1) {
-              <button 
-                type="button" 
-                class="back-button px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-                (click)="previousStep()">
-                VOLTAR
-              </button>
-            }
-            
-            <button 
-              type="button" 
-              class="continue-button px-4 py-2 bg-[#192554] text-white rounded-md hover:bg-[#121c3e]"
-              (click)="nextStep()">
-              {{ currentStep < totalSteps ? 'CONTINUAR' : 'CONFIRMAR' }}
-            </button>
-          </div>
-        </form>
+        <div class="step-line right"></div>
+      </div>
+      <div class="flex-1 text-center relative">
+        <div [class]="currentStep === 2 ? 'step-active' : (currentStep > 2 ? 'step-completed' : 'step-inactive')">
+          REPRESENTANTE
+        </div>
+        <div class="step-line left"></div>
       </div>
     </div>
+    
+    <!-- Form Steps -->
+    <form [formGroup]="locationForm">
+      @if (currentStep === 1) {
+        <app-step-one 
+          [formGroup]="locationForm" 
+          [categories]="categories"
+          (coverImageSelected)="onCoverImageSelected($event)"
+          (logoImageSelected)="onLogoImageSelected($event)">
+        </app-step-one>
+      }
+      
+      @if (currentStep === 2) {
+        <app-step-two [formGroup]="locationForm"></app-step-two>
+      }
+      
+      <!-- Form Actions -->
+      <div class="flex justify-end gap-4 mt-8">
+        <button 
+          type="button" 
+          class="cancel-button px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+          (click)="cancel()">
+          CANCELAR
+        </button>
+        
+        @if (currentStep > 1) {
+          <button 
+            type="button" 
+            class="back-button px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+            (click)="previousStep()">
+            VOLTAR
+          </button>
+        }
+        
+        <button 
+          type="button" 
+          class="continue-button px-4 py-2 bg-[#192554] text-white rounded-md hover:bg-[#121c3e] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          [disabled]="!validateCurrentStep()"
+          (click)="nextStep()">
+          {{ currentStep < totalSteps ? 'CONTINUAR' : 'CONFIRMAR' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
