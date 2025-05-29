@@ -20,8 +20,7 @@ import { GetCategoriesNames } from '../../../../models/CreateEvent.interface';
     MatFormFieldModule,
     MatSelectModule,
     MatButtonModule,
-    MatIconModule,
-    ImagePreviewPipe
+    MatIconModule
   ],
   templateUrl: './step-three.component.html',
   styleUrl: './step-three.component.scss'

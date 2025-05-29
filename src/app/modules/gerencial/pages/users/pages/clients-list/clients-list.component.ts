@@ -37,7 +37,6 @@ export class ClientsListComponent implements OnInit {
   
   public displayedColumns: TableColumn[] = [
     { label: 'Nome', key: 'name', type: 'text' },
-    { label: 'CPF/CNPJ', key: 'document', type: 'text' },
     { label: 'Telefone', key: 'phone', type: 'text' },
     { label: 'E-mail', key: 'email', type: 'text' },
     { label: 'Status', key: 'active', type: 'status' },
