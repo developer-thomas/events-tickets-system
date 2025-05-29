@@ -27,7 +27,7 @@
     <!-- <app-filter-table (filter)="filter($event)"></app-filter-table> -->
   
     <app-commom-table
-      [data]="financialData"
+      [data]="financialData()"
       [displayedColumns]="displayedColumns"
       (detail)="gotoDetailPage($event)"
       (delete)="deleteEvent($event)"

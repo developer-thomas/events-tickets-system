@@ -1,40 +1,39 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { CommomTableComponent, TableColumn } from '../../../../shared/components/commom-table/commom-table.component';
 import { FilterTableComponent } from '../../../../shared/components/filter-table/filter-table.component';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
 import { DashboardViewComponent } from './dashboard-view/dashboard-view.component';
+import { FinancialService } from '../financial.service';
+import { GetAllFinancial } from '../models/GetAllFinancial.interface';
 
 type ViewMode = "list" | "dashboard"
 
 @Component({
   selector: 'app-financial-list',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, PageHeaderComponent, DashboardViewComponent, FilterTableComponent, CommomTableComponent],
+  imports: [CommonModule, MatButtonModule, MatIconModule, PageHeaderComponent, DashboardViewComponent, CommomTableComponent],
   templateUrl: './financial-list.component.html',
   styleUrl: './financial-list.component.scss'
 })
 export class FinancialListComponent {
- private router = inject(Router);
-  private toastr = inject(ToastrService);
+  private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
+  private financialService = inject(FinancialService);
 
   viewMode: ViewMode = "list"
-  public financialData: any= [];
+
+  public financialData = signal<GetAllFinancial[]>([]);
 
   public displayedColumns: TableColumn[] = [
-      { label: 'Nome do Evento', key: 'name', type: 'text' },
-      { label: 'Local', key: 'location', type: 'text' },
-      { label: 'Data', key: 'date', type: 'text' },
-      { label: 'Ingressos vendidos', key: 'ticketsSold', type: 'text' },
-      { label: 'Valor unitário', key: 'unitPrice', type: 'text' },
-      { label: 'Valor total', key: 'totalValue', type: 'text' },
-      { label: 'Ingressos VIPs', key: 'vipTickets', type: 'text' },
-      { label: '', key: 'menu', type: 'menu' },
+      { label: 'Data', key: 'createdAt', type: 'date' },
+      { label: 'Usuário', key: 'user', type: 'text' },
+      { label: 'Método de pagamento', key: 'payment', type: 'text' },
+      { label: 'Valor', key: 'value', type: 'currency' },
+      { label: 'Status', key: 'status', type: 'text' },
     ];
 
   ngOnInit(): void {
@@ -42,20 +41,21 @@ export class FinancialListComponent {
   }
 
   private getFinancial(search?: string) {
-    let financial = [];
-    for (let i = 0; i <= 10; i++) {
-      financial.push({
-        id: i,
-        name: 'Nome do evento',
-        location: 'Nome do Local',
-        date: '00/00/00',
-        ticketsSold: '00',
-        unitPrice: 'R$ 00,00',
-        totalValue: 'R$ 00,00',
-        vipTickets: '00'
-      })
-    }
-    this.financialData = financial;
+    this.financialService.getAll().subscribe({
+      next: (res) => {
+        console.log(res)
+        const data = res.map((financial: GetAllFinancial) => ({
+          ...financial,
+          payment: financial.payment !== null ? this.translate(financial.payment.method) : 'N/A',
+          user: financial.user.name,
+          status: this.translate(financial.status)
+          
+        }))
+
+        this.financialData.set(data);
+      
+      }
+    })
   }
 
   public gotoDetailPage(row: any) {
@@ -75,5 +75,14 @@ export class FinancialListComponent {
 
   public filter(search: string) {
     this.getFinancial(search);
+  }
+
+  translate(word: string) {
+    if (word === 'CREDIT_CARD') return 'Cartão de Crédito';
+    if (word === 'PIX') return 'Pix';
+    if (word === 'Paid') return 'Pago';
+    if (word === 'UnPaid') return 'Não pago';
+
+    return word; 
   }
 }
