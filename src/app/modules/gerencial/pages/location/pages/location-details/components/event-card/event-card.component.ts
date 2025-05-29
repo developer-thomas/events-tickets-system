@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -11,7 +11,7 @@ import { GetOneLocationEvent } from '../../../../models/GetLocationById.interfac
   templateUrl: './event-card.component.html',
   styleUrl: './event-card.component.scss'
 })
-export class EventCardComponent {
+export class EventCardComponent implements OnChanges {
   @Input() event!: GetOneLocationEvent | undefined;
 
   @Output() delete = new EventEmitter<number>()
@@ -38,5 +38,9 @@ export class EventCardComponent {
   // do evento através do ID
   onClick(event: any): void {
     this.goToDetails.emit(event);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('oi', this.event)
   }
 }

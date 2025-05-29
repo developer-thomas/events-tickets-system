@@ -48,6 +48,7 @@ export class LocationListComponent {
   private getLocations(search?: string) {
     this.locationService.getAllLocations(this.currentPage(), this.pageSize(), this.searchTerm()).pipe(
       map((res): any[] => {
+        console.log('res', res)
         return res.result.map(loc => ({
           id: loc.id,
           name: loc.name,
@@ -56,8 +57,8 @@ export class LocationListComponent {
         }));
       })
     ).subscribe({
-      next: (locaisTransformados) => {
-        this.locationsData.set(locaisTransformados); 
+      next: (transformedLocation) => {
+        this.locationsData.set(transformedLocation); 
       }
     });
   }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -19,12 +19,13 @@ import { GetOneLocation, GetOneLocationResponse } from '../../models/GetLocation
   templateUrl: './location-details.component.html',
   styleUrl: './location-details.component.scss'
 })
-export class LocationDetailsComponent {
+export class LocationDetailsComponent implements OnInit {
   private router = inject(Router);
   private locationService = inject(LocationService);
   private activatedRoute = inject(ActivatedRoute);
 
   locationId: any;
+
   public locationData = signal<GetOneLocation | undefined>(undefined);
 
   eventTypes = ["Tipo do evento", "Tipo do evento", "Tipo do evento"]
@@ -77,8 +78,7 @@ export class LocationDetailsComponent {
     this.locationService.getLocationById(this.locationId).subscribe({
       next: (res: GetOneLocationResponse) => {
         this.locationData.set(res.result);
-        console.log(this.locationData())
-        
+        console.log('location data:', this.locationData())
       }
     })
   }
@@ -98,6 +98,6 @@ export class LocationDetailsComponent {
 
   createNewEvent(): void {
     console.log("Creating new event")
-    this.router.navigate(['/gerencial/local/cadastrar'])
+    this.router.navigate(['/gerencial/evento/cadastrar'])
   }
 }

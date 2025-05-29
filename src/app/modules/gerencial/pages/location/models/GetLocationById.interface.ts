@@ -44,4 +44,7 @@ export interface GetOneLocationEvent {
     createdAt?: string;
     updatedAt?: string;
     deletedAt?: string | null;
+    fileCoverUrl: string;
+    fileLogoUrl: string;
+    fileUrl: string;
 }
