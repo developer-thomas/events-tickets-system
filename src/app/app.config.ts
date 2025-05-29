@@ -1,6 +1,5 @@
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter, withComponentInputBinding, withHashLocation, withInMemoryScrolling } from '@angular/router';
-
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideEnvironmentNgxMask } from 'ngx-mask';
@@ -9,7 +8,7 @@ import { routes } from './app.routes';
 import { bearerTokenInterceptor } from './modules/shared/interceptors/bearer-token/bearer-token.interceptor';
 import { globalErrorInterceptor } from './modules/shared/interceptors/global-error/global-error.interceptor';
 import { loadingInterceptor } from './modules/shared/interceptors/loading/loading.interceptor';
-import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { LOCALE_ID } from '@angular/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -34,5 +33,6 @@ export const appConfig: ApplicationConfig = {
         loadingInterceptor,
       ]),
     ),
+    { provide: LOCALE_ID, useValue: 'pt-BR'}
   ],
 };
