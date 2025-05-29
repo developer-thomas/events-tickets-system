@@ -9,7 +9,7 @@ import { EventScheduleComponent } from './components/event-schedule/event-schedu
 import { EventSponsorsComponent } from './components/event-sponsors/event-sponsors.component';
 import { EventService } from '../../event.service';
 import { ActivatedRoute } from '@angular/router';
-import { EventSponsor, GetOneEvent, TimelineEvent } from '../../models/GetEventById.interface';
+import { EventAddress, EventSponsor, GetOneEvent, TimelineEvent } from '../../models/GetEventById.interface';
 
 @Component({
   selector: 'app-event-details',
@@ -25,13 +25,9 @@ export class EventDetailsComponent implements OnInit {
   eventId!: string | number;
   public eventData = signal<GetOneEvent | undefined>(undefined);
 
-  locationData: EventLocationData = {
-    address: "Avenida Salvador, Bairro, cidade",
-    mapImage: "assets/images/map-event-details.png",
-  }
-
   timelineEvent = signal<TimelineEvent[]>([]);
   sponsors = signal<EventSponsor[]>([]);
+  locationData = signal<EventAddress | undefined>(undefined);
 
   ngOnInit(): void {
     const eventId = this.activatedRoute.snapshot.paramMap.get('id');
@@ -44,9 +40,12 @@ export class EventDetailsComponent implements OnInit {
   getEventById() {
     this.eventService.getOneEvent(this.eventId).subscribe({
       next: (res) => {
+        console.log('detalhjes do evento', res.eventLocation)
         this.eventData.set(res);
         this.timelineEvent.set(res.timelineEvent)
         this.sponsors.set(res.eventSponsor)
+        this.locationData.set(res.eventLocation.addressLocation)
+
       }
     })
   }

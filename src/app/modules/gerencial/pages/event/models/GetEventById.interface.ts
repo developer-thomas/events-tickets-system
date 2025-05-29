@@ -39,9 +39,15 @@ export interface EventLocation {
   id: number;
   name: string;
   description: string;
-  addressLocation: string | null;
+  addressLocation: EventAddress;
 }
   
+export interface EventAddress {
+  lat: any;
+  lng: any;
+  placeId: string;
+}
+
 export interface TimelineEvent {
   id: number;
   description: string;
