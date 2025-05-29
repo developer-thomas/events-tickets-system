@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -25,11 +25,12 @@ export interface EventHeaderData {
   templateUrl: './event-header.component.html',
   styleUrl: './event-header.component.scss'
 })
-export class EventHeaderComponent implements OnChanges {
+export class EventHeaderComponent {
   private eventService = inject(EventService);
   
   @Input() eventId: any;
   @Input() eventData!: GetOneEvent | any;
+  @Input() useActionButtons: boolean = true;
 
   @Output() delete = new EventEmitter<number>()
   @Output() edit = new EventEmitter<number>()
@@ -49,10 +50,5 @@ export class EventHeaderComponent implements OnChanges {
       active: event.checked,
     })
   }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('oi', this.eventData)
-  }
-
 
 }

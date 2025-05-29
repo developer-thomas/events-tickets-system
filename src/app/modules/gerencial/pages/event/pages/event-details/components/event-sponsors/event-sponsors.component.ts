@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
+import { EventSponsor } from '../../../../models/GetEventById.interface';
 
 export interface Sponsor {
   name: string
@@ -14,6 +15,7 @@ export interface Sponsor {
   templateUrl: './event-sponsors.component.html',
   styleUrl: './event-sponsors.component.scss'
 })
-export class EventSponsorsComponent {
-  @Input() sponsors: Sponsor[] = []
+export class EventSponsorsComponent  {
+  @Input() sponsors: EventSponsor[] = [];
+
 }

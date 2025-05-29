@@ -113,4 +113,5 @@ export class EventService {
   getOneEvent(eventId: any): Observable<GetOneEvent> {
     return this.http.get<GetOneEvent>(`${this.api}/events/${eventId}`);
   }
+
 }

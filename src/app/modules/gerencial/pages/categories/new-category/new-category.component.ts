@@ -21,9 +21,9 @@ import { ToastrService } from 'ngx-toastr';
 export class NewCategoryComponent implements OnInit {
   dialog = inject(MatDialogRef<NewCategoryComponent>)
   private fb = inject(FormBuilder)
+  private toastr = inject(ToastrService);
   private categoryService = inject(CategoriesService)
   private convertBaseFile = inject(ConvertbasefileService);
-  private toastr = inject(ToastrService);
 
   categoryForm!: FormGroup
   categoryImage: File | null = null

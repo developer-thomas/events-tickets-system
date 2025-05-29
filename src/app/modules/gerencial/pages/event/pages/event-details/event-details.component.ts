@@ -1,29 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { EventHeaderComponent, EventHeaderData } from './components/event-header/event-header.component';
+import { EventHeaderComponent } from './components/event-header/event-header.component';
 import { EventLocationComponent, EventLocationData } from './components/event-location/event-location.component';
 import { EventScheduleComponent } from './components/event-schedule/event-schedule.component';
 import { EventSponsorsComponent } from './components/event-sponsors/event-sponsors.component';
 import { EventService } from '../../event.service';
 import { ActivatedRoute } from '@angular/router';
-import { GetOneEvent } from '../../models/GetEventById.interface';
-
-interface ScheduleItem {
-  date: string
-  day: string
-  time: string
-  description: string
-}
-
-interface Sponsor {
-  name: string
-  category: string
-  description: string
-  image?: string
-}
+import { EventSponsor, GetOneEvent, TimelineEvent } from '../../models/GetEventById.interface';
 
 @Component({
   selector: 'app-event-details',
@@ -36,66 +22,16 @@ export class EventDetailsComponent implements OnInit {
   private eventService = inject(EventService);
   private activatedRoute = inject(ActivatedRoute);
   
-  public eventId!: string;
+  eventId!: string | number;
   public eventData = signal<GetOneEvent | undefined>(undefined);
-
-  eventHeaderData: EventHeaderData = {
-    id: 1,
-    title: "Título do evento",
-    location: "Nome do local",
-    price: "R$ 1500,00",
-    dateRange: "17-22 de mar",
-    image: "assets/images/event-details.png",
-    description:
-      "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-    active: true,
-    sponsorLogo: "assets/images/imf-brasil.png",
-  }
 
   locationData: EventLocationData = {
     address: "Avenida Salvador, Bairro, cidade",
     mapImage: "assets/images/map-event-details.png",
   }
 
-  scheduleItems: ScheduleItem[] = [
-    {
-      date: "00/00/00",
-      day: "Segunda",
-      time: "00:00 - 00:00",
-      description:
-        "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been",
-    },
-    {
-      date: "00/00/00",
-      day: "Segunda",
-      time: "00:00 - 00:00",
-      description:
-        "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been",
-    },
-  ]
-
-  sponsors: Sponsor[] = [
-    {
-      name: "Nome do parceiro",
-      category: "Categoria",
-      description:
-        "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to",
-    },
-    {
-      name: "Nome do parceiro",
-      category: "Categoria",
-      description:
-        "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to",
-    },
-    {
-      name: "Nome do parceiro",
-      category: "Categoria",
-      description:
-        "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to",
-    },
-  ]
-
-  constructor() {}
+  timelineEvent = signal<TimelineEvent[]>([]);
+  sponsors = signal<EventSponsor[]>([]);
 
   ngOnInit(): void {
     const eventId = this.activatedRoute.snapshot.paramMap.get('id');
@@ -108,10 +44,15 @@ export class EventDetailsComponent implements OnInit {
   getEventById() {
     this.eventService.getOneEvent(this.eventId).subscribe({
       next: (res) => {
-        console.log(res);
         this.eventData.set(res);
+        this.timelineEvent.set(res.timelineEvent)
+        this.sponsors.set(res.eventSponsor)
       }
     })
+  }
+
+  getAnEventTimeline() {
+
   }
 
   onDeleteEvent(id: number): void {
@@ -124,6 +65,5 @@ export class EventDetailsComponent implements OnInit {
 
   onToggleEvent(data: { id: number; active: boolean }): void {
     console.log("Toggle event:", data)
-    this.eventHeaderData.active = data.active
   }
 }
