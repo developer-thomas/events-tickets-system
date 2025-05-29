@@ -48,7 +48,12 @@ export class TicketsListComponent implements OnInit{
   private getEvents(search?: string) {
     this.ticketsService.getAllTickets().subscribe({
       next: (res) => {
-        this.eventData.set(res);
+        const data = res.map((ticket) => ({
+          ...ticket,
+          status: ticket.status === 'VALID' ? "Válido" : "Inválido"
+        }))
+        
+        this.eventData.set(data);
       }
     })
   }

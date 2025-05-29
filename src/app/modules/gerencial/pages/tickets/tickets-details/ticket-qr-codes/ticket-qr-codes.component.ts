@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { GetOneTicket } from '../../../event/models/GetEventById.interface';
 
 interface TicketQrCode {
   id: number
@@ -18,20 +19,7 @@ interface TicketQrCode {
   styleUrl: './ticket-qr-codes.component.scss'
 })
 export class TicketQrCodesComponent {
-  tickets: TicketQrCode[] = [
-    {
-      id: 1,
-      title: "Ingresso 1",
-      code: "1035016380321",
-      status: "Em aberto",
-    },
-    {
-      id: 2,
-      title: "Ingresso 1",
-      code: "1035016380321",
-      status: "Em aberto",
-    },
-  ]
+  @Input() ticketData!: GetOneTicket | undefined;
 
   constructor() {}
 

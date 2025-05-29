@@ -1,28 +1,26 @@
-<div class="qr-codes-container shadow-lg">
-  @for (ticket of tickets; track ticket.id) {
+<div class="qr-codes-container shadow-lg"> 
     <div class="ticket-card">
       <div class="flex items-center">
         <div class="qr-code-image">
           <!-- QR Code Image -->
-           <img src="assets/images/qr-code.png" alt="qr code">
+           <img [src]="ticketData?.qrcode?.qrcode" alt="qr code">
         </div>
         <div class="ticket-info">
-          <h3 class="ticket-title">{{ ticket.title }}</h3>
-          <p class="ticket-code">COD: {{ ticket.code }}</p>
+          <h3 class="ticket-title">{{ ticketData?.event?.name }}</h3>
+          <p class="ticket-code">COD: {{ ticketData?.qrcode?.id }}</p>
         </div>
         <div class="ticket-actions">
-          <span class="status-badge">{{ ticket.status }}</span>
+          <span class="status-badge">{{ ticketData?.status }}</span>
           <div class="action-buttons">
-            <button class="action-button" (click)="viewTicket(ticket.id)">
+            <button class="action-button" (click)="viewTicket(ticketData?.event?.id)">
               <mat-icon>visibility</mat-icon>
             </button>
-            <button class="action-button" (click)="downloadTicket(ticket.id)">
+            <button class="action-button" (click)="downloadTicket(ticketData?.event?.id)">
               <mat-icon>download</mat-icon>
             </button>
           </div>
         </div>
       </div>
     </div>
-  }
 </div>
 

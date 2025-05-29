@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { EventDetailsComponent } from '../../event/pages/event-details/event-details.component';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,6 +6,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
 import { TicketQrCodesComponent } from './ticket-qr-codes/ticket-qr-codes.component';
+import { ActivatedRoute } from '@angular/router';
+import { TicketsService } from '../tickets.service';
+import { GetOneTicket } from '../../event/models/GetEventById.interface';
+import { TicketEventComponent } from './ticket-event/ticket-event.component';
 
 interface TicketDetails {
   id: number
@@ -27,27 +31,42 @@ interface TicketDetails {
     MatButtonModule,
     PageHeaderComponent,
     TicketQrCodesComponent,
-    EventDetailsComponent,
+    TicketEventComponent
   ],
   templateUrl: './tickets-details.component.html',
   styleUrl: './tickets-details.component.scss'
 })
-export class TicketsDetailsComponent {
-  selectedTabIndex = 0
+export class TicketsDetailsComponent implements OnInit {
+  private activatedRoute = inject(ActivatedRoute);
+  private ticketService = inject(TicketsService);
 
-  ticketDetails: TicketDetails = {
-    id: 1,
-    title: "Título do evento",
-    date: "00/00/00",
-    time: "00:00",
-    quantity: 5,
-    status: "Em aberto",
-    price: "R$ 00,00",
-  }
+  public tickeData = signal<GetOneTicket | undefined>(undefined);
+
+  public ticketId!: number;
+  selectedTabIndex = 0
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const ticketId = this.activatedRoute.snapshot.paramMap.get('id');
+
+    if(ticketId) {
+      this.ticketId = parseInt(ticketId);
+    }
+    
+    this.getTicketById();
+  }
+
+  getTicketById() {
+    if(this.ticketId) {
+      this.ticketService.getOneTicket(this.ticketId).subscribe({
+        next: (res) => {
+          console.log('ticket', res);
+          this.tickeData.set(res);
+        }
+      })
+    }
+  }
 
   selectTab(index: number): void {
     this.selectedTabIndex = index
