@@ -241,6 +241,6 @@ export class NewEventComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(["/gerencial/location"])
+    this.router.navigate(["/gerencial/local"])
   }
 }

@@ -9,13 +9,25 @@ import { DashboardViewComponent } from './components/dashboard-view/dashboard-vi
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocationService } from '../../location.service';
-import { GetOneLocation, GetOneLocationResponse } from '../../models/GetLocationById.interface';
+import { GetOneLocation, GetOneLocationAddress, GetOneLocationResponse } from '../../models/GetLocationById.interface';
+import { EventLocationComponent } from '../../../event/pages/event-details/components/event-location/event-location.component';
+import { LocationMapComponent } from './components/location-map/location-map.component';
 
 
 @Component({
   selector: 'app-location-details',
   standalone: true,
-  imports: [PageHeaderComponent, CommonModule, MatIcon, MatSlideToggle, MatTabsModule, FilterTableComponent, CardsViewComponent, DashboardViewComponent],
+  imports: [
+    PageHeaderComponent, 
+    CommonModule, 
+    MatIcon, 
+    MatSlideToggle, 
+    MatTabsModule, 
+    FilterTableComponent, 
+    CardsViewComponent, 
+    DashboardViewComponent, 
+    LocationMapComponent
+  ],
   templateUrl: './location-details.component.html',
   styleUrl: './location-details.component.scss'
 })
@@ -27,6 +39,7 @@ export class LocationDetailsComponent implements OnInit {
   locationId: any;
 
   public locationData = signal<GetOneLocation | undefined>(undefined);
+  public locationAddress = signal<GetOneLocationAddress | undefined>(undefined);
 
   eventTypes = ["Tipo do evento", "Tipo do evento", "Tipo do evento"]
 
@@ -78,6 +91,8 @@ export class LocationDetailsComponent implements OnInit {
     this.locationService.getLocationById(this.locationId).subscribe({
       next: (res: GetOneLocationResponse) => {
         this.locationData.set(res.result);
+        this.locationAddress.set(res.result.addressLocation);
+        
         console.log('location data:', this.locationData())
       }
     })
@@ -99,5 +114,10 @@ export class LocationDetailsComponent implements OnInit {
   createNewEvent(): void {
     console.log("Creating new event")
     this.router.navigate(['/gerencial/evento/cadastrar'])
+  }
+
+  get backgroundImage(): string {
+    const url = this.locationData()?.fileCoverUrl || 'assets/image/no-image.jpg';
+    return `url(${url})`;
   }
 }

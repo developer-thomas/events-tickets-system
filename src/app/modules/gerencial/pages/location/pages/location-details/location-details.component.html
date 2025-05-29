@@ -1,7 +1,7 @@
 <app-page-header title="Local" pageSession="Detalhes do Local" />
 
 <!-- Header Banner -->
-<div class="relative w-full h-44 bg-cover bg-center" [ngStyle]="{ 'background-image': 'url(' + locationData()?.fileCoverUrl + ')' }">
+<div class="relative w-full h-44 bg-cover bg-center" [ngStyle]="{ 'background-image': backgroundImage }">
   <div class="absolute top-0 right-0 p-2 flex gap-2">
     <button mat-icon-button>
       <mat-icon class="text-white">delete</mat-icon>
@@ -80,7 +80,7 @@
   
   <div [hidden]="selectedTab !== 1">
     <div class="py-4">
-      <p>Conteúdo da aba de localização</p>
+      <app-location-map [address]="locationAddress()"></app-location-map>
     </div>
   </div>
 </div>
