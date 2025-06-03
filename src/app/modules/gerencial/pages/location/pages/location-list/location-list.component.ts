@@ -36,8 +36,7 @@ export class LocationListComponent {
   public displayedColumns: TableColumn[] = [
     { label: 'Nome', key: 'name', type: 'text' },
     { label: 'Categorias', key: 'categories', type: 'text' },
-    { label: 'Telefone', key: 'description', type: 'text' },
-    { label: 'Status', key: 'status', type: 'status' },
+    { label: 'Descrição', key: 'description', type: 'text' },
     { label: '', key: 'menu', type: 'menu' },
   ];
 

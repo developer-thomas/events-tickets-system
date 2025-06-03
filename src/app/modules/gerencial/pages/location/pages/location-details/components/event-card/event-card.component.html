@@ -2,12 +2,12 @@
   <div class="relative">
     <img [src]="event?.fileUrl" alt="{{ event?.name }}" class="w-full h-48 object-cover">
     <div class="absolute top-2 right-2 flex gap-2">
-      <button mat-icon-button class="text-white" (click)="onDelete()">
+      <!-- <button mat-icon-button class="text-white" (click)="onDelete()">
         <mat-icon>delete</mat-icon>
       </button>
       <button mat-icon-button class="text-white" (click)="onEdit()">
         <mat-icon>edit</mat-icon>
-      </button>
+      </button> -->
       <!-- <mat-slide-toggle [checked]="event.active" (change)="onToggle($event)" color="primary"></mat-slide-toggle> -->
     </div>
   </div>
@@ -15,7 +15,7 @@
   <mat-card-content class="p-4">
     <h2 class="text-lg font-medium">{{ event?.name }}</h2>
     <div>
-      <img [src]="event?.categories?.[0]?.imageIcon" alt="">
+      <img class="h-4 w-7" [src]="event?.categories?.[0]?.imageIconUrl" [alt]="event?.categories?.[0]?.name">
       <span class="text-sm text-gray-500 mb-2">{{ event?.categories?.[0]?.name }}</span>
     </div>
     <p class="text-sm text-gray-700">{{ event?.description }}</p>

@@ -13,25 +13,21 @@ import { GetOneLocationEvent } from '../../../../models/GetLocationById.interfac
 })
 export class CardsViewComponent {
   private router = inject(Router);
-  @Input() events: GetOneLocationEvent[] | undefined= []
+  @Input() events: GetOneLocationEvent[] | undefined= [];
 
   onDeleteEvent(id: number): void {
     console.log("Delete event:", id)
-    // Implement delete logic
   }
 
   onEditEvent(id: number): void {
     console.log("Edit event:", id)
-    // Implement edit logic
   }
 
   onToggleEvent(data: { id: number; active: boolean }): void {
     console.log("Toggle event:", data)
-    // Implement toggle logic
   }
 
   goToEventDetails(row: any) {
-    console.log('oi',row)
     this.router.navigate(['/gerencial/evento/', row.id])
   }
 }

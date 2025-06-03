@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, inject, Input } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { GetOneLocationAddress } from '../../../../models/GetLocationById.interface';
 import { GoogleMapsModule } from '@angular/google-maps';
 
@@ -9,7 +9,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
   templateUrl: './location-map.component.html',
   styleUrl: './location-map.component.scss'
 })
-export class LocationMapComponent implements AfterViewInit {
+export class LocationMapComponent implements OnChanges{
   private cdRef = inject(ChangeDetectorRef);
   @Input() address: GetOneLocationAddress | any;
 
@@ -23,12 +23,14 @@ export class LocationMapComponent implements AfterViewInit {
 
   markerPosition = this.center;
 
-  ngAfterViewInit(): void {
+  ngOnChanges(): void {
     const { lat, lng } = this.address;
+
     this.center = { lat, lng };
     this.markerPosition = { lat, lng };
     this.addressRedirection = `https://www.google.com/maps?q=${lat},${lng}`;
 
     this.cdRef.detectChanges();
   }
+
 }

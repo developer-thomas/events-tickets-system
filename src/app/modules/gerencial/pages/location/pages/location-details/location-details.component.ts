@@ -10,7 +10,6 @@ import { PageHeaderComponent } from '../../../../../shared/components/page-heade
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocationService } from '../../location.service';
 import { GetOneLocation, GetOneLocationAddress, GetOneLocationResponse } from '../../models/GetLocationById.interface';
-import { EventLocationComponent } from '../../../event/pages/event-details/components/event-location/event-location.component';
 import { LocationMapComponent } from './components/location-map/location-map.component';
 
 

@@ -25,8 +25,9 @@ export interface GetOneLocationAddress {
 export interface GetOneLocationCategory {
     id?: number;
     name?: string;
-    imageIcon: string;
-    imageCover: string;
+    imageIconUrl: string;
+    imageCoverUrl: string;
+    
     
 }
 

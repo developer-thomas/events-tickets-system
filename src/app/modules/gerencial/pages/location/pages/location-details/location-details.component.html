@@ -25,9 +25,8 @@
       <div class="flex gap-2 mt-2">
         <div *ngFor="let category of locationData()?.categories" 
              class="w-6 h-6 rounded-full flex items-center justify-center" 
-            
              >
-             <img [src]="category.imageIcon" alt="Ícone da categoria" class="w-4 h-4 ml-1 mt-1" />
+             <img class="h-6 w-20" [src]="category.imageIconUrl" alt="Ícone da categoria" />
         </div>
       </div>
     </div>
