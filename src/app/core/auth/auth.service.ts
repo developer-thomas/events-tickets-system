@@ -1,21 +1,22 @@
 import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Observable, tap } from "rxjs";
 import { environment } from "../../../environments/environment.development";
 import { SigninCredentialsResponse } from "../models/auth";
 import { UserService } from "./user.service";
 
-
-
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient, private userService: UserService) {}
+  private http = inject(HttpClient);
+  private userService = inject(UserService);
+
+  private readonly api = environment.api;
 
   auth( email: string, password: string ): Observable<SigninCredentialsResponse> {
     return this.http.post<SigninCredentialsResponse>(
-        `${environment.api}/auth`,
+        `${this.api}/auth`,
         {
           email,
           password,
@@ -26,7 +27,7 @@ export class AuthService {
 
   forgot(email: string | null): Observable<any> {
     return this.http.post<SigninCredentialsResponse>(
-      `${environment.api}/auth/forgot`,
+      `${this.api}/auth/forgot`,
       {
         email,
       }
@@ -35,7 +36,7 @@ export class AuthService {
 
   reset({ code, password, confirmPassword }: any): Observable<any> {
     return this.http.post<SigninCredentialsResponse>(
-      `${environment.api}/auth/reset`,
+      `${this.api}/auth/reset`,
       {
         code,
         password,
@@ -46,7 +47,7 @@ export class AuthService {
 
   concactUs(contact: any): Observable<any> {
     return this.http.post<any>(
-      `${environment.api}/v1/noAuth/contactUs`,
+      `${this.api}/v1/noAuth/contactUs`,
       contact
     );
   }
