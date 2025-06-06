@@ -42,6 +42,7 @@ export class LocationDetailsComponent implements OnInit {
 
   eventTypes = ["Tipo do evento", "Tipo do evento", "Tipo do evento"]
 
+  // Mock para dashboard
   events = [
     {
       id: 1,
