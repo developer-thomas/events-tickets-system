@@ -14,13 +14,13 @@
     <!-- Ticket Summary Card -->
     <div class="ticket-summary-card">
       <div class="ticket-info">
-        <h2 class="ticket-title">{{ ticket.title }}</h2>
-        <p class="ticket-date">Data: {{ ticket.date }} | {{ ticket.time }}</p>
-        <p class="ticket-quantity">Quantidade: {{ ticket.quantity }}</p>
+        <h2 class="ticket-title">{{ ticketData()?.event?.name }}</h2>
+        <p class="ticket-date">Data: {{ ticketData()?.event?.eventDate | date: 'dd/MM/yy' }} | {{ ticketData()?.event?.timelineEvent?.[0]?.hourInit }}</p>
+        <p class="ticket-quantity">Quantidade: {{ ticketData()?.event?.numberOfTickets }}</p>
       </div>
       <div class="ticket-status-price">
-        <span class="ticket-status">{{ ticket.status }}</span>
-        <span class="ticket-price">{{ ticket.price }}</span>
+        <span class="ticket-status">{{ ticketData()?.status }}</span>
+        <span class="ticket-price">{{ ticketData()?.event?.value === 0 ? 'Gratuito' : (ticketData()?.event?.value| currency: 'BRL') }}</span>
       </div>
     </div>
 
@@ -45,13 +45,13 @@
         <!-- QR Codes Tab -->
         <app-qr-codes-view 
           *ngIf="selectedTabIndex === 0" 
-          [qrCodes]="ticket.qrCodes">
+          [qrCode]="ticketData()?.qrcode">
         </app-qr-codes-view>
         
         <!-- Event Details Tab -->
         <app-event-view 
           *ngIf="selectedTabIndex === 1" 
-          [ticket]="ticket">
+          [eventId]="ticketData()?.event?.id">
         </app-event-view>
       </div>
     </div>
