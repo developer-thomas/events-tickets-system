@@ -79,10 +79,8 @@ export class ConfigFormComponent implements OnInit {
   }
 
   public submit(): void {
-    // Obter as permissões selecionadas
     const permissions = this.permissions.filter((p) => p.checked).map((p) => p.id)
 
-    // Validar o formulário e as permissões
     if (this.form.invalid) {
       this.form.markAllAsTouched()
       this.toastr.error("Preencha todos os campos obrigatórios!")
@@ -97,7 +95,6 @@ export class ConfigFormComponent implements OnInit {
 
     this.showPermissionError = false
 
-    // Preparar os dados para envio
     const data = {
       name: this.form.value.name || "",
       email: this.form.value.email || "",
@@ -107,12 +104,9 @@ export class ConfigFormComponent implements OnInit {
       permissions: permissions,
     }
 
-    console.log("Enviando dados:", data)
-
     // Enviar os dados para o backend
     this.configService.save(data).subscribe({
       next: (response) => {
-        console.log("Colaborador cadastrado com sucesso:", response)
         this.toastr.success("Colaborador cadastrado com sucesso!")
         this.goBack()
       },
