@@ -1,11 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FilterTableComponent } from '../../../../../../shared/components/filter-table/filter-table.component';
 import { EventsComponent } from './tabs/events/events.component';
+import { AccountHomeService } from '../../account-home.service';
+import { GetOneLocation } from '../../models/GetOneLocations.interface';
+import { haversineDistance } from '../../../../../../shared/utils/haversineDistance';
+import { AddressLocation } from '../../models/GetAllLocations.interface';
+import { Observable } from 'rxjs';
+import { LocationComponent } from './tabs/location/location.component';
 
 interface Event {
   id: number
@@ -19,15 +25,29 @@ interface Event {
 @Component({
   selector: 'app-location-details',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatTabsModule, RouterModule, FilterTableComponent, EventsComponent],
+  imports: [
+    CommonModule, 
+    MatIconModule, 
+    MatButtonModule, 
+    MatTabsModule, 
+    RouterModule, 
+    FilterTableComponent, 
+    EventsComponent,
+    LocationComponent
+  ],
   templateUrl: './location-details.component.html',
   styleUrl: './location-details.component.scss'
 })
 export class LocationDetailsComponent implements OnInit{
-  private route = inject(ActivatedRoute);
+  private route = inject(ActivatedRoute); 
+  private accountHomeService = inject(AccountHomeService);
 
   locationId: string | null = null
   activeTab = 0
+
+  locationData = signal<GetOneLocation | null>(null);
+  locationAddressData = signal<AddressLocation | null>(null);
+  locationDistance = signal<any | null>(null);
 
   categories = [
     { color: "#cc3131", icon: "local_movies" },
@@ -47,68 +67,26 @@ export class LocationDetailsComponent implements OnInit{
     categories: ["theater", "music", "dance", "art", "cinema"],
   }
 
-  events: Event[] = [
-    {
-      id: 1,
-      title: "Título do evento",
-      image: "assets/images/event-placeholder.jpg",
-      category: "theater",
-      description:
-        "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      isFavorite: false,
-    },
-    {
-      id: 2,
-      title: "Título do evento",
-      image: "assets/images/event-placeholder.jpg",
-      category: "theater",
-      description:
-        "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      isFavorite: false,
-    },
-    {
-      id: 3,
-      title: "Título do evento",
-      image: "assets/images/event-placeholder.jpg",
-      category: "theater",
-      description:
-        "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      isFavorite: false,
-    },
-    {
-      id: 4,
-      title: "Título do evento",
-      image: "assets/images/event-placeholder.jpg",
-      category: "theater",
-      description:
-        "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      isFavorite: false,
-    },
-    {
-      id: 5,
-      title: "Título do evento",
-      image: "assets/images/event-placeholder.jpg",
-      category: "theater",
-      description:
-        "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      isFavorite: false,
-    },
-    {
-      id: 6,
-      title: "Título do evento",
-      image: "assets/images/event-placeholder.jpg",
-      category: "theater",
-      description:
-        "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      isFavorite: false,
-    },
-  ]
-
   eventTypes = ["Tipo do evento", "Tipo do evento", "Tipo do evento"]
 
   ngOnInit(): void {
-    this.locationId = this.route.snapshot.paramMap.get("id")
-    console.log("Location ID:", this.locationId)
+    this.locationId = this.route.snapshot.paramMap.get("id");
+  
+    this.getLocationById()
+  }
+
+  getLocationById() {
+    if(!this.locationId) {
+      return
+    }
+
+    this.accountHomeService.getLocationById(this.locationId).subscribe({
+      next: (res) => {
+        this.locationData.set(res.result);
+        this.locationDistance.set(res.result.addressLocation);
+
+      }
+    })
   }
 
   goBack(): void {
@@ -123,8 +101,27 @@ export class LocationDetailsComponent implements OnInit{
     console.log("Filtering by:", searchTerm)
   }
 
-  onFavoriteToggle(event: Event): void {
+  onFavoriteToggle(event: any): void {
     event.isFavorite = !event.isFavorite
     console.log("Toggled favorite for event:", event.id, "New state:", event.isFavorite)
+  }
+
+  // MEXER AQUI
+  // PRECISO FAZER A COMPARAÇÃO ENTRE AS DISTÂNCIAS
+  getUserLocation(lat: number, lng: number): Observable<number> {
+    return new Observable(observer => {
+      this.accountHomeService.getUserLocation().subscribe({
+        next: (res) => {
+          const distance = haversineDistance(res.lat, res.lng, lat, lng);
+          observer.next(distance);
+          observer.complete();
+        },
+        error: (error) => {
+          console.error('Error getting user location:', error);
+          observer.next(0);
+          observer.complete();
+        }
+      });
+    });
   }
 }

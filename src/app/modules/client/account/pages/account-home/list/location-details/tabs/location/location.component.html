@@ -1,6 +1,25 @@
-<!-- Location Tab -->
-<div class="location-tab">
-  <div class="map-placeholder">
-    <p>Mapa da localização será exibido aqui</p>
-  </div>
+<!-- Location Section -->
+<div class="mb-8">
+  <h2 class="text-xl font-semibold mb-4">Localização</h2>
+  <p class="text-gray-700 mb-4">
+    <a [href]="addressRedirection" target="_blank" class="link">
+      Ir para a localização
+    </a>
+  </p>
+
+  <google-map 
+    [center]="center" 
+    [zoom]="zoom" 
+    height="600px" 
+    width="100%">
+  
+    <map-marker 
+      [position]="markerPosition" 
+      [options]="markerOptions">
+    </map-marker>
+
+  </google-map>
+  
 </div>
+  
+  

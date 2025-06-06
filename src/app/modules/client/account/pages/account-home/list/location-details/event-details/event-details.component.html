@@ -1,88 +1,9 @@
-<div class="event-detail-container">
-  <!-- Back Button -->
-  <div class="back-button-container">
-    <button class="back-button" (click)="goBack()">
-      <mat-icon>chevron_left</mat-icon>
-      <span>VOLTAR</span>
-    </button>
-  </div>
-
-  <!-- Event Header -->
-  <div class="event-header">
-    <div class="event-image">
-      <img [src]="event.image" alt="{{ event.title }}">
-    </div>
-    <div class="event-info">
-      <h1 class="event-title">{{ event.title }}</h1>
-      <p class="event-location">{{ event.location }}</p>
-      
-      <div class="event-price">{{ event.price }}</div>
-      <div class="event-date">{{ event.dateRange }}</div>
-      
-      <div class="sponsor-logo" *ngIf="event.sponsorLogo">
-        <img [src]="event.sponsorLogo" alt="Sponsor">
-      </div>
-      
-      <div class="action-buttons">
-        <div class="social-actions">
-          <button class="action-button" (click)="shareEvent()">
-            <mat-icon>share</mat-icon>
-          </button>
-          <button class="action-button" (click)="toggleFavorite()">
-            <mat-icon>{{ isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
-          </button>
-        </div>
-        <button class="buy-button" (click)="buyTicket()">Check Out</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Description Section -->
-  <div class="content-section">
-    <h2 class="section-title">Descrição</h2>
-    <p class="section-text">{{ event.description }}</p>
-  </div>
-
-  <!-- Location Section -->
-  <div class="content-section">
-    <h2 class="section-title">Localização</h2>
-    <p class="section-text">{{ event.address }}</p>
-    <div class="map-container">
-      <img src="assets/images/map.png" alt="Map" class="map-image">
-    </div>
-  </div>
-
-  <!-- Schedule Section -->
-  <div class="content-section">
-    <h2 class="section-title">Cronograma do evento</h2>
-    <div class="schedule-items">
-      <div *ngFor="let item of scheduleItems" class="schedule-item">
-        <div class="schedule-date">
-          <mat-icon class="schedule-icon">calendar_today</mat-icon>
-          <div class="date-info">
-            <span class="date">{{ item.date }} | {{ item.day }}</span>
-            <span class="time">{{ item.time }}</span>
-          </div>
-        </div>
-        <p class="schedule-description">{{ item.description }}</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Sponsors Section -->
-  <div class="content-section">
-    <h2 class="section-title">Patrocinadores</h2>
-    <div class="sponsors-grid">
-      <div *ngFor="let sponsor of sponsors" class="sponsor-card">
-        <div class="sponsor-header">
-          <div class="sponsor-avatar"></div>
-          <div class="sponsor-info">
-            <h3 class="sponsor-name">{{ sponsor.name }}</h3>
-            <p class="sponsor-category">{{ sponsor.category }}</p>
-          </div>
-        </div>
-        <p class="sponsor-description">{{ sponsor.description }}</p>
-      </div>
-    </div>
-  </div>
-</div>
+<app-event-details-generic 
+    [eventId]="eventId"
+    [useActionButtons]="false"
+    [useClientButtons]="true"
+    (buyTicket)="true"
+    (favoriteEvent)="toggleFavorite($event)"
+    (shareEvent)="true"
+>
+</app-event-details-generic>

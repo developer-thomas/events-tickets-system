@@ -1,26 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
-import { FilterTableComponent } from '../../../../../shared/components/filter-table/filter-table.component';
-
-interface Category {
-  id: string
-  name: string
-  icon: string
-  color: string
-}
-
-interface Location {
-  id: number
-  name: string
-  distance: number
-  duration: number
-  image: string
-  link: string;
-  categories: string[]
-}
+import { GetAllLocation, UserLocation } from '../models/GetAllLocations.interface';
+import { haversineDistance } from '../../../../../shared/utils/haversineDistance';
+import { estimateTravelTime } from '../../../../../shared/utils/estimateTravelTime' 
 
 @Component({
   selector: 'app-list',
@@ -29,11 +14,17 @@ interface Location {
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
-export class ListComponent {
-  // @Input() categories: Category[] = []
+export class ListComponent implements OnChanges {
   @Input() selectedCategory = "all"
+
+  @Input() locations: GetAllLocation[] = [];
+  @Input() userLocation!: UserLocation | null;
+
   @Output() backToMapView = new EventEmitter();
 
+  locationWithDistanceAndTime = signal<GetAllLocation[]>([]);
+
+  // Categorias virão dinamicamente de /categories
   categories = [
     { color: "#cc3131", icon: "local_movies" },
     { color: "#ffcc00", icon: "music_note" },
@@ -42,86 +33,34 @@ export class ListComponent {
     { color: "#a148bf", icon: "celebration" },
   ]
 
-  locations: Location[] = [
-    {
-      id: 1,
-      name: "Nome do local",
-      distance: 5,
-      duration: 8,
-      link: 'https://www.maps.google.com',
-      image: "assets/images/location-placeholder.jpg",
-      categories: ["theater", "music", "dance", "art", "cinema"],
-    },
-    {
-      id: 2,
-      name: "Nome do local",
-      distance: 5,
-      duration: 8,
-      image: "assets/images/location-placeholder.jpg",
-      categories: ["theater", "music", "dance", "art", "cinema"],
-      link: 'https://www.maps.google.com',
-      
-    },
-    {
-      id: 3,
-      name: "Nome do local",
-      distance: 5,
-      duration: 8,
-      image: "assets/images/location-placeholder.jpg",
-      categories: ["theater", "music", "dance", "art", "cinema"],
-      link: 'https://www.maps.google.com',
-      
-    },
-    {
-      id: 4,
-      name: "Nome do local",
-      distance: 5,
-      duration: 8,
-      image: "assets/images/location-placeholder.jpg",
-      categories: ["theater", "music", "dance", "art", "cinema"],
-      link: 'https://www.maps.google.com',
-      
-    },
-    {
-      id: 5,
-      name: "Nome do local",
-      distance: 5,
-      duration: 8,
-      image: "assets/images/location-placeholder.jpg",
-      categories: ["theater", "music", "dance", "art", "cinema"],
-      link: 'https://www.maps.google.com',
-      
-    },
-    {
-      id: 6,
-      name: "Nome do local",
-      distance: 5,
-      duration: 8,
-      image: "assets/images/location-placeholder.jpg",
-      categories: ["theater", "music", "dance", "art", "cinema"],
-      link: 'https://www.maps.google.com',
-      
-    },
-  ]
-
   constructor(private router: Router) {}
 
-  ngOnInit(): void {}
+  ngOnChanges(): void {
+    const locationWithDistance = this.locations.map(local => {
+      const distance = haversineDistance(
+        this.userLocation?.lat,
+        this.userLocation?.lng,
+        local.addressLocation.lat,
+        local.addressLocation.lng
+      );
+
+      const estimatedTime = estimateTravelTime(distance);
+
+      return {
+        ...local,
+        distanceKm: distance,
+        estimatedTime
+      }
+    
+    });
+
+    this.locationWithDistanceAndTime.set(locationWithDistance);
+    console.log(this.locationWithDistanceAndTime())
+  }
 
   onFilter(searchTerm: string): void {
     console.log("Filtering by:", searchTerm)
-    // Implement filtering logic
   }
-
-  // getCategoryColor(categoryId: string): string {
-  //   const category = this.categories.find((c) => c.id === categoryId)
-  //   return category ? category.color : "#192554"
-  // }
-
-  // getCategoryIcon(categoryId: string): string {
-  //   const category = this.categories.find((c) => c.id === categoryId)
-  //   return category ? category.icon : "circle"
-  // }
 
   goBack(): void {
     this.backToMapView.emit();

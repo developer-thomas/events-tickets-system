@@ -4,15 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FilterTableComponent } from '../../../../../../../../shared/components/filter-table/filter-table.component';
-
-export interface Event {
-  id: number
-  title: string
-  image: string
-  category: string
-  description: string
-  isFavorite: boolean
-}
+import { GetOneLocationEvent } from '../../../../models/GetOneLocations.interface'
 
 @Component({
   selector: 'app-events',
@@ -22,9 +14,10 @@ export interface Event {
   styleUrl: './events.component.scss'
 })
 export class EventsComponent {
-  private router = inject(Router)
-  private route = inject(ActivatedRoute)
-  @Input() events: Event[] = []
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  @Input() events: GetOneLocationEvent[] | undefined = []
   @Input() eventTypes: string[] = []
 
   @Output() filterChange = new EventEmitter<string>()
@@ -34,8 +27,9 @@ export class EventsComponent {
     this.filterChange.emit(searchTerm)
   }
 
-  toggleFavorite(event: Event): void {
-    this.favoriteToggle.emit(event)
+  toggleFavorite(event: any): void {
+    // this.favoriteToggle.emit(event)
+    console.log(event)
   }
 
   navigateToEventDetail(eventId: number): void {

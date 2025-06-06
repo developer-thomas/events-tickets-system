@@ -1,7 +1,7 @@
 <div class="location-detail-container">
   <!-- Header Image -->
   <div class="header-image">
-    <img src="assets/images/local-details-header.png" alt="Event Header">
+    <img [src]="locationData()?.fileCoverUrl ||'assets/images/local-details-header.png'" [alt]="locationData()?.name">
     <button class="back-button" (click)="goBack()">
       <mat-icon>chevron_left</mat-icon>
       <span>VOLTAR</span>
@@ -11,27 +11,27 @@
   <!-- Location Profile -->
   <div class="location-profile ">
     <div class="profile-image">
-      <img [src]="location.image" alt="{{ location.name }}">
+      <img [src]="locationData()?.fileLogoUrl" [alt]="locationData()?.name">
     </div>
     <div class="profile-info">
-      <h1 class="location-name">{{ location.name }}</h1>
+      <h1 class="location-name">{{ locationData()?.name }}</h1>
       <div class="location-meta">
         <div class="distance">
           <mat-icon>place</mat-icon>
           <span>{{ location.distance }} km</span>
         </div>
         <div class="flex gap-2 mt-2 categories">
-          <div *ngFor="let category of categories" 
+          <div *ngFor="let category of locationData()?.categories" 
                class="w-6 h-6 rounded-full flex items-center justify-center" 
-               [style.background-color]="category.color">
-            <mat-icon class="text-white text-sm ml-1 mt-1">{{ category.icon }}</mat-icon>
+              >
+            <img class="rounded-full h-6" [src]="category.imageCoverUrl" [alt]="category.name">
           </div>
         </div>
       </div>
     </div>
     <!-- Location Description -->
     <div class="location-description">
-      <p>{{ location.description }}</p>
+      <p>{{ locationData()?.description }}</p>
     </div>
   </div>
 
@@ -60,7 +60,7 @@
     <!-- Events Tab -->
     <div *ngIf="activeTab === 0" class="events-tab">
       <app-events
-        [events]="events"
+        [events]="locationData()?.event"
         [eventTypes]="eventTypes"
         (filterChange)="onFilterChange($event)"
         (favoriteToggle)="onFavoriteToggle($event)" 
@@ -71,8 +71,7 @@
     <!-- Location Tab -->
     <div *ngIf="activeTab === 1" class="location-tab">
       <div class="map-placeholder">
-        <h3 class="mb-5">Avenida Salvador, Bairro, Cidade</h3>
-        <img class="w-full max-h-full" src="assets/images/map.png" alt="">
+        <app-location [placeLatLng]="locationData()?.addressLocation"></app-location>
       </div>
     </div>
   </div>
