@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
@@ -7,12 +7,14 @@ import { FilterTableComponent } from '../../../../../shared/components/filter-ta
 import { ListComponent } from '../list/list.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FilterModalComponent } from '../filter-modal/filter-modal.component';
+import { MapViewComponent } from './map-view/map-view.component';
+import { AccountHomeService } from '../account-home.service';
+import { GetAllLocation, UserLocation } from '../models/GetAllLocations.interface';
 
 interface Category {
   id: string
   name: string
   icon: string
-  
 }
 
 @Component({
@@ -24,12 +26,16 @@ interface Category {
     MatButtonModule,
     RouterModule,
     FilterTableComponent,
-    ListComponent
+    ListComponent,
+    MapViewComponent
   ],
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss'
 })
 export class MapComponent {
+  private dialog = inject(MatDialog);
+  private accountHomeService = inject(AccountHomeService);
+
   viewMode: "map" | "list" = "map"
 
   categories: Category[] = [
@@ -42,9 +48,16 @@ export class MapComponent {
 
   selectedCategory = "all"
 
-  constructor(private dialog: MatDialog) {}
+  // Armazena todos os eventos que vem do backend
+  locationsData = signal<GetAllLocation[]>([]);
 
-  ngOnInit(): void {}
+  // Armazena a lat lng do usuário que entra
+  userLocation = signal<UserLocation | null>(null);
+
+  ngOnInit(): void {
+    this.getAllLocations();
+    this.getUserLocation();
+  }
 
   toggleView(): void {
     this.viewMode = this.viewMode === "map" ? "list" : "map"
@@ -55,7 +68,6 @@ export class MapComponent {
   }
 
   onFilter(searchTerm: string): void {
-    // Open the filter modal
     const dialogRef = this.dialog.open(FilterModalComponent, {
       width: "90%",
       maxWidth: "500px",
@@ -65,7 +77,22 @@ export class MapComponent {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         console.log("Filtering by:", searchTerm, "with options:", result)
-        // Implement filtering logic with both search term and filter options
+      }
+    })
+  }
+
+  getAllLocations() {
+    this.accountHomeService.getAll().subscribe({
+      next: (res) => {
+        this.locationsData.set(res.result);
+      }
+    })
+  }
+
+  getUserLocation() {
+    this.accountHomeService.getUserLocation().subscribe({
+      next: (res) => {
+        this.userLocation.set(res);
       }
     })
   }

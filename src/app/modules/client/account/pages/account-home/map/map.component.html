@@ -21,11 +21,11 @@
   
   <!-- Map View -->
   <div class="map-container" *ngIf="viewMode === 'map'">
-    <img src="assets/images/map.png" alt="Map" class="map-image">
+    <app-map-view [userLocation]="userLocation()"></app-map-view>
   </div>
   
   <!-- List View (Hidden by default) -->
   <div class="list-container" *ngIf="viewMode === 'list'">
-    <app-list (backToMapView)="toggleView()"></app-list>
+    <app-list  [userLocation]="userLocation()" [locations]="locationsData()" (backToMapView)="toggleView()"></app-list>
   </div>
 </div>
