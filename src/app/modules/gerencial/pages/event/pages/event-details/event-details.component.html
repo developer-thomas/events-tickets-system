@@ -1,23 +1,9 @@
-<div class="container mx-auto px-4 py-6">
-  <div class="bg-white rounded-lg shadow-sm p-6">
-    <!-- Event Header Component -->
-    <app-event-header 
-      [eventData]="eventData()"
-      (delete)="onDeleteEvent($event)"
-      (edit)="onEditEvent($event)"
-      (toggleActive)="onToggleEvent($event)"
-      [eventId]="eventId"
-      >
-    </app-event-header>
-
-    <!-- Event Location Component -->
-    <app-event-location [locationData]="locationData()"></app-event-location>
-    
-    <!-- Event Schedule Component -->
-    <app-event-schedule [scheduleItems]="timelineEvent()"></app-event-schedule>
-
-    <!-- Event Sponsors Component -->
-    <app-event-sponsors [sponsors]="sponsors()"></app-event-sponsors>
-  </div>
-</div>
-
+<app-event-details-generic 
+    [eventId]="eventId"
+    [useActionButtons]="true"
+    [useClientButtons]="false"
+    (activeEvent)="changeEventStatus($event)"
+    (deleteEvent)="deleteEvent($event)"
+    (editEvent)="editEvent($event)"
+>
+</app-event-details-generic>

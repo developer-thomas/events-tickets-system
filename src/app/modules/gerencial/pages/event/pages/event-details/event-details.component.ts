@@ -3,66 +3,43 @@ import { Component, inject, Input, OnChanges, OnInit, signal, SimpleChanges } fr
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { EventHeaderComponent } from './components/event-header/event-header.component';
-import { EventLocationComponent, EventLocationData } from './components/event-location/event-location.component';
-import { EventScheduleComponent } from './components/event-schedule/event-schedule.component';
-import { EventSponsorsComponent } from './components/event-sponsors/event-sponsors.component';
-import { EventService } from '../../event.service';
 import { ActivatedRoute } from '@angular/router';
-import { EventAddress, EventSponsor, GetOneEvent, TimelineEvent } from '../../models/GetEventById.interface';
+import { EventDetailsGenericComponent } from '../../../../../shared/components/event-details/event-details.component';
 
 @Component({
   selector: 'app-event-details',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatSlideToggleModule, EventHeaderComponent, EventLocationComponent, EventScheduleComponent, EventSponsorsComponent],
+  imports: [
+    CommonModule, 
+    MatIconModule, 
+    MatButtonModule, 
+    MatSlideToggleModule, 
+    EventDetailsGenericComponent  
+  ],
   templateUrl: './event-details.component.html',
   styleUrl: './event-details.component.scss'
 })
 export class EventDetailsComponent implements OnInit {
-  private eventService = inject(EventService);
   private activatedRoute = inject(ActivatedRoute);
   
   eventId!: string | number;
-  public eventData = signal<GetOneEvent | undefined>(undefined);
-
-  timelineEvent = signal<TimelineEvent[]>([]);
-  sponsors = signal<EventSponsor[]>([]);
-  locationData = signal<EventAddress | undefined>(undefined);
 
   ngOnInit(): void {
     const eventId = this.activatedRoute.snapshot.paramMap.get('id');
     if(eventId) {
       this.eventId = eventId;
-      this.getEventById();
     }
   }
 
-  getEventById() {
-    this.eventService.getOneEvent(this.eventId).subscribe({
-      next: (res) => {
-        console.log('detalhjes do evento', res.eventLocation)
-        this.eventData.set(res);
-        this.timelineEvent.set(res.timelineEvent)
-        this.sponsors.set(res.eventSponsor)
-        this.locationData.set(res.eventLocation.addressLocation)
-
-      }
-    })
-  }
-
-  getAnEventTimeline() {
-
-  }
-
-  onDeleteEvent(id: number): void {
+  deleteEvent(id: number): void {
     console.log("Delete event:", id)
   }
 
-  onEditEvent(id: number): void {
+  editEvent(id: number): void {
     console.log("Edit event:", id)
   }
 
-  onToggleEvent(data: { id: number; active: boolean }): void {
-    console.log("Toggle event:", data)
+  changeEventStatus(id: any): void {
+    console.log(id)
   }
 }
