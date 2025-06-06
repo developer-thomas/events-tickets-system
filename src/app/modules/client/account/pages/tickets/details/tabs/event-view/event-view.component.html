@@ -1,0 +1,12 @@
+@if(eventId) {
+    <app-event-details-generic 
+        [eventId]="eventId"
+        [useActionButtons]="false"
+        [useClientButtons]="false"
+    >
+    </app-event-details-generic>
+}@else {
+    <div class="h-screen">
+        <h1> Não há eventos disponíveis para este ingresso</h1>
+    </div>
+}

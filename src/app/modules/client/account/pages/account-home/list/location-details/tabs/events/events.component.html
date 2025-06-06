@@ -1,14 +1,12 @@
 <!-- Events Tab -->
-<div class="events-tab">
+ <!-- ESSE MIN-H-SCREEN PODE DAR OVERFLOW COM MUITOS EVENTOS, SE NÃO DER, OK! -->
+<div class="events-tab min-h-screen">
   <!-- Search and Filter -->
   <div class="search-filter-container">
-    <app-filter-table (filter)="onFilter($event)">
-      
-    </app-filter-table>
+    <app-filter-table (filter)="onFilter($event)" />
   </div>
 
   <!-- Event Type Filters -->
-  
      <div class="event-type-filters">
        <button *ngFor="let type of eventTypes" class="event-type-button">
          {{ type }}
