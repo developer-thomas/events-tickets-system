@@ -1,26 +1,31 @@
 <div class="ticket-list-container">
-  <!-- <app-page-header title="Ingressos" pageSession="Meus Ingressos"></app-page-header> -->
 
   <div class="tickets-content">
     <h1 class="tickets-title">Ingressos</h1>
 
     <div class="tickets-list">
-      <div *ngFor="let ticket of tickets" class="ticket-card" (click)="navigateToTicketDetail(ticket.id)">
-        <div class="ticket-info">
-          <h2 class="ticket-title">{{ ticket.title }}</h2>
-          <p class="ticket-date">Data: {{ ticket.date }} | {{ ticket.time }}</p>
-          <p class="ticket-quantity">Quantidade: {{ ticket.quantity }}</p>
+      @for(ticket of ticketsData(); track ticket.id) {
+        <div class="ticket-card" (click)="navigateToTicketDetail(ticket.id)">
+          <div class="ticket-info">
+            <h2 class="ticket-title">{{ ticket.event.name }}</h2>
+            @if(ticket.event.timelineEvent.length > 0) {
+              <p class="ticket-date">Data: {{ ticket.event.timelineEvent[0].date | date: 'dd/MM/yy' }} | {{ ticket.event.timelineEvent[0].hourInit }}</p>
+              <!-- <p class="ticket-quantity">Quantidade: {{ ticket.quantity }}</p> -->
+            }
+          </div>
+          <div class="ticket-status-price">
+            <span class="ticket-status">{{ ticket.status }}</span>
+            <span class="ticket-price">{{ ticket.value === 0 ? 'Gratuito' : (ticket.value | currency: 'BRL') }}</span>
+          </div>
         </div>
-        <div class="ticket-status-price">
-          <span class="ticket-status">{{ ticket.status }}</span>
-          <span class="ticket-price">{{ ticket.price }}</span>
-        </div>
-      </div>
+      }
 
       <!-- Empty state when no tickets -->
-      <div *ngIf="tickets.length === 0" class="empty-tickets">
-        <p>Você não possui ingressos no momento.</p>
-      </div>
+       @if(ticketsData().length === 0) {
+         <div class="empty-tickets">
+           <p>Você não possui ingressos no momento.</p>
+         </div>
+       }
     </div>
   </div>
 </div>

@@ -1,63 +1,48 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
-
-interface Ticket {
-  id: number
-  title: string
-  date: string
-  time: string
-  quantity: number
-  status: string
-  price: string
-}
+import { TicketsService } from '../tickets.service';
+import { GetAllUserTickets } from '../models/GetAllUserTickets.interface';
 
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [CommonModule, MatIconModule, PageHeaderComponent],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
-export class ListComponent {
+export class ListComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  
-  tickets: Ticket[] = [
-    {
-      id: 1,
-      title: "Título do evento",
-      date: "00/00/00",
-      time: "00:00",
-      quantity: 5,
-      status: "Em aberto",
-      price: "R$ 00,00",
-    },
-    {
-      id: 2,
-      title: "Título do evento",
-      date: "00/00/00",
-      time: "00:00",
-      quantity: 5,
-      status: "Em aberto",
-      price: "R$ 00,00",
-    },
-    {
-      id: 3,
-      title: "Título do evento",
-      date: "00/00/00",
-      time: "00:00",
-      quantity: 5,
-      status: "Em aberto",
-      price: "R$ 00,00",
-    },
-  ]
+  private ticketsService = inject(TicketsService);
 
-  ngOnInit(): void {}
+  ticketsData = signal<GetAllUserTickets[]>([]);
+
+  ngOnInit(): void {
+    this.getUserTickets()
+  }
+
+  getUserTickets() {
+    this.ticketsService.getUserTickets().subscribe({
+      next: (res) => {
+        const data = res.data.map((ticket) => ({
+          ...ticket,
+          status: this.translateTicketStatus(ticket.status),
+        }))
+        this.ticketsData.set(data)
+      }
+    })
+  }
 
   navigateToTicketDetail(ticketId: number): void {
     this.router.navigate([ticketId], { relativeTo: this.route})
+  }
+
+  translateTicketStatus(statusName: string) {
+    if (statusName === 'VALID') return 'Válido';
+    if (statusName === 'USED') return 'Usado';
+    if (statusName === 'INVALID') return 'Inválido';
+    return statusName;
   }
 }
