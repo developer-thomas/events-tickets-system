@@ -1,11 +1,6 @@
-import { AfterViewInit, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { EventAddress } from '../models/GetEventById.interface';
 import { GoogleMapsModule } from '@angular/google-maps';
-import { EventAddress } from '../../../../models/GetEventById.interface';
-
-export interface EventLocationData {
-  address: string
-  mapImage: string
-}
 
 @Component({
   selector: 'app-event-location',
@@ -14,7 +9,7 @@ export interface EventLocationData {
   templateUrl: './event-location.component.html',
   styleUrl: './event-location.component.scss'
 })
-export class EventLocationComponent implements AfterViewInit{
+export class EventLocationComponent {
   @Input() locationData!: EventAddress | any;
   addressRedirection: string = '';
   // Coordenadas fornecidas

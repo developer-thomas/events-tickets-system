@@ -1,0 +1,47 @@
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+  }
+  
+  .social-actions {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .action-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    
+    &:hover {
+      background-color: #e4e4e4;
+    }
+    
+    mat-icon {
+      color: #292d32;
+    }
+  }
+  
+  .buy-button {
+    background-color: #192554;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 24px;
+    font-weight: 500;
+    font-size: 16px;
+    cursor: pointer;
+    
+    &:hover {
+      background-color: darken(#192554, 10%);
+    }
+  }

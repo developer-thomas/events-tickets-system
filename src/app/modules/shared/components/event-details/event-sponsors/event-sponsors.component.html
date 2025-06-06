@@ -1,0 +1,26 @@
+<!-- Sponsors Section -->
+<div>
+    <h2 class="text-xl font-semibold mb-4">Patrocinadores</h2>
+    @if(sponsors.length > 0) {
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        @for (sponsor of sponsors; track sponsor.id) {
+          <div class="sponsor-card p-4 border border-gray-200 rounded-lg">
+            <div class="flex items-center mb-4">
+              <div class="sponsor-avatar w-12 h-15 bg-gray-200 mr-3">
+                <img class="rounded-full" [src]="sponsor.imageUrl || 'assets/images/no-image.jpg'" [alt]="sponsor.name">
+              </div>
+              <div>
+                <h3 class="font-medium">{{ sponsor.name }}</h3>
+                <!-- <p class="text-sm text-gray-500">{{ sponsor.category }}</p> -->
+              </div>
+            </div>
+            <p class="text-sm text-gray-700 ml-16">{{ sponsor.description }}</p>
+          </div>
+        }
+      </div>
+    } @else {
+      <h3>Não há patrocinadores para este evento</h3>
+    }
+  </div>
+  
+  

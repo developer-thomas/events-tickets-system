@@ -1,13 +1,12 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { TimelineEvent } from '../models/GetEventById.interface';
 import { MatIconModule } from '@angular/material/icon';
-import { TimelineEvent } from '../../../../models/GetEventById.interface';
-import { CapitalizePipe } from '../../../../../../../shared/pipes/capitalize-pipe/capitalize-pipe.pipe';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-event-schedule',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [MatIconModule, CommonModule],
   templateUrl: './event-schedule.component.html',
   styleUrl: './event-schedule.component.scss'
 })

@@ -1,27 +1,14 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
+import { EventService } from '../../../../gerencial/pages/event/event.service';
+import { GetOneEvent } from '../models/GetEventById.interface';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { GetOneEvent } from '../../../../models/GetEventById.interface';
-import { EventService } from '../../../../event.service';
-
-export interface EventHeaderData {
-  id: number
-  title: string
-  location: string
-  price: string
-  dateRange: string
-  image: string
-  description: string
-  active: boolean
-  sponsorLogo?: string
-}
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-event-header',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatSlideToggleModule],
+  imports: [MatIconModule, MatSlideToggle, CommonModule],
   templateUrl: './event-header.component.html',
   styleUrl: './event-header.component.scss'
 })
@@ -31,10 +18,17 @@ export class EventHeaderComponent {
   @Input() eventId: any;
   @Input() eventData!: GetOneEvent | any;
   @Input() useActionButtons: boolean = true;
-
+  @Input() useClientButtons: boolean = false;
+  @Input() isFavorite: boolean = false;
+  // Ações do usuário admin
   @Output() delete = new EventEmitter<number>()
   @Output() edit = new EventEmitter<number>()
   @Output() toggleActive = new EventEmitter<{ id: number; active: boolean }>()
+
+  // Ações do usuário client
+  @Output() shareEvent = new EventEmitter<any>();
+  @Output() activeEvent = new EventEmitter<any>();
+  @Output() buyTicket = new EventEmitter<any>();
 
   onDelete(): void {
     this.delete.emit(this.eventData.id)
@@ -50,5 +44,18 @@ export class EventHeaderComponent {
       active: event.checked,
     })
   }
+
+  onShareEvent() {
+    this.shareEvent.emit(this.eventId);
+  }
+
+  onToggleFavorite() {
+    this.activeEvent.emit(this.eventId);
+  }
+
+  onBuyTicket() {
+    this.buyTicket.emit(this.eventId);
+  }
+
 
 }
