@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
+import { FavoritesService } from '../favorites.service';
+import { StorageService } from '../../../../../../core/auth/storage.service';
 
 interface Category {
   id: string
@@ -28,9 +30,14 @@ interface FavoriteEvent {
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
-export class ListComponent {
-  searchQuery = ""
+export class ListComponent implements OnInit {
+  private favoritesService = inject(FavoritesService);
   private router = inject(Router)
+  private storageService = inject(StorageService);
+
+  userId!: any;
+
+  searchQuery = ""
   selectedCategory = "all"
 
   categories: Category[] = [
@@ -98,7 +105,28 @@ export class ListComponent {
     },
   ]
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getUserId();
+    this.getFavorites();
+  }
+
+  getFavorites() {
+    this.favoritesService.getFavorites(this.userId).subscribe({
+      next: (res) => {
+        console.log('aaa', res)
+      }
+    })
+  }
+
+  getUserId() {
+    const userId = Number(this.storageService.getItem('userId'));
+
+    if(userId) {
+      this.userId = userId;
+    }
+
+    
+  }
 
   toggleCategory(category: Category): void {
     this.selectedCategory = category.id;

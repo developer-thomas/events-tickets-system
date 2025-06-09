@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { Observable, tap } from "rxjs";
+import { Observable, switchMap, tap } from "rxjs";
 import { environment } from "../../../environments/environment.development";
 import { SigninCredentialsResponse } from "../models/auth";
 import { UserService } from "./user.service";
@@ -14,15 +14,18 @@ export class AuthService {
 
   private readonly api = environment.api;
 
-  auth( email: string, password: string ): Observable<SigninCredentialsResponse> {
-    return this.http.post<SigninCredentialsResponse>(
+  auth( email: string, password: string ): Observable<any> {
+    return this.http.post<any>(
         `${this.api}/auth`,
         {
           email,
           password,
         }
       )
-      .pipe(tap((user) => this.userService.decodeAndNotify(user)));
+      .pipe(tap(
+        (user) => this.userService.decodeAndNotify(user)),
+        switchMap(() => this.userService.getLoggedUser())
+      );
   }
 
   forgot(email: string | null): Observable<any> {

@@ -5,8 +5,7 @@ import { RouterModule } from '@angular/router';
   selector: 'app-favorites',
   standalone: true,
   imports: [RouterModule],
-  templateUrl: './favorites.component.html',
-  styleUrl: './favorites.component.scss'
+  template: '<router-outlet></router-outlet>',
 })
 export class FavoritesComponent {
 
