@@ -3,6 +3,10 @@ import { environment } from '../../../../../../environments/environment.developm
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+interface favoriteStatus {
+  status: 'removed' | 'added';
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -13,6 +17,10 @@ export class FavoritesService {
 
   getFavorites(userId: any): Observable<any> {
     return this.http.get<any>(`${this.api}/favorites/by/user/${userId}`)
+  }
+
+  favoriteAnEvent(data: { eventId: number, userId: number }): Observable<favoriteStatus> {
+    return this.http.post<favoriteStatus>(`${this.api}/favorites/favorite/toggle`, data)
   }
 
 }

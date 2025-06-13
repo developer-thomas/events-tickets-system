@@ -34,14 +34,21 @@ export class AccountComponent implements OnInit {
 
   isLoggedIn() {
     const token = this.storageService.getToken();
-
-    if(token) {
-      this.routes.push(
-        { label: 'ingressos', route: 'ingressos', icon: 'receipt_long'},
-        { label: 'favoritos', route: 'favoritos', icon: 'favorite'},
-        { label: 'minha agenda', route: 'minha-agenda', icon: 'calendar_month'},
-      )
+  
+    if (token) {
+      const loggedRoutes: ISidenavRoute[] = [
+        { label: 'ingressos', route: 'ingressos', icon: 'receipt_long' },
+        { label: 'favoritos', route: 'favoritos', icon: 'favorite' },
+        { label: 'minha agenda', route: 'minha-agenda', icon: 'calendar_month' },
+      ];
+  
+      const ajudaIndex = this.routes.findIndex(r => r.route === 'ajuda');
+  
+      if (ajudaIndex !== -1) {
+        this.routes.splice(ajudaIndex, 0, ...loggedRoutes);
+      } else {
+        this.routes.push(...loggedRoutes);
+      }
     }
   }
-
 }
