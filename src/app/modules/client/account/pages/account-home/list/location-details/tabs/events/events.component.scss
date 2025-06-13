@@ -147,3 +147,14 @@
   height: 20px;
   border-radius: 50%;
 }
+
+
+// FAVORITES
+.filled-heart {
+  color: red; // Coração cheio
+}
+
+.outlined-heart {
+  color: transparent; // Sem preenchimento
+  -webkit-text-stroke: 0.1px red; // Apenas contorno vermelho
+}

@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { FavoritesService } from '../favorites.service';
 import { StorageService } from '../../../../../../core/auth/storage.service';
+import { ToastrService } from 'ngx-toastr';
 
 interface Category {
   id: string
@@ -14,13 +15,13 @@ interface Category {
   isActive?: boolean
 }
 
-interface FavoriteEvent {
-  id: number
-  title: string
-  location: string
-  description: string
-  image: string
-  isFavorite: boolean
+export interface FavoriteEvent {
+  id: number;
+  name: string;
+  description: string;
+  eventLocation: string;
+  isFavorite: boolean;
+  image: string;
 }
 
 @Component({
@@ -34,8 +35,10 @@ export class ListComponent implements OnInit {
   private favoritesService = inject(FavoritesService);
   private router = inject(Router)
   private storageService = inject(StorageService);
+  private toastr = inject(ToastrService);
 
   userId!: any;
+  favoriteEvents = signal<FavoriteEvent[]>([]);
 
   searchQuery = ""
   selectedCategory = "all"
@@ -48,63 +51,6 @@ export class ListComponent implements OnInit {
     { id: "art", name: "Arte", icon: "assets/map-icons/rio-icon.png" },
   ]
 
-  favoriteEvents: FavoriteEvent[] = [
-    {
-      id: 1,
-      title: "Título do evento",
-      location: "Nome do local",
-      description:
-        "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      image: "//images/event-placeholder.jpg",
-      isFavorite: true,
-    },
-    {
-      id: 2,
-      title: "Título do evento",
-      location: "Nome do local",
-      description:
-        "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      image: "assets/images/event-placeholder.jpg",
-      isFavorite: true,
-    },
-    {
-      id: 3,
-      title: "Título do evento",
-      location: "Nome do local",
-      description:
-        "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      image: "assets/images/event-placeholder.jpg",
-      isFavorite: true,
-    },
-    {
-      id: 4,
-      title: "Título do evento",
-      location: "Nome do local",
-      description:
-        "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      image: "assets/images/event-placeholder.jpg",
-      isFavorite: true,
-    },
-    {
-      id: 5,
-      title: "Título do evento",
-      location: "Nome do local",
-      description:
-        "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      image: "assets/images/event-placeholder.jpg",
-      isFavorite: true,
-    },
-    {
-      id: 6,
-      title: "Título do evento",
-      location: "Nome do local",
-      description:
-        "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-      image: "assets/images/event-placeholder.jpg",
-      isFavorite: true,
-    },
-  ]
-
   ngOnInit(): void {
     this.getUserId();
     this.getFavorites();
@@ -114,6 +60,7 @@ export class ListComponent implements OnInit {
     this.favoritesService.getFavorites(this.userId).subscribe({
       next: (res) => {
         console.log('aaa', res)
+        this.favoriteEvents.set(res);
       }
     })
   }
@@ -122,10 +69,8 @@ export class ListComponent implements OnInit {
     const userId = Number(this.storageService.getItem('userId'));
 
     if(userId) {
-      this.userId = userId;
+      this.userId = Number(userId);
     }
-
-    
   }
 
   toggleCategory(category: Category): void {
@@ -143,16 +88,22 @@ export class ListComponent implements OnInit {
   }
 
   toggleFavorite(event: FavoriteEvent): void {
-    event.isFavorite = !event.isFavorite
-    if (!event.isFavorite) {
-      setTimeout(() => {
-        this.favoriteEvents = this.favoriteEvents.filter((e) => e.id !== event.id)
-      }, 300)
-    }
+    const eventId = event.id;
+    const userId = this.userId;
+    
+    this.favoritesService.favoriteAnEvent({ eventId, userId }).subscribe({
+      next: (_) => {
+        this.toastr.success("Evento removido dos favoritos")
+        this.getFavorites();
+      }, error: (err) => {
+        this.toastr.error("Erro ao remover evento", err)
+      }
+    })
   }
 
   buyTicket(eventId: number): void {
     console.log("Buy ticket for event:", eventId)
+
   }
 
   viewEventDetails(eventId: number): void {

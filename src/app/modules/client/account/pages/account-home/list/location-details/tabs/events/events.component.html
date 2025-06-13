@@ -20,7 +20,9 @@
           <div class="event-image">
             <img [src]="event.fileUrl" alt="{{ event.name }}">
             <button class="favorite-button" (click)="toggleFavorite(event.id); $event.stopPropagation()">
-              <mat-icon>{{ event.isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+              <mat-icon [ngClass]="event.isFavorite ? 'filled-heart' : 'outlined-heart'">
+                {{ event.isFavorite ? 'favorite' : 'favorite' }}
+              </mat-icon>
             </button>
           </div>
           <div class="event-info">

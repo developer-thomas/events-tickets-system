@@ -3,15 +3,16 @@
     <div class="header-content">
       <!-- Logo -->
       <a routerLink="/" class="logo">
-        <img src="assets/images/logo-header.png" alt="Cidade da Cultura">
+        @if(isAuth && userData()?.imageUrl) {
+          <img [src]="userData()?.imageUrl" alt="Imagem do usuário">
+        } @else {
+          <img src="assets/images/logo-header.png" alt="Imagem do usuário">
+        }
       </a>
       
       <!-- Right Side Actions -->
       <div class="header-actions">
-        <button mat-icon-button class="action-button">
-          <mat-icon>calendar_today</mat-icon>
-        </button>
-        
+               
         <button mat-icon-button class="action-button">
           <mat-icon>shopping_cart</mat-icon>
         </button>
@@ -22,15 +23,23 @@
               <mat-icon>person</mat-icon>
             </div>
             <div class="user-info text-white">
-              <span class="user-label">Faça seu</span>
-              <span class="user-action cursor-pointer" routerLink="/login">Login ou Cadastro</span>
+              @if(isAuth === false) {
+                <span class="user-label">Faça seu login</span>
+              } @else {
+                <span class="user-label">Seja bem vindo(a)</span>
+              }
+              @if(isAuth === false) {
+                <span class="user-action cursor-pointer" routerLink="/login">Login ou Cadastro</span>
+              } @else {
+                <span class="user-action cursor-pointer" routerLink="/login">{{ userData()?.name }}</span>
+              }
             </div>
             <mat-icon class="dropdown-icon" style="cursor: pointer; color: white">keyboard_arrow_down</mat-icon>
           </div>
           
           <mat-menu #userMenu="matMenu" xPosition="before">
             <button mat-menu-item routerLink="/client/meus-dados">Meus Dados</button>
-            <button mat-menu-item routerLink="/home">Sair</button>
+            <button mat-menu-item (click)="logout()">Sair</button>
           </mat-menu>
         </div>
       </div>

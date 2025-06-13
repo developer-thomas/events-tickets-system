@@ -1,4 +1,4 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+<div class=" mx-auto py-6 container">
   <h1 class="text-2xl font-semibold text-gray-800 mb-6">Favoritos</h1>
   
   <!-- Search and Filters -->
@@ -41,7 +41,7 @@
   <!-- Favorites Grid -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     <div 
-      *ngFor="let event of favoriteEvents" 
+      *ngFor="let event of favoriteEvents()" 
       class="bg-white rounded-lg shadow overflow-hidden transition-all duration-300"
       [ngClass]="{'opacity-0 scale-90': !event.isFavorite, 'hover:-translate-y-1': event.isFavorite}">
       
@@ -51,17 +51,18 @@
         (click)="viewEventDetails(event.id)">
         <img 
           [src]="event.image" 
-          alt="{{ event.title }}" 
+          alt="{{ event.name }}" 
           class="w-full h-full object-cover">
       </div>
       
       <!-- Event Info -->
       <div class="p-4">
         <div class="flex justify-between items-start mb-2">
-          <h2 class="text-lg font-semibold text-gray-800">{{ event.title }}</h2>
+          <h2 class="text-lg font-semibold text-gray-800">{{ event.name }}</h2>
           <button 
             class="bg-transparent border-none p-0 cursor-pointer" 
-            (click)="toggleFavorite(event)">
+            (click)="toggleFavorite(event)"
+            >
             <mat-icon 
               [ngClass]="{'text-[#f13b3e]': event.isFavorite, 'text-gray-300': !event.isFavorite}">
               favorite
@@ -69,7 +70,7 @@
           </button>
         </div>
         
-        <p class="text-sm text-gray-600 mb-2">{{ event.location }}</p>
+        <p class="text-sm text-gray-600 mb-2">{{ event.eventLocation }}</p>
         <p class="text-sm text-gray-600 mb-4 line-clamp-3">{{ event.description }}</p>
         
         <button 
@@ -82,7 +83,7 @@
     
     <!-- Empty state when no favorites -->
     <div 
-      *ngIf="favoriteEvents.length === 0" 
+      *ngIf="favoriteEvents().length === 0" 
       class="col-span-full flex flex-col items-center justify-center p-12 text-center bg-white rounded-lg shadow">
       <mat-icon class="text-gray-300 text-5xl mb-4">favorite_border</mat-icon>
       <p class="text-lg font-medium text-gray-800 mb-2">Você ainda não tem favoritos</p>
