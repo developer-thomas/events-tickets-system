@@ -38,6 +38,9 @@ export class CommomTableComponent<T> implements OnChanges, AfterViewInit {
   data = input<T[]>();
   @Input({ required: true }) displayedColumns!: TableColumn[];
 
+  @Input() useEditBtn: boolean = true;
+  @Input() useDeleteBtn: boolean = true;
+  @Input() useDetailBtn: boolean = true;
   // total de itens para paginação
   @Input() totalItems = 50;
   @Input() public page = 1;
