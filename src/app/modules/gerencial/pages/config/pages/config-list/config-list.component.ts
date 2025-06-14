@@ -4,8 +4,9 @@ import { BaseButtonComponent } from '../../../../../shared/components/base-butto
 import { CommomTableComponent, TableColumn } from '../../../../../shared/components/commom-table/commom-table.component';
 import { FilterTableComponent } from '../../../../../shared/components/filter-table/filter-table.component';
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
-import { ConfigResponse, ConfigService } from '../../config.service';
+import { ConfigService } from '../../config.service';
 import { GetAllCollaborators } from '../../models/GetAllCollaborators.interface';
+import { ConfirmDialogService } from '../../../../../shared/services/confirm-dialog/confirmDialog.service';
 
 @Component({
   selector: 'app-config-list',
@@ -24,6 +25,7 @@ export class ConfigListComponent implements OnInit {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   private configService = inject(ConfigService);
+  private confirmDialog = inject(ConfirmDialogService);
 
   public title = 'Configurações';
   public pageSession = 'Configurações';
@@ -47,7 +49,11 @@ export class ConfigListComponent implements OnInit {
   private getAdmins(search?: string): void {
     this.configService.getAll(1, 10, search).subscribe({
       next: (res) => {
-        this.admins.set(res);
+        const data = res;
+        this.admins.set(data.map((admin) => ({
+          ...admin,
+          role: admin.role === 'ADMIN' ? 'Admin' : 'Colaborador'
+        })));
       }
     })
   }

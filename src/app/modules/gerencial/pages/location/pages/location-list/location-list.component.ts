@@ -8,6 +8,7 @@ import { BaseButtonComponent } from '../../../../../shared/components/base-butto
 import { AllLocations, GetAllLocations } from '../../models/GetAllLocations.interface';
 import { LocationService } from '../../location.service';
 import { map } from 'rxjs';
+import { ConfirmDialogService } from '../../../../../shared/services/confirm-dialog/confirmDialog.service';
 
 @Component({
   selector: 'app-location-list',
@@ -21,6 +22,7 @@ export class LocationListComponent {
   private toastr = inject(ToastrService);
   private activatedRoute = inject(ActivatedRoute);
   private locationService = inject(LocationService);
+  private confirmDialog = inject(ConfirmDialogService);
 
   public title = 'Local';
   public pageSession = 'Local';
@@ -81,14 +83,20 @@ export class LocationListComponent {
   }
 
   deleteLocation(row: any) {
-    const deleteUser = confirm('Deseja deletar esse usuário?');
-
-    // DESCOMENTAR QUANDO ESTIVER NA FASE DE INTEGRAÇÃO
-    // if (deleteUser) {
-    //   this.clientService.deleteClient(row.id);
-    //   this.toastr.success('Cliente excluído com sucesso!')
-    // }
-    return
-
+    this.confirmDialog.confirm('Confirmar exclusão', 'Você tem certeza que deseja excluir este local?')
+      .then((confirmed) => {
+        if (confirmed) {
+          this.locationService.deleteLocation(row.id).subscribe({
+            next: () => {
+              this.toastr.success('Local deletado com sucesso');
+              this.getLocations();
+            },
+            error: (err) => {
+              console.error('Erro ao excluir evento:', err);
+              this.toastr.error('Erro ao excluir local');
+            }
+          });
+        }
+      });
   }
 }

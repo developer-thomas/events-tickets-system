@@ -37,7 +37,6 @@ export class TicketsListComponent implements OnInit{
       { label: 'Nome do local', key: 'eventLocationName', type: 'text' },
       { label: 'Valor', key: 'value', type: 'text' },
       { label: 'Status', key: 'status', type: 'text' },
-      { label: '', key: 'menu', type: 'menu' },
     ];
 
   ngOnInit(): void {

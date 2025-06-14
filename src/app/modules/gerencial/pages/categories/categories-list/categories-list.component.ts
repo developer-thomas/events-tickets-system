@@ -9,6 +9,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { NewCategoryComponent } from '../new-category/new-category.component';
 import { GetAllCategories } from '../models/GetAllCategories.interface';
 import { CategoriesService } from '../categories.service';
+import { ConfirmDialogService } from '../../../../shared/services/confirm-dialog/confirmDialog.service';
 
 @Component({
   selector: 'app-categories-list',
@@ -20,6 +21,8 @@ import { CategoriesService } from '../categories.service';
 export class CategoriesListComponent implements OnInit{
   private dialog = inject(MatDialog);
   private categoriesService = inject(CategoriesService);
+  private confirmDialog = inject(ConfirmDialogService);
+  private toastr = inject(ToastrService);
 
   public title = 'Categorias';
   public pageSession = 'Categorias';
@@ -61,7 +64,21 @@ export class CategoriesListComponent implements OnInit{
   }
   
   deleteCategory(row: any) {
-   
+    this.confirmDialog.confirm('Confirmar exclusão', 'Você tem certeza que deseja excluir este categoria?')
+    .then((confirmed) => {
+      if (confirmed) {
+        this.categoriesService.delete(row.id).subscribe({
+          next: () => {
+            this.toastr.success('Categoria deletada com sucesso');
+            this.getCategories();
+          },
+          error: (err) => {
+            console.error('Erro ao excluir categoria:', err);
+            this.toastr.error('Erro ao excluir categoria');
+          }
+        });
+      }
+    });
   }
   
   newCategory() {

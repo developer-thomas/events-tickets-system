@@ -40,7 +40,6 @@ export class ClientsListComponent implements OnInit {
     { label: 'Telefone', key: 'phone', type: 'text' },
     { label: 'E-mail', key: 'email', type: 'text' },
     { label: 'Status', key: 'active', type: 'status' },
-    { label: '', key: 'menu', type: 'menu' },
   ];
 
   ngOnInit() {

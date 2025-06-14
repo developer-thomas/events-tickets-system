@@ -60,21 +60,21 @@ export class EventsComponent implements OnInit, OnChanges {
 
     console.log(eventId, userId);
 
-      // Atualiza visualmente o estado de favorito localmente
-    const eventIndex = this.events?.findIndex(event => event.id === eventId);
-    if (eventIndex !== undefined && eventIndex > -1 && this.events) {
-      const current = this.events[eventIndex];
-      this.events[eventIndex] = {
-        ...current,
-        isFavorite: !current.isFavorite
-      };
-    }
-
     if(userId) {
       this.favoritesService.favoriteAnEvent({eventId, userId}).subscribe({
         next: (res) => {
           if(res.status === 'added') {
             this.toastr.success('Evento adicionado aos favoritos')
+              // Atualiza visualmente o estado de favorito localmente
+            const eventIndex = this.events?.findIndex(event => event.id === eventId);
+            
+            if (eventIndex !== undefined && eventIndex > -1 && this.events) {
+              const current = this.events[eventIndex];
+              this.events[eventIndex] = {
+                ...current,
+                isFavorite: !current.isFavorite
+              };
+            }
           } else if (res.status === 'removed') {
             this.toastr.success('Evento removido dos favoritos')
           }
