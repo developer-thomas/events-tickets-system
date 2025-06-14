@@ -13,7 +13,7 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { ToastrService } from 'ngx-toastr';
 import { BaseButtonComponent } from '../../../../../shared/components/base-button/base-button.component';
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
-import { ConfigPermissionResponse, ConfigService } from '../../config.service';
+import { ConfigService } from '../../config.service';
 
 @Component({
   selector: 'app-config-edit',
@@ -47,7 +47,7 @@ export class ConfigEditComponent implements OnInit {
   public title = 'Configurações';
   public pageSession = 'Novo Colaborador';
   public status!: boolean;
-  public permissions: ConfigPermissionResponse[] = [];
+  public permissions: any[] = [];
 
   public form = this.fb.group({
     name: ['', [Validators.required]],

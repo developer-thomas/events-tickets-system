@@ -12,7 +12,7 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { ToastrService } from 'ngx-toastr';
 import { BaseButtonComponent } from '../../../../../shared/components/base-button/base-button.component';
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
-import { ConfigPermissionResponse, ConfigService } from '../../config.service';
+import { ConfigService } from '../../config.service';
 
 @Component({
   selector: 'app-config-form',
@@ -44,7 +44,7 @@ export class ConfigFormComponent implements OnInit {
   public title = "Configurações"
   public pageSession = "Novo Colaborador"
   public hide = true
-  public permissions: ConfigPermissionResponse[] = []
+  public permissions: any[] = []
   public showPermissionError = false
 
   public form = this.fb.group({
