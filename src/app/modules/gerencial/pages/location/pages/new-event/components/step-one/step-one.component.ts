@@ -80,7 +80,7 @@ export class StepOneComponent implements OnInit{
       this.getFormControl("categoryIds").setValue([])
     } else {
       this.selectedCategories = [categoryId]
-      this.getFormControl("categoryIds").setValue([categoryId]) // API espera um array
+      this.getFormControl("categoryIds").setValue([categoryId]);
     }
   }
 

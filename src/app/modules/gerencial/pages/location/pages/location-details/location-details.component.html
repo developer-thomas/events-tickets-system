@@ -2,7 +2,7 @@
 
 <!-- Header Banner -->
 <div class="relative w-full h-44 bg-cover bg-center" [ngStyle]="{ 'background-image': backgroundImage }">
-  <div class="absolute top-0 right-0 p-2 flex gap-2">
+  <!-- <div class="absolute top-0 right-0 p-2 flex gap-2">
     <button mat-icon-button>
       <mat-icon class="text-white">delete</mat-icon>
     </button>
@@ -10,7 +10,7 @@
       <mat-icon class="text-white">edit</mat-icon>
     </button>
     <mat-slide-toggle color="primary"></mat-slide-toggle>
-  </div>
+  </div> -->
 </div>
 
 <!-- Location Info -->
@@ -72,7 +72,7 @@
       </div>
       
       <!-- View Components -->
-      <app-cards-view *ngIf="currentView === 'cards'" [events]="locationData()?.event"></app-cards-view>
+      <app-cards-view style="cursor: pointer;" *ngIf="currentView === 'cards'" [events]="locationData()?.event"></app-cards-view>
       <app-dashboard-view *ngIf="currentView === 'dashboard'" [events]="events"></app-dashboard-view>
     </div>
   </div>
