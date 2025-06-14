@@ -28,4 +28,8 @@ export class CategoriesService {
   create(formData: any): Observable<any> {
     return this.http.post<any>(`${this.api}/categories`, formData);
   }
+
+  delete(categoryId: any): Observable<any> {
+    return this.http.delete(`${this.api}/categories/${categoryId}`);
+  }
 }

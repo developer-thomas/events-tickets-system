@@ -90,4 +90,10 @@ export class LocationService {
 
     return this.http.post<any>(`${this.api}/upload/image`, formData)
   }
+  /**
+   * Deleta um local
+   */
+  deleteLocation(locationId: number): Observable<any> {
+    return this.http.delete<any>(`${this.api}/places/${locationId}`)
+  }
 }
