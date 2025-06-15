@@ -3,6 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
+import { UserService } from '../../../../core/auth/user.service';
 
 @Component({
   selector: 'app-user-card',
@@ -17,13 +18,27 @@ import { Router } from '@angular/router';
 })
 export class UserCardComponent {
   private router = inject(Router);
+  private userService = inject(UserService);
 
   public user: any | null = {
     name: 'Paulo Ricardo',
-    profilePicture: 'assets/png/default-user.png',
+    imageUrl: 'assets/png/default-user.jpg',
   };
 
   logout() {
     this.router.navigate(['/']);
+  }
+
+  public username!: string;
+
+  ngOnInit(): void {
+    this.userService.getLoggedUser().subscribe({
+      next: (res) => {
+        this.user = {
+          name: res.name,
+          imageUrl: res.imageUrl
+        }
+      }
+    })
   }
 }
