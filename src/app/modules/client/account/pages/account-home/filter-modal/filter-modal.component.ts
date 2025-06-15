@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { CategoriesService } from '../../../../../gerencial/pages/categories/categories.service';
+import { GetAllCategories } from '../../../../../gerencial/pages/categories/models/GetAllCategories.interface';
 
 interface DateSelection {
   day: number
@@ -11,18 +15,14 @@ interface DateSelection {
 @Component({
   selector: 'app-filter-modal',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, MatFormField, MatLabel, MatSelectModule],
   templateUrl: './filter-modal.component.html',
   styleUrl: './filter-modal.component.scss'
 })
-export class FilterModalComponent {
-  types = [
-    { id: "jm", name: "JM Brasil", logo: "assets/map-icons/jm-icon.png", selected: false },
-    { id: "arena", name: "Arena da Palavra", logo: "assets/map-icons/arena-icon.png", selected: false },
-    { id: "arte", name: "Arte Espaços", logo: "assets/map-icons/arte-icon.png", selected: false },
-    { id: "corpo", name: "Corpo", logo: "assets/map-icons/corpo-icon.png", selected: false },
-    { id: "rio", name: "Rio", logo: "assets/map-icons/rio-icon.png", selected: false },
-  ]
+export class FilterModalComponent implements OnInit {
+  private categoriesService = inject(CategoriesService);
+
+  categories = signal<GetAllCategories[]>([]);
 
   locations = [
     { id: "home", name: "Casa", icon: "home", selected: false },
@@ -30,17 +30,55 @@ export class FilterModalComponent {
     { id: "current", name: "Localização atual", icon: "location_on", selected: false },
   ]
 
+  months = [
+    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+  ];
+
+  years = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() + i);
+
+  selectedMonth = new Date().getMonth(); // mês atual
+  selectedYear = new Date().getFullYear();
+
+  dates: DateSelection[] = [];
+
   weekDays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"]
 
-  dates: DateSelection[] = Array.from({ length: 31 }, (_, i) => ({
-    day: i + 1,
-    selected: i + 1 >= 8 && i + 1 <= 13, // Pre-select dates 8-13
-  }))
+  ngOnInit(): void {
+    this.getAllCategories();
+    this.generateCalendarDays();
+  }
+
+  getAllCategories() {
+    this.categoriesService.getAll().subscribe({
+      next: (res) => {
+        this.categories.set(res);
+      }
+    })
+  }
+
+  generateCalendarDays(): void {
+    const firstDayOfMonth = new Date(this.selectedYear, this.selectedMonth, 1).getDay(); // 0 = Domingo
+    const daysInMonth = new Date(this.selectedYear, this.selectedMonth + 1, 0).getDate();
+  
+    const calendar: DateSelection[] = [];
+  
+    // Adiciona dias "vazios" antes do primeiro dia do mês para alinhamento com o dia da semana correto
+    for (let i = 0; i < firstDayOfMonth; i++) {
+      calendar.push({ day: 0, selected: false }); // dia 0 significa vazio (não renderiza número)
+    }
+  
+    for (let i = 1; i <= daysInMonth; i++) {
+      calendar.push({ day: i, selected: false });
+    }
+  
+    this.dates = calendar;
+  }
 
   constructor(public dialogRef: MatDialogRef<FilterModalComponent>) {}
 
-  selectType(typeId: string): void {
-    this.types.forEach((type) => {
+  selectCategories(typeId: number): void {
+    this.categories().forEach((type) => {
       if (type.id === typeId) {
         type.selected = !type.selected
       }
@@ -61,14 +99,17 @@ export class FilterModalComponent {
     date.selected = !date.selected
   }
 
+  // ENVIA OS DADOS SELECIONADOS NO FILTRO PARA O COMPONENT PAI E BUSCA NO RETORNO DA API
   applyFilters(): void {
     const selectedFilters = {
-      types: this.types.filter((t) => t.selected).map((t) => t.id),
+      types: this.categories().filter((t) => t.selected).map((t) => t.id),
       location: this.locations.find((l) => l.selected)?.id || null,
       dates: this.dates.filter((d) => d.selected).map((d) => d.day),
-    }
-
-    this.dialogRef.close(selectedFilters)
+      month: this.selectedMonth,
+      year: this.selectedYear
+    };
+  
+    this.dialogRef.close(selectedFilters);
   }
 
   closeDialog(): void {

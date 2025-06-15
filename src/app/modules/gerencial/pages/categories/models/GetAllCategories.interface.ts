@@ -3,4 +3,5 @@ export interface GetAllCategories {
     name: string;
     imageCover?: string;
     imageIcon?: string;
+    selected?: any;
 }

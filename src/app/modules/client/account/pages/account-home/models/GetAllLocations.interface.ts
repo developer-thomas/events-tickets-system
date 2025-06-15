@@ -30,6 +30,7 @@ export interface EventItem {
   name: string;
   description: string;
   categories: EventCategory[];
+  eventDate: string;
 }
 
 export interface EventCategory {

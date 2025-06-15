@@ -59,6 +59,35 @@ export class MapComponent implements OnInit {
     this.viewMode = this.viewMode === "map" ? "list" : "map"
   }
 
+  // OBTÉM TODOS OS LOCAIS SEM PAGINAÇÃO
+  getAllLocations() {
+    this.accountHomeService.getAll().subscribe({
+      next: (res) => {
+        this.allLocations.set(res.result);
+        this.locationsData.set(res.result); // inicialmente, mostra todos
+      }
+    })
+  }
+  
+  // SOLICITA A LOCALIZAÇÃO DO USUÁRIO
+  getUserLocation() {
+    this.accountHomeService.getUserLocation().subscribe({
+      next: (res) => {
+        this.userLocation.set(res);
+      }
+    })
+  }
+
+  // PEGA TODAS AS CATEGORIAS
+  getAllCategories() {
+    this.categoriesService.getAll().subscribe({
+      next: (res) => {
+        this.categories.set(res);
+      }
+    })
+  }
+
+  // FILTRA PELA CATEGORIA SELECIONADA
   selectCategory(category: GetAllCategories): void {
     if (this.selectedCategory === category.id) {
       this.selectedCategory = 0;
@@ -77,47 +106,75 @@ export class MapComponent implements OnInit {
     this.locationsData.set(filtered);
   }
 
-  getAllLocations() {
-    this.accountHomeService.getAll().subscribe({
-      next: (res) => {
-        this.allLocations.set(res.result);
-        this.locationsData.set(res.result); // inicialmente, mostra todos
-      }
-    })
-  }
-  
-
-  getUserLocation() {
-    this.accountHomeService.getUserLocation().subscribe({
-      next: (res) => {
-        this.userLocation.set(res);
-      }
-    })
-  }
-
-  getAllCategories() {
-    this.categoriesService.getAll().subscribe({
-      next: (res) => {
-        this.categories.set(res);
-      }
-    })
-  }
-
-
+  // ABRE O FILTRO DO MODAL
   onFilter(searchTerm: string): void {
     const dialogRef = this.dialog.open(FilterModalComponent, {
       width: "90%",
       maxWidth: "500px",
+      maxHeight: '100vh',
       panelClass: "filter-dialog",
     })
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        console.log("Filtering by:", searchTerm, "with options:", result)
+    dialogRef.afterClosed().subscribe((filters) => {
+      if (filters) {
+        this.applyFilters(filters);
       }
     })
   }
 
+  // MÉTODO PARA APLICAR O FILTRO VINDO DO MODAL
+  applyFilters(filters: {
+    types: number[],
+    location: string | null,
+    dates: number[],
+    month: number,
+    year: number
+  }) {
+    const allLocations = this.accountHomeService.getCachedLocations();
+  
+    // Cria array de datas no formato 'YYYY-MM-DD' baseado no filtro de dias, mês e ano
+    const selectedDates = filters.dates.map((day) => {
+      const monthStr = String(filters.month + 1).padStart(2, '0');
+      const dayStr = String(day).padStart(2, '0');
+      return `${filters.year}-${monthStr}-${dayStr}`;
+    });
+  
+    const filtered = allLocations.filter((location) => {
+      let matchesPlace = true;
+      if (filters.location) {
+        if (filters.location === 'home') {
+          matchesPlace = location.name.toLowerCase().includes('casa');
+        } else if (filters.location === 'work') {
+          matchesPlace = location.name.toLowerCase().includes('trabalho');
+        } else if (filters.location === 'current') {
+          matchesPlace = true; 
+        } else {
+          // Caso selecione algo diferente, tenta comparar placeId
+          matchesPlace = location.addressLocation?.placeId === filters.location;
+        }
+      }
+
+      // Filtra eventos dentro da location
+      const matchingEvents = location.event?.filter((event) => {
+        const eventDateISO = new Date(event.eventDate).toISOString().split('T')[0];
+  
+        const matchesDate =
+          filters.dates.length === 0 || selectedDates.includes(eventDateISO);
+  
+        const matchesCategory =
+          filters.types.length === 0 ||
+          event.categories?.some((cat) => filters.types.includes(cat.id));
+  
+        return matchesDate && matchesCategory;
+      });
+  
+      return matchesPlace && matchingEvents?.length > 0;
+    });
+  
+    this.locationsData.set(filtered);
+  }
+  
+  // FILTRO DE TEXTO
   onSearchChange(searchTerm: string): void {
     const term = searchTerm.trim().toLowerCase();
   

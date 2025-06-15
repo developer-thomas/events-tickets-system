@@ -187,3 +187,8 @@
   border-radius: 50%;
 }
 
+.calendar-day.empty {
+  background-color: transparent;
+  cursor: default;
+  pointer-events: none;
+}
