@@ -1,6 +1,6 @@
 <div class="account-home-container">
   <!-- Search and Filter Bar -->
-  <div class="search-filter-container w-full">
+  <div class="search-filter-container w-full z-49">
     <app-filter-table (filter)="onFilter($event)"></app-filter-table>
     <button class="view-toggle-button" (click)="toggleView()">
       <mat-icon>{{ viewMode === 'map' ? 'format_list_bulleted' : 'map' }}</mat-icon>
@@ -9,23 +9,30 @@
   <div class="category-filters">
     <div 
       *ngFor="let category of categories()" 
-      class="category-item"
+      class="category-item  z-5"
       [class.active]="selectedCategory === category.id"
       (click)="selectCategory(category.id)">
-      <div class="category-icon">
-        <mat-icon>{{ category.imageIcon }}</mat-icon>
-         <img [src]="category.imageIcon" alt="ícone da categoria">
+      <div class="category-icon flex justify-center ">
+         <img class="icon-image" [src]="category.imageIcon" alt="ícone da categoria">
       </div>
     </div>
   </div>
   
   <!-- Map View -->
   <div class="map-container" *ngIf="viewMode === 'map'">
-    <app-map-view [userLocation]="userLocation()"></app-map-view>
+    <app-map-view 
+      [userLocation]="userLocation()"
+      [locations]="locationsData()"
+      >
+    </app-map-view>
   </div>
   
   <!-- List View (Hidden by default) -->
   <div class="list-container" *ngIf="viewMode === 'list'">
-    <app-list  [userLocation]="userLocation()" [locations]="locationsData()" (backToMapView)="toggleView()"></app-list>
+    <app-list 
+      [userLocation]="userLocation()" 
+      [locations]="locationsData()" 
+      (backToMapView)="toggleView()">
+    </app-list>
   </div>
 </div>

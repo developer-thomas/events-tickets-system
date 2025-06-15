@@ -34,14 +34,6 @@ export class MapComponent implements OnInit {
   private categoriesService = inject(CategoriesService);
 
   viewMode: "map" | "list" = "map"
-
-  // categories: Category[] = [
-  //   { id: "all", name: "Todos", icon: "assets/map-icons/jm-icon.png" },
-  //   { id: "theater", name: "Teatro", icon: "assets/map-icons/arena-icon.png" },
-  //   { id: "music", name: "Música", icon: "assets/map-icons/arte-icon.png" },
-  //   { id: "dance", name: "Dança", icon: "assets/map-icons/corpo-icon.png" },
-  //   { id: "art", name: "Arte", icon: "assets/map-icons/rio-icon.png" },
-  // ]
     
   selectedCategory = 0;
     
@@ -66,6 +58,7 @@ export class MapComponent implements OnInit {
 
   selectCategory(categoryId: number): void {
     this.selectedCategory = categoryId
+    console.log(categoryId)
   }
 
   onFilter(searchTerm: string): void {
