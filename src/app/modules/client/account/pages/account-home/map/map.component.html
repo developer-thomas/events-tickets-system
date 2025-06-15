@@ -1,17 +1,22 @@
 <div class="account-home-container">
   <!-- Search and Filter Bar -->
   <div class="search-filter-container w-full z-49">
-    <app-filter-table (filter)="onFilter($event)"></app-filter-table>
+    <app-filter-table 
+      (filter)="onFilter($event)" 
+      (filterText)="onSearchChange($event)" 
+    />
+
     <button class="view-toggle-button" (click)="toggleView()">
       <mat-icon>{{ viewMode === 'map' ? 'format_list_bulleted' : 'map' }}</mat-icon>
     </button>
+  
   </div>
   <div class="category-filters">
     <div 
       *ngFor="let category of categories()" 
       class="category-item  z-5"
       [class.active]="selectedCategory === category.id"
-      (click)="selectCategory(category.id)">
+      (click)="selectCategory(category)">
       <div class="category-icon flex justify-center ">
          <img class="icon-image" [src]="category.imageIcon" alt="ícone da categoria">
       </div>

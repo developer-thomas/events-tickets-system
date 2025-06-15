@@ -16,4 +16,6 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class FilterTableComponent {
   @Output() filter = new EventEmitter<string>();
+  @Output() filterText = new EventEmitter<string>();
+
 }

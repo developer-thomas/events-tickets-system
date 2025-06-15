@@ -1,24 +1,33 @@
-<div class="mb-8 z-0">
-  <google-map
-    #map
-    class="z-0"
-    [center]="center"
-    [zoom]="zoom"
-    [options]="mapOptions"
-    height="100vh"
-    width="100%"
-  >
-    <!-- Marcador do usuário -->
-    <map-marker
-      [position]="markerPosition"
-      [options]="markerOptions"
-    ></map-marker>
+<google-map
+  #map
+  class="z-0"
+  [center]="center"
+  [zoom]="zoom"
+  [options]="mapOptions"
+  height="100vh"
+  width="100%"
+>
+  <!-- Marcador do usuário -->
+  <map-marker
+    [position]="markerPosition"
+    [options]="markerOptions"
+  ></map-marker>
 
-    <!-- Marcadores das localizações recebidas -->
-    <map-marker
-      *ngFor="let marker of customMarkers"
-      [position]="marker.position"
-      [options]="{ title: marker.title, icon: marker.icon }"
-    ></map-marker>
-  </google-map>
-</div>
+  <!-- Marcadores dinâmicos -->
+  <map-marker
+    *ngFor="let marker of customMarkers; let i = index"
+    [position]="marker.position"
+    [options]="{ title: marker.title, icon: marker.icon }"
+    (mapClick)="openInfo(marker, i)">
+  </map-marker>
+
+
+  <!-- Info Window -->
+  <map-info-window #infoWindow>
+    <div class="p-2">
+      <img class="mx-auto" [src]="selectedMarker?.coverUrl" width="80%" />
+      <h1 style="font-size: 30px; margin-bottom: 10px;">{{ selectedMarker?.title }}</h1>
+      <img [src]="selectedMarker?.iconUrl" width="40" />
+    </div>
+  </map-info-window>
+</google-map>

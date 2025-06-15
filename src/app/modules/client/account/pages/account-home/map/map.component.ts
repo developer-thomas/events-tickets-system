@@ -43,6 +43,9 @@ export class MapComponent implements OnInit {
   // Armazena todos os eventos que vem do backend
   locationsData = signal<GetAllLocation[]>([]);
 
+  // Armazena os locais em cachê através do método do service
+  allLocations = signal<GetAllLocation[]>([]);
+
   // Armazena a lat lng do usuário que entra
   userLocation = signal<UserLocation | null>(null);
 
@@ -56,32 +59,33 @@ export class MapComponent implements OnInit {
     this.viewMode = this.viewMode === "map" ? "list" : "map"
   }
 
-  selectCategory(categoryId: number): void {
-    this.selectedCategory = categoryId
-    console.log(categoryId)
-  }
-
-  onFilter(searchTerm: string): void {
-    const dialogRef = this.dialog.open(FilterModalComponent, {
-      width: "90%",
-      maxWidth: "500px",
-      panelClass: "filter-dialog",
-    })
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        console.log("Filtering by:", searchTerm, "with options:", result)
-      }
-    })
+  selectCategory(category: GetAllCategories): void {
+    if (this.selectedCategory === category.id) {
+      this.selectedCategory = 0;
+      this.locationsData.set(this.accountHomeService.getCachedLocations());
+      return;
+    }
+  
+    this.selectedCategory = category.id;
+  
+    const allLocations = this.accountHomeService.getCachedLocations();
+  
+    const filtered = allLocations.filter(loc =>
+      loc.categories?.some(cat => cat.id === category.id)
+    );
+  
+    this.locationsData.set(filtered);
   }
 
   getAllLocations() {
     this.accountHomeService.getAll().subscribe({
       next: (res) => {
-        this.locationsData.set(res.result);
+        this.allLocations.set(res.result);
+        this.locationsData.set(res.result); // inicialmente, mostra todos
       }
     })
   }
+  
 
   getUserLocation() {
     this.accountHomeService.getUserLocation().subscribe({
@@ -97,5 +101,37 @@ export class MapComponent implements OnInit {
         this.categories.set(res);
       }
     })
+  }
+
+
+  onFilter(searchTerm: string): void {
+    const dialogRef = this.dialog.open(FilterModalComponent, {
+      width: "90%",
+      maxWidth: "500px",
+      panelClass: "filter-dialog",
+    })
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log("Filtering by:", searchTerm, "with options:", result)
+      }
+    })
+  }
+
+  onSearchChange(searchTerm: string): void {
+    const term = searchTerm.trim().toLowerCase();
+  
+    if (!term) {
+      // Se estiver vazio, mostra todos os locais do cache
+      this.locationsData.set(this.allLocations());
+      return;
+    }
+  
+    // Filtra os locais pelo nome
+    const filtered = this.allLocations().filter(location =>
+      location.name.toLowerCase().includes(term)
+    );
+  
+    this.locationsData.set(filtered);
   }
 }
