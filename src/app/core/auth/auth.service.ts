@@ -28,6 +28,19 @@ export class AuthService {
       );
   }
 
+  adminAuth( email: string, password: string ): Observable<any> {
+    return this.http.post<any>(
+        `${this.api}/admin/login`,
+        {
+          email,
+          password,
+        }
+      )
+      .pipe(tap(
+        (user) => this.userService.decodeAndNotify(user)),
+      );
+  }
+
   forgot(email: string | null): Observable<any> {
     return this.http.post<SigninCredentialsResponse>(
       `${this.api}/auth/forgot`,

@@ -45,7 +45,7 @@ export class SigninComponent {
     const { email , password } = this.form.value;
 
     if( email && password ) {
-      this.authService.auth(email, password).subscribe(() => {
+      this.authService.adminAuth(email, password).subscribe(() => {
         this.toastr.success('Login realizado com sucesso!');
         this.router.navigate(['/gerencial']);
       });

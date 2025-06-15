@@ -5,8 +5,7 @@ import { RouterModule } from '@angular/router';
   selector: 'app-account-home',
   standalone: true,
   imports: [RouterModule],
-  templateUrl: './account-home.component.html',
-  styleUrl: './account-home.component.scss'
+  template: '<router-outlet></router-outlet>'
 })
 export class AccountHomeComponent {
 
