@@ -37,26 +37,30 @@ export class ListComponent implements OnChanges {
 
   ngOnChanges(): void {
     const locationWithDistance = this.locations.map(local => {
-      const distance = haversineDistance(
-        this.userLocation?.lat,
-        this.userLocation?.lng,
-        local.addressLocation.lat,
-        local.addressLocation.lng
-      );
-
-      const estimatedTime = estimateTravelTime(distance);
-
+      let distance = 0;
+      let estimatedTime = '';
+  
+      if (this.userLocation && local.addressLocation) {
+        distance = haversineDistance(
+          this.userLocation.lat,
+          this.userLocation.lng,
+          local.addressLocation.lat,
+          local.addressLocation.lng
+        );
+        estimatedTime = estimateTravelTime(distance);
+      }
+  
       return {
         ...local,
         distanceKm: distance,
         estimatedTime
-      }
-    
+      };
     });
-
+  
     this.locationWithDistanceAndTime.set(locationWithDistance);
-    console.log(this.locationWithDistanceAndTime())
+    console.log(this.locationWithDistanceAndTime());
   }
+  
 
   onFilter(searchTerm: string): void {
     console.log("Filtering by:", searchTerm)

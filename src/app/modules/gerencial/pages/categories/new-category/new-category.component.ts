@@ -19,17 +19,19 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './new-category.component.scss'
 })
 export class NewCategoryComponent implements OnInit {
-  dialog = inject(MatDialogRef<NewCategoryComponent>)
+  public dialog = inject(MatDialogRef<NewCategoryComponent>)
   private fb = inject(FormBuilder)
   private toastr = inject(ToastrService);
   private categoryService = inject(CategoriesService)
-  private convertBaseFile = inject(ConvertbasefileService);
 
   categoryForm!: FormGroup
   categoryImage: File | null = null
+  categoryIconImage: File | null = null;
 
-  @ViewChild("fileInput") fileInput!: ElementRef<HTMLInputElement>
-  
+
+  @ViewChild("fileInput") fileInput!: ElementRef<HTMLInputElement>;
+  @ViewChild("fileIconInput") fileIconInput!: ElementRef<HTMLInputElement>;
+
   @Output() save = new EventEmitter<CreateCategory>()
   @Output() cancel = new EventEmitter<void>()
 
@@ -41,6 +43,7 @@ export class NewCategoryComponent implements OnInit {
     this.categoryForm = this.fb.group({
       name: ["", Validators.required],
       image: [null, Validators.required],
+      icon: [null, Validators.required]
     })
   }
 
@@ -54,32 +57,40 @@ export class NewCategoryComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
-    if (this.categoryForm.valid && this.categoryImage) {
-      this.convertBaseFile.convertFileToBase64(this.categoryImage).then((base64) => {
-        // const categoryData: CreateCategory = {
-        //   name: this.categoryForm.value.name,
-        //   file: base64.split(",")[1], // Remover o prefixo "data:image/jpeg;base64,"
-        // }
-        const categoryData = new FormData();
+  onImageIconSelected(event: Event): void {
+    const input = event.target as HTMLInputElement
+    if (input.files && input.files.length) {
+      this.categoryIconImage = input.files[0]
+      this.categoryForm.patchValue({
+        icon: this.categoryIconImage,
+      })
+    }
+  }
 
+  async onSubmit(): Promise<void> {
+    if (this.categoryForm.valid && this.categoryImage && this.categoryIconImage) {
+      try {        
+        const categoryData = new FormData();
         categoryData.append('name', this.categoryForm.value.name);
-        categoryData.append('imageCover', base64.split(",")[1]);
+        categoryData.append('imageCover', this.categoryImage);
+        categoryData.append('imageIcon', this.categoryIconImage); 
 
         this.categoryService.create(categoryData).subscribe({
           next: (_) => {
             this.toastr.success("Categoria criada com sucesso:")
-            this.dialog.close()
-          },
-          error: (error) => {
-            this.toastr.error("Erro ao criar categoria:", error.error.message)
-            console.error("Erro ao criar categoria:", error)
-          },
+            this.dialog.close();
+          }, error: (error) => {
+            this.toastr.error('Erro ao criar categoria:', error.error.message);
+            console.error('Erro ao criar categoria:', error);
+          }
         })
-      })
+      } catch (error) {
+        this.toastr.error('Erro ao converter imagem para base64');
+        console.error('Erro ao converter imagem:', error);
+      }
     } else {
-      // Mark all fields as touched to trigger validation messages
       this.markFormGroupTouched(this.categoryForm)
+      this.toastr.warning('Preencha todos os campos e selecione as duas imagens.');
     }
   }
 
@@ -87,7 +98,6 @@ export class NewCategoryComponent implements OnInit {
     this.dialog.close()
   }
 
-  // Helper method to mark all controls as touched
   private markFormGroupTouched(formGroup: FormGroup): void {
     Object.values(formGroup.controls).forEach((control) => {
       control.markAsTouched()
