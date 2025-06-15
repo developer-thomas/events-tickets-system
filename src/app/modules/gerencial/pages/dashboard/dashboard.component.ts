@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { NgApexchartsModule } from 'ng-apexcharts';
-import { DashboardCardComponent, DashbocardInfos } from './components/dashboard-card/dashboard-card.component';
+import { DashboardCardComponent } from './components/dashboard-card/dashboard-card.component';
 import { DashboardBuyedTicketsComponent } from './components/dashboard-buyed-tickets/dashboard-buyed-tickets.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+import { DashboardData, DashbocardInfos, TicketsSold } from './models/Dashboard.interface';
+import { DashboardService } from './dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,102 +20,232 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
     PageHeaderComponent,
   ],
 })
-export class DashboardComponent {
+export class DashboardComponent implements AfterViewInit {
+  private dashboardService = inject(DashboardService);
+  private cdr = inject(ChangeDetectorRef)
+
   public title = 'Dashboard';
   public pageSession = 'Dashboard';
 
-  public infos: DashbocardInfos[] = [
+  public ticketsSold = signal<TicketsSold[]>([]);
+
+  // ngOnInit(): void {
+  //   this.getDashboardData();
+  // }
+
+  ngAfterViewInit(): void {
+    this.getDashboardData();
+  }
+
+  getDashboardData() {
+    this.dashboardService.getDashboard().subscribe({
+      next: (res) => {
+        this.populateDashboardCard(res);
+        this.ticketsSold.set(res.lastTicketsSold);
+        this.populateBarChart(res);
+        this.populatePieChart(res);
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  // Popula os valores dos cards com a resposta da api
+  public populateDashboardCard(res: any) {
+    this.dashboardCardData = this.dashboardCardData.map((info) => {
+      switch (info.description) {
+        case 'Faturamento Ingressos':
+          return { ...info, value: this.formatCurrency(res.ticketsRevenue) };
+        case 'Faturamento Planos':
+          return { ...info, value: this.formatCurrency(res.subscritionsRevenue) };
+        case 'Usuários':
+          return { ...info, value: res.users.toLocaleString() };
+        default:
+          return info;
+      }
+    });    
+  }
+
+  // Informações que devem conter no card
+  public dashboardCardData: DashbocardInfos[] = [
     {
-      value: 'R$ 3.000.000,00',
+      value: '',
       description: 'Faturamento Ingressos',
-      percentage: '+50.2%',
       icon: 'paid',
       color: '#294153',
     },
     {
       value: '83.706',
       description: 'Faturamento Planos',
-      percentage: '+30.8%',
       icon: 'person',
       color: '#FBBB01',
     },
     {
       value: '981.657',
       description: 'Usuários',
-      percentage: '+76.4%',
       icon: 'task',
       color: '#EC6C6D',
     },
   ];
 
-  public pieChart: any = {
+  populatePieChart(res: any) {
+    const categoriesData = res.categoriesRevenue;
+    const locationsData = res.locationsRevenue;
+
+    this.pieChartCategories = {
+      ...this.pieChartCategories,
+      series: categoriesData.map((cat: any) => cat.revenue),
+      labels: categoriesData.map((cat: any) => cat.name)
+    };
+
+    this.pieChartPlaces = {
+      ...this.pieChartPlaces,
+      series: locationsData.map((loc: any) => loc.total),
+      labels: locationsData.map((loc: any) => loc.name)
+    };
+  }
+
+  public pieChartCategories: any = {
     colors: ['#6485BC', '#0969E6', '#1B2E4E', '#3F67A9', '#284980'],
-    series: [44, 55, 13, 43, 22],
+    series: [],
     chart: {
       type: 'pie',
+      height: 350
     },
     legend: {
-      show: false,
+      position: 'bottom',
+      horizontalAlign: 'center'
     },
+    labels: [],
+    responsive: [{
+      breakpoint: 480,
+      options: {
+        chart: {
+          width: 200
+        },
+        legend: {
+          position: 'bottom'
+        }
+      }
+    }]
   };
+
+  public pieChartPlaces: any = {
+    colors: ['#6485BC', '#0969E6', '#1B2E4E', '#3F67A9', '#284980'],
+    series: [],
+    chart: {
+      type: 'pie',
+      height: 350
+    },
+    legend: {
+      position: 'bottom',
+      horizontalAlign: 'center'
+    },
+    labels: [],
+    responsive: [{
+      breakpoint: 480,
+      options: {
+        chart: {
+          width: 200
+        },
+        legend: {
+          position: 'bottom'
+        }
+      }
+    }]
+  };
+
+
+  populateBarChart(res: any) {
+    const annualData = res.annualInformation;
+    const cleanedAnnualData = annualData.slice(0, 12);
+
+    this.barChart = {
+      ...this.barChart,
+      series: [
+        {
+          name: 'Usuários',
+          data: cleanedAnnualData.map((item: any) => item.totalUsers)
+        },
+        {
+          name: 'Faturamento',
+          data: cleanedAnnualData.map((item: any) => item.ticketsRevenue)
+        }
+      ],
+      xaxis: {
+        ...this.barChart.xaxis,
+        categories: cleanedAnnualData.map((item: any) => item.month)
+      }
+    };
+  }
 
   public barChart: any = {
     series: [
       {
-        name: 'Novos Usuários',
-        data: [50, 44, 55, 57, 56, 61, 58],
-        color: '#FBBB01',
+        name: 'Usuários',
+        data: []
       },
       {
-        name: 'Vendas',
-        data: [79, 76, 85, 101, 98, 87, 105],
-        color: '#294153',
-      },
-
+        name: 'Faturamento',
+        data: []
+      }
     ],
     chart: {
       type: 'bar',
       height: 350,
+      stacked: false,
     },
     plotOptions: {
       bar: {
         horizontal: false,
         columnWidth: '55%',
+        endingShape: 'rounded'
       },
     },
     dataLabels: {
-      enabled: false,
+      enabled: false
     },
     stroke: {
       show: true,
       width: 2,
-      colors: ['transparent'],
+      colors: ['transparent']
     },
     xaxis: {
-      categories: [
-        'Seg',
-        'Ter',
-        'Qua',
-        'Qui',
-        'Sex',
-        'Sab',
-        'Dom',
-      ],
+      categories: [],
     },
-    yaxis: {
-      title: {
-        text: '$ (thousands)',
+    yaxis: [
+      {
+        title: {
+          text: 'Usuários'
+        }
       },
-    },
+      {
+        opposite: true,
+        title: {
+          text: 'Faturamento'
+        }
+      }
+    ],
     fill: {
-      opacity: 1,
+      opacity: 1
     },
     tooltip: {
       y: {
-        formatter: function(val: any) {
-          return '$ ' + val + ' thousands';
-        },
-      },
+        formatter: function (val: any) {
+          return val
+        }
+      }
     },
+    legend: {
+      position: 'top',
+      horizontalAlign: 'left',
+    }
   };
+
+  formatCurrency(value: number): string {
+    return value.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      minimumFractionDigits: 2
+    });
+  }
 }

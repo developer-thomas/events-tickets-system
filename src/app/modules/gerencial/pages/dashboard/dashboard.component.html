@@ -2,7 +2,7 @@
 
 <section>
   <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-    @for (item of infos; track $index) {
+    @for (item of dashboardCardData; track $index) {
       <div class="w-full">
         <app-dashboard-card [info]="item"></app-dashboard-card>
       </div>
@@ -38,10 +38,11 @@
           <mat-card-content class="bg-white rounded-lg">
             <h1 class="text-xl text-slate-500">Locais Faturamento</h1>
             <apx-chart
-              [series]="pieChart.series"
-              [chart]="pieChart.chart"
-              [labels]="pieChart.labels"
-              [legend]="pieChart.legend"
+              [series]="pieChartPlaces.series"
+              [chart]="pieChartPlaces.chart"
+              [labels]="pieChartPlaces.labels"
+              [colors]="pieChartPlaces.colors"
+              [legend]="pieChartPlaces.legend"
             ></apx-chart>
           </mat-card-content>
         </mat-card>
@@ -53,10 +54,11 @@
           <mat-card-content class="bg-white">
             <h1 class="text-xl text-slate-500">Categorias Faturamento</h1>
             <apx-chart
-              [series]="pieChart.series"
-              [chart]="pieChart.chart"
-              [labels]="pieChart.labels"
-              [legend]="pieChart.legend"
+              [series]="pieChartCategories.series"
+              [chart]="pieChartCategories.chart"
+              [labels]="pieChartCategories.labels"
+              [colors]="pieChartCategories.colors"
+              [legend]="pieChartCategories.legend"
             ></apx-chart>
           </mat-card-content>
         </mat-card>
@@ -68,12 +70,11 @@
         <mat-card-content class="bg-custom-gray rounded-lg shadow-lg">
           <h1 class="text-xl mb-3">Ingressos Comprados</h1>
           <div class="space-y-3">
-            <div><app-dashboard-buyed-tickets></app-dashboard-buyed-tickets></div>
-            <div><app-dashboard-buyed-tickets></app-dashboard-buyed-tickets></div>
-            <div><app-dashboard-buyed-tickets></app-dashboard-buyed-tickets></div>
-            <div><app-dashboard-buyed-tickets></app-dashboard-buyed-tickets></div>
-            <div><app-dashboard-buyed-tickets></app-dashboard-buyed-tickets></div>
-            <div><app-dashboard-buyed-tickets></app-dashboard-buyed-tickets></div>
+            @for(ticket of ticketsSold(); track ticket.id) {
+              <div>
+                <app-dashboard-buyed-tickets [boughtTickets]="ticket"/>
+              </div>
+            }
           </div>
         </mat-card-content>
       </mat-card>

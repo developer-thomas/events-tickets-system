@@ -1,14 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-
-export type DashbocardInfos = {
-  value: string;
-  description: string;
-  percentage: string;
-  icon: string;
-  color: string;
-}
+import { DashbocardInfos } from '../../models/Dashboard.interface';
 
 @Component({
   selector: 'app-dashboard-card',

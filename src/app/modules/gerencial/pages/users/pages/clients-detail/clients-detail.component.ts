@@ -31,7 +31,7 @@ import { CommonModule } from '@angular/common';
   ],
 })
 export class ClientsDetailComponent implements OnInit {
-  @Input() id!: string;
+  @Input() id!: number;
 
   private clientService = inject(ClientService);
   private toastr = inject(ToastrService);
@@ -39,12 +39,7 @@ export class ClientsDetailComponent implements OnInit {
   public title = 'Clientes';
   public pageSession = 'Detalhes do cliente';
   
-  // RETIRAR O ANY NA FASE DE INTEGRAÇÃO
   public client?:  | any;
-
-  // PARA OS DADOS MOCKADOS (AJUSTAR NA INTEGRAÇÃO)
-  public financial!: any;
-  public tickets!: any;
 
   ngOnInit(): void {
     this.getClient();
@@ -57,10 +52,10 @@ export class ClientsDetailComponent implements OnInit {
   }
 
   public changeStatus(): void {
-    // this.clientService.changeStatus(this.id).subscribe(() => {
-    //   this.toastr.success('Status alterado com sucesso');
-    //   this.getClient();
-    // });
+    this.clientService.changeStatus(this.id).subscribe(() => {
+      this.toastr.success('Status alterado com sucesso');
+      this.getClient();
+    });
   }
  
 }

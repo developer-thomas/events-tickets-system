@@ -5,9 +5,9 @@
         <mat-icon class="text-white">description</mat-icon>
       </div>
       <div>
-        <p class="text-sm">#0120120D</p>
-        <p class="text-sm">Nome do Cliente</p>
-        <p class="text-sm">00/00/00</p>
+        <p class="text-sm">#{{ boughtTickets.id }}</p>
+        <p class="text-sm">{{ boughtTickets.userName }}</p>
+        <p class="text-sm">{{ boughtTickets.createdAt| date: 'dd/MM/yyyy'}}</p>
       </div>
     </div>
   </mat-card-content>

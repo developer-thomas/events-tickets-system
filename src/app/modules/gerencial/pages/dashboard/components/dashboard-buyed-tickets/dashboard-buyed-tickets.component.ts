@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { TicketsSold } from '../../models/Dashboard.interface';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard-buyed-tickets',
@@ -10,8 +12,10 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [
     MatCardModule,
     MatIconModule,
+    CommonModule
   ],
 })
 export class DashboardBuyedTicketsComponent {
 
+  @Input({required: true}) boughtTickets!: TicketsSold;
 }
