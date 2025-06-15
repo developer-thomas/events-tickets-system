@@ -1,7 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CommomTableComponent, TableColumn } from '../../../../../../../shared/components/commom-table/commom-table.component';
+import { GetUserFinancial } from '../../../../models/GetUserFinancial.interface';
+import { ClientService } from '../../../../client.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-financial-tab',
@@ -13,7 +16,7 @@ import { CommomTableComponent, TableColumn } from '../../../../../../../shared/c
         <mat-card>
           <mat-card-content>
             <app-commom-table
-              [data]="financialData"
+              [data]="financialData()"
               [displayedColumns]="displayedColumns"
             ></app-commom-table>
           </mat-card-content>
@@ -23,35 +26,46 @@ import { CommomTableComponent, TableColumn } from '../../../../../../../shared/c
   ,
 })
 export class FinancialTabComponent implements OnInit {
-  financialData: any;
+  private clientService = inject(ClientService);
+  private activatedRoute = inject(ActivatedRoute);
+
+  private userId!: number;
+  financialData = signal<GetUserFinancial[]>([]);
 
   public displayedColumns: TableColumn[] = [
-    { label: 'Data', key: 'data', type: 'text' },
-    { label: 'Usuário', key: 'user', type: 'text' },
-    { label: 'Método de Pagamento', key: 'paymentMethod', type: 'text' },
-    { label: 'Valor', key: 'price', type: 'text' },
+    { label: 'Data', key: 'createdAt', type: 'date' },
+    { label: 'Código de transação', key: 'codeId', type: 'text' },
+    { label: 'Método de Pagamento', key: 'method', type: 'text' },
+    { label: 'Valor', key: 'amount', type: 'currency' },
     { label: 'Status', key: 'status', type: 'text' },
-    { label: '', key: 'menu', type: 'menu' },
   ];
 
   ngOnInit(): void {
+    this.getUserId();
     this.fetchData();  
   }
 
-  fetchData() {
-    let financial = []
-
-    for (let i = 0; i <= 5; i++) { 
-      financial.push(
-        {
-          data: '00/00/0000',
-          user: 'Nome do usuário',
-          paymentMethod: 'Cartão de Crédito',
-          price: 'R$ 00,00',
-          status: 'Pago',
-        },
-      )
+  getUserId() {
+    const userId = this.activatedRoute.snapshot.params['id'];
+    if(userId) {
+      this.userId = userId;
     }
-    this.financialData = financial;
+  }
+
+  fetchData() {
+    const userId = this.userId;
+
+    if(userId) {
+      this.clientService.getUserFinancial(userId).subscribe({
+        next: (res) => {
+          const data = res.map((payment) => ({
+            ...payment, 
+            status: payment.status === 'Paid' ? 'Pago' : 'Não pago',
+            method: payment.method === 'CREDIT_CARD' ? 'Cartão de Crédito' : 'Pix',
+          }))
+          this.financialData.set(data);
+        }
+      })
+    }
   }
 }

@@ -26,7 +26,6 @@ export class ClientsListComponent implements OnInit {
   public title = 'Clientes';
   public pageSession = 'Clientes';
 
-  // TIRAR O ANY QUANDO ESTIVER NA FASE DE INTEGRAÇÃO
   public clients = signal<any[]>([]);
 
   // paginação
@@ -40,6 +39,8 @@ export class ClientsListComponent implements OnInit {
     { label: 'Telefone', key: 'phone', type: 'text' },
     { label: 'E-mail', key: 'email', type: 'text' },
     { label: 'Status', key: 'active', type: 'status' },
+    { label: '', key: 'menu', type: 'menu' },
+    
   ];
 
   ngOnInit() {
@@ -47,7 +48,6 @@ export class ClientsListComponent implements OnInit {
   }
 
   private getClients(search?: string) {
-    // DESCOMENTAR QUANDO ESTIVER NA FASE DE INTEGRAÇÃO
     this.clientService.getClients(this.currentPage(), this.pageSize(), this.searchTerm()).subscribe((response) => {
       console.log(response);
       
@@ -81,8 +81,7 @@ export class ClientsListComponent implements OnInit {
       this.clientService.deleteClient(row.id);
       this.toastr.success('Cliente excluído com sucesso!')
     }
-
     return
-
   }
+
 }
