@@ -8,13 +8,13 @@
   </div>
   <div class="category-filters">
     <div 
-      *ngFor="let category of categories" 
+      *ngFor="let category of categories()" 
       class="category-item"
       [class.active]="selectedCategory === category.id"
       (click)="selectCategory(category.id)">
       <div class="category-icon">
-        <!-- <mat-icon>{{ category.icon }}</mat-icon> -->
-         <img [src]="category.icon" alt="ícone da categoria">
+        <mat-icon>{{ category.imageIcon }}</mat-icon>
+         <img [src]="category.imageIcon" alt="ícone da categoria">
       </div>
     </div>
   </div>

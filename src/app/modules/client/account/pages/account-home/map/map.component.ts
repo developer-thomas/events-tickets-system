@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
@@ -10,12 +10,8 @@ import { FilterModalComponent } from '../filter-modal/filter-modal.component';
 import { MapViewComponent } from './map-view/map-view.component';
 import { AccountHomeService } from '../account-home.service';
 import { GetAllLocation, UserLocation } from '../models/GetAllLocations.interface';
-
-interface Category {
-  id: string
-  name: string
-  icon: string
-}
+import { CategoriesService } from '../../../../../gerencial/pages/categories/categories.service';
+import { GetAllCategories } from '../../../../../gerencial/pages/categories/models/GetAllCategories.interface';
 
 @Component({
   selector: 'app-map',
@@ -32,21 +28,25 @@ interface Category {
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss'
 })
-export class MapComponent {
+export class MapComponent implements OnInit {
   private dialog = inject(MatDialog);
   private accountHomeService = inject(AccountHomeService);
+  private categoriesService = inject(CategoriesService);
 
   viewMode: "map" | "list" = "map"
 
-  categories: Category[] = [
-    { id: "all", name: "Todos", icon: "assets/map-icons/jm-icon.png" },
-    { id: "theater", name: "Teatro", icon: "assets/map-icons/arena-icon.png" },
-    { id: "music", name: "Música", icon: "assets/map-icons/arte-icon.png" },
-    { id: "dance", name: "Dança", icon: "assets/map-icons/corpo-icon.png" },
-    { id: "art", name: "Arte", icon: "assets/map-icons/rio-icon.png" },
-  ]
-
-  selectedCategory = "all"
+  // categories: Category[] = [
+  //   { id: "all", name: "Todos", icon: "assets/map-icons/jm-icon.png" },
+  //   { id: "theater", name: "Teatro", icon: "assets/map-icons/arena-icon.png" },
+  //   { id: "music", name: "Música", icon: "assets/map-icons/arte-icon.png" },
+  //   { id: "dance", name: "Dança", icon: "assets/map-icons/corpo-icon.png" },
+  //   { id: "art", name: "Arte", icon: "assets/map-icons/rio-icon.png" },
+  // ]
+    
+  selectedCategory = 0;
+    
+  // Armazena todas as categorias 
+  categories = signal<GetAllCategories[]>([]);
 
   // Armazena todos os eventos que vem do backend
   locationsData = signal<GetAllLocation[]>([]);
@@ -57,13 +57,14 @@ export class MapComponent {
   ngOnInit(): void {
     this.getAllLocations();
     this.getUserLocation();
+    this.getAllCategories();
   }
 
   toggleView(): void {
     this.viewMode = this.viewMode === "map" ? "list" : "map"
   }
 
-  selectCategory(categoryId: string): void {
+  selectCategory(categoryId: number): void {
     this.selectedCategory = categoryId
   }
 
@@ -93,6 +94,14 @@ export class MapComponent {
     this.accountHomeService.getUserLocation().subscribe({
       next: (res) => {
         this.userLocation.set(res);
+      }
+    })
+  }
+
+  getAllCategories() {
+    this.categoriesService.getAll().subscribe({
+      next: (res) => {
+        this.categories.set(res);
       }
     })
   }
