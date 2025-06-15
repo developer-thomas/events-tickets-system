@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { GetAllClients } from './models/GetAllClients.interface';
 import { GetClientResponse } from './models/GetOneClient.interface';
 import { GetUserTicket } from './models/GetUserTickets.interface';
+import { GetUserFinancial } from './models/GetUserFinancial.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +31,7 @@ export class ClientService {
     return this.http.get<GetAllClients[]>(`${this.api}/users`, { params });
   }
 
-  getClientById(id: string):Observable<GetClientResponse> {
+  getClientById(id: number):Observable<GetClientResponse> {
     return this.http.get<GetClientResponse>(`${this.api}/users/client/${id}`);
   }
 
@@ -39,18 +40,9 @@ export class ClientService {
     return this.http.get<GetUserTicket[]>(`${this.api}/admin/tickets`, { params })
   }
 
-
-  // save(data: any) {
-  //   return this.http.post(`${environment.api}/users`, data);
-  // }
-
-  // changeStatus(id: string) {
-  //   return this.http.patch<ClientResponse>(`${environment.api}/users/${id}/status`, {});
-  // }
-
-  // updateClient(id: string, client: any): Observable<ClientResponse> {
-  //   return this.http.patch<ClientResponse>(`${environment.api}/users/${id}`, client)
-  // }
+  changeStatus(userId: number) {
+    return this.http.post<any>(`${environment.api}/users/toggle/status/${userId}`, {});
+  }
 
   deleteClient(id: any): void {
     this.http.delete(`${environment.api}/users/${id}`)
@@ -60,5 +52,8 @@ export class ClientService {
     return this.http.get<any>(`${this.api}/events/${id}`);
   }
 
+  getUserFinancial(userId: number): Observable<GetUserFinancial[]> {
+    return this.http.get<GetUserFinancial[]>(`${this.api}/admin/user/${userId}/financial`);
+  }
 
 }
