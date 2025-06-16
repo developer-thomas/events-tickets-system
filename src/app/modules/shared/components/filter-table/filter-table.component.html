@@ -10,9 +10,11 @@
           (keyup)="filterText.emit(search.value)"
         />
       </mat-form-field>
-      <button mat-stroked-button (click)="filter.emit(search.value)" class="filter-button w-10 h-10">
-        <mat-icon>filter_alt</mat-icon>
-      </button>
+      @if(useFilterBtn) {
+        <button mat-stroked-button (click)="filter.emit(search.value)" class="filter-button w-10 h-10">
+          <mat-icon>filter_alt</mat-icon>
+        </button>
+      }
     </div>
     <ng-content />
   </div>

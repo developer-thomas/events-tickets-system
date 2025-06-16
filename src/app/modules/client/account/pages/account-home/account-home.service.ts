@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../../../environments/environment.development';
-import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { map, Observable, tap } from 'rxjs';
 import { GetAllLocation, LocationListResponse, UserLocation } from './models/GetAllLocations.interface';
 import { ApiResponse } from './models/GetOneLocations.interface';
 
@@ -54,6 +54,8 @@ export class AccountHomeService {
               lat: position.coords.latitude,
               lng: position.coords.longitude
             }
+            localStorage.setItem("userLat", latLng.lat)
+            localStorage.setItem("userLng", latLng.lng)
             observer.next(latLng);
             observer.complete();
           },
@@ -66,5 +68,23 @@ export class AccountHomeService {
       }
     });
   }
+
+  /**
+   * Obtém a distância entre duas localizações
+   */
+  getDistance(
+    origin: { userLat: string, userLng: string },
+    destination: { lat: string, lng: string }
+  ): Observable<number> {
+    const params = new HttpParams()
+      .set('origin', `${origin.userLat},${origin.userLng}`)
+      .set('destination', `${destination.lat},${destination.lng}`);
+  
+    return this.http.get<{ distance: number }>(`${this.api}/maps/places/directions`, { params })
+      .pipe(
+        map(res => res.distance)
+      );
+  }
+
 
 }

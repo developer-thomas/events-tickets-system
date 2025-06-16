@@ -1,43 +1,55 @@
 <!-- Events Tab -->
- <!-- ESSE MIN-H-SCREEN PODE DAR OVERFLOW COM MUITOS EVENTOS, SE NÃO DER, OK! -->
+<!-- ESSE MIN-H-SCREEN PODE DAR OVERFLOW COM MUITOS EVENTOS, SE NÃO DER, OK! -->
 <div class="events-tab min-h-screen">
   <!-- Search and Filter -->
   <div class="search-filter-container">
-    <app-filter-table (filter)="onFilter($event)" />
+    <app-filter-table (filterText)="onFilter($event)" [useFilterBtn]="false"/>
   </div>
 
   <!-- Event Type Filters -->
-     <div class="event-type-filters">
-       <button *ngFor="let type of eventTypes" class="event-type-button">
-         {{ type }}
-       </button>
-     </div>
-   
-     <!-- Events Grid -->
-     <div class="events-grid">
-      @for(event of events; track event.id) {
-        <div class="event-card" (click)="navigateToEventDetail(event.id)">
-          <div class="event-image">
-            <img [src]="event.fileUrl" alt="{{ event.name }}">
-            <button class="favorite-button" (click)="toggleFavorite(event.id); $event.stopPropagation()">
-              <mat-icon [ngClass]="event.isFavorite ? 'filled-heart' : 'outlined-heart'">
-                {{ event.isFavorite ? 'favorite' : 'favorite' }}
-              </mat-icon>
-            </button>
-          </div>
-          <div class="event-info">
-            <h3 class="event-title">{{ event.name }}</h3>
-            <div class="event-category">
-              <div class="category-dot">
-                <img class=" rounded-full h-6" [src]="event.categories[0].imageIconUrl" alt="">
-              </div>
-            </div>
-            <p class="event-description">{{ event.description }}</p>
-          </div>
+  <!-- <div class="event-type-filters">
+    <button *ngFor="let type of eventTypes" class="event-type-button">
+      {{ type }}
+    </button>
+  </div> -->
+  
+  <!-- Events Grid -->
+  <div class="events-grid">
+    @for(event of events; track event.id) {
+      <div class="event-card" (click)="navigateToEventDetail(event.id)">
+        <div class="event-image">
+          <img 
+            [src]="event.fileUrl || 'assets/images/no-image.jpg'" 
+            alt="{{ event.name }}"
+            (error)="onImgError($event)">
+          <button class="favorite-button" (click)="toggleFavorite(event.id); $event.stopPropagation()">
+            <mat-icon [ngClass]="event.isFavorite ? 'filled-heart' : 'outlined-heart'">
+              {{ event.isFavorite ? 'favorite' : 'favorite' }}
+            </mat-icon>
+          </button>
         </div>
-      } @empty {
-        <h1>Não há eventos disponíveis para este local</h1>
-      }
-     </div>
- 
+        <div class="event-info">
+          <h3 class="event-title">{{ event.name }}</h3>
+          <div class="event-category">
+            <div class="category-dot" *ngIf="event.categories!.length > 0; else noCategoryImage">
+              <img 
+                class="rounded-full h-6" 
+                [src]="event.categories[0].imageIconUrl || 'assets/images/no-image.jpg'" 
+                alt=""
+                (error)="onImgError($event)">
+            </div>
+            <ng-template #noCategoryImage>
+              <img 
+                class="rounded-full h-6" 
+                src="assets/images/no-image.jpg" 
+                alt="">
+            </ng-template>
+          </div>
+          <p class="event-description">{{ event.description }}</p>
+        </div>
+      </div>
+    } @empty {
+      <h1>Não há eventos disponíveis para este local</h1>
+    }
+  </div>
 </div>

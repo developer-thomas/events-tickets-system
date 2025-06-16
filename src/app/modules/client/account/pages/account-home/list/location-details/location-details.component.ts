@@ -10,17 +10,8 @@ import { AccountHomeService } from '../../account-home.service';
 import { GetOneLocation } from '../../models/GetOneLocations.interface';
 import { haversineDistance } from '../../../../../../shared/utils/haversineDistance';
 import { AddressLocation } from '../../models/GetAllLocations.interface';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable, switchMap, tap } from 'rxjs';
 import { LocationComponent } from './tabs/location/location.component';
-
-interface Event {
-  id: number
-  title: string
-  image: string
-  category: string
-  description: string
-  isFavorite: boolean
-}
 
 @Component({
   selector: 'app-location-details',
@@ -31,7 +22,6 @@ interface Event {
     MatButtonModule, 
     MatTabsModule, 
     RouterModule, 
-    FilterTableComponent, 
     EventsComponent,
     LocationComponent
   ],
@@ -49,30 +39,9 @@ export class LocationDetailsComponent implements OnInit{
   locationAddressData = signal<AddressLocation | null>(null);
   locationDistance = signal<any | null>(null);
 
-  categories = [
-    { color: "#cc3131", icon: "local_movies" },
-    { color: "#ffcc00", icon: "music_note" },
-    { color: "#209db3", icon: "theater_comedy" },
-    { color: "#4728a2", icon: "palette" },
-    { color: "#a148bf", icon: "celebration" },
-  ]
-
-  location = {
-    id: 1,
-    name: "NOME DO LOCAL",
-    distance: 30,
-    image: "assets/images/location-placeholder.svg",
-    description:
-      "Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-    categories: ["theater", "music", "dance", "art", "cinema"],
-  }
-
-  eventTypes = ["Tipo do evento", "Tipo do evento", "Tipo do evento"]
-
   ngOnInit(): void {
     this.locationId = this.route.snapshot.paramMap.get("id");
-  
-    this.getLocationById()
+    this.getLocationById();
   }
 
   getLocationById() {
@@ -82,9 +51,10 @@ export class LocationDetailsComponent implements OnInit{
 
     this.accountHomeService.getLocationById(this.locationId).subscribe({
       next: (res) => {
+        console.log('res', res)
         this.locationData.set(res.result);
-        this.locationDistance.set(res.result.addressLocation);
-
+        this.locationAddressData.set(res.result.addressLocation);
+        this.getUserLocation(res.result.addressLocation.lat, res.result.addressLocation.lng)
       }
     })
   }
@@ -108,20 +78,26 @@ export class LocationDetailsComponent implements OnInit{
 
   // MEXER AQUI
   // PRECISO FAZER A COMPARAÇÃO ENTRE AS DISTÂNCIAS
-  getUserLocation(lat: number, lng: number): Observable<number> {
-    return new Observable(observer => {
-      this.accountHomeService.getUserLocation().subscribe({
-        next: (res) => {
-          const distance = haversineDistance(res.lat, res.lng, lat, lng);
-          observer.next(distance);
-          observer.complete();
-        },
-        error: (error) => {
-          console.error('Error getting user location:', error);
-          observer.next(0);
-          observer.complete();
-        }
-      });
-    });
+  
+  getUserLocation(eventLat: number, eventLng: number) {
+    const userLat = Number(localStorage.getItem('userLat'));
+    const userLng = Number(localStorage.getItem('userLng'));
+
+    console.log(eventLat, eventLng)
+
+    console.log('eventlat,', eventLat)
+    // Verifica se lat/lng são válidos
+    if (!userLat || !userLng) {
+      return 
+    }
+
+    const distance = haversineDistance(
+      userLat,
+      userLng,
+      eventLat,
+      eventLng
+    )
+
+    this.locationDistance.set(distance)
   }
 }

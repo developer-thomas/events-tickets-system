@@ -30,6 +30,8 @@ export class EventsComponent implements OnInit, OnChanges {
   @Output() filterChange = new EventEmitter<string>()
   @Output() favoriteToggle = new EventEmitter<Event>()
 
+  allEvents: GetOneLocationEvent[] = [] // guarda a lista completa
+
   ngOnInit(): void {
     const userId = localStorage.getItem('userId');
     const isAuth = localStorage.getItem('authToken');
@@ -46,42 +48,57 @@ export class EventsComponent implements OnInit, OnChanges {
   }
   
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('events', this.events)
-    
+    if (changes['events'] && this.events) {
+      this.allEvents = [...this.events]; // salva os eventos originais para poder filtrar
+    }
   }
 
   onFilter(searchTerm: string): void {
-    this.filterChange.emit(searchTerm)
+    this.filterChange.emit(searchTerm);
+
+    if (!searchTerm || searchTerm.trim() === '') {
+      this.events = [...this.allEvents]; // mostra tudo se não tiver filtro
+      return;
+    }
+
+    const normalizedTerm = searchTerm.toLowerCase();
+
+    this.events = this.allEvents.filter(event =>
+      event.name.toLowerCase().includes(normalizedTerm) ||
+      event.description?.toLowerCase().includes(normalizedTerm)
+    );
   }
 
   toggleFavorite(id: any): void {
     const eventId = id;
     const userId = this.userId;
-
-    console.log(eventId, userId);
-
-    if(userId) {
-      this.favoritesService.favoriteAnEvent({eventId, userId}).subscribe({
+  
+    if (userId) {
+      this.favoritesService.favoriteAnEvent({ eventId, userId }).subscribe({
         next: (res) => {
-          if(res.status === 'added') {
-            this.toastr.success('Evento adicionado aos favoritos')
-              // Atualiza visualmente o estado de favorito localmente
-            const eventIndex = this.events?.findIndex(event => event.id === eventId);
-            
-            if (eventIndex !== undefined && eventIndex > -1 && this.events) {
-              const current = this.events[eventIndex];
-              this.events[eventIndex] = {
-                ...current,
-                isFavorite: !current.isFavorite
+          const updateFavoriteStatus = (list: GetOneLocationEvent[] | undefined) => {
+            const index = list?.findIndex(event => event.id === eventId);
+            if (index !== undefined && index > -1 && list) {
+              list[index] = {
+                ...list[index],
+                isFavorite: !list[index].isFavorite
               };
             }
+          };
+  
+          updateFavoriteStatus(this.events);
+          updateFavoriteStatus(this.allEvents);
+  
+          if (res.status === 'added') {
+            this.toastr.success('Evento adicionado aos favoritos');
           } else if (res.status === 'removed') {
-            this.toastr.success('Evento removido dos favoritos')
+            this.toastr.success('Evento removido dos favoritos');
           }
-        }, error: (err) => {
-          this.toastr.error('Erro ao adicionar aos favoritos')
+        },
+        error: (err) => {
+          this.toastr.error('Erro ao adicionar/remover dos favoritos');
         }
-      })
+      });
     } else {
       alert("Você precisa estar logado");
     }
@@ -105,5 +122,10 @@ export class EventsComponent implements OnInit, OnChanges {
         console.error('Erro ao buscar favoritos', err);
       }
     });
+  }
+
+  onImgError(event: Event) {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = 'assets/images/no-image.jpg';
   }
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -15,6 +15,8 @@ import { MatInputModule } from '@angular/material/input';
   ],
 })
 export class FilterTableComponent {
+  @Input() useFilterBtn: boolean = true;
+
   @Output() filter = new EventEmitter<string>();
   @Output() filterText = new EventEmitter<string>();
 

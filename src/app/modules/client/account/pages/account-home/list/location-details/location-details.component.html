@@ -18,7 +18,11 @@
       <div class="location-meta">
         <div class="distance">
           <mat-icon>place</mat-icon>
-          <span>{{ location.distance }} km</span>
+          @if(locationDistance()) {
+            <span>{{ locationDistance() }} km de você</span>
+          } @else {
+            <span>Localização não foi fornecida</span>
+          }
         </div>
         <div class="flex gap-2 mt-2 categories">
           <div *ngFor="let category of locationData()?.categories" 
@@ -59,9 +63,17 @@
   <div class="tab-content">
     <!-- Events Tab -->
     <div *ngIf="activeTab === 0" class="events-tab">
-      <app-events
+      <!-- <app-events
         [events]="locationData()?.event"
         [eventTypes]="eventTypes"
+        (filterChange)="onFilterChange($event)"
+        (favoriteToggle)="onFavoriteToggle($event)" 
+      >
+      </app-events> -->
+
+      <!-- SE O CLIENTE QUISER O FILTRO POR CATEGORIES, USAR O CODIGO ACIMA E TRATAR -->
+      <app-events
+        [events]="locationData()?.event"
         (filterChange)="onFilterChange($event)"
         (favoriteToggle)="onFavoriteToggle($event)" 
       >
