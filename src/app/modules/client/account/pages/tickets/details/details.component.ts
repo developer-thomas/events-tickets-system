@@ -8,22 +8,7 @@ import { TicketsService } from '../tickets.service';
 import { EventViewComponent } from './tabs/event-view/event-view.component';
 import { QrCodesViewComponent } from './tabs/qr-codes-view/qr-codes-view.component';
 import { GetTicketByIdResponse } from '../models/GetTicketById.interface';
-
-interface Ticket {
-  id: number
-  title: string
-  date: string
-  time: string
-  quantity: number
-  status: string
-  price: string
-  qrCodes: {
-    id: number
-    label: string
-    code: string
-    status: string
-  }[]
-}
+import { GetAllUserTickets } from '../models/GetAllUserTickets.interface';
 
 @Component({
   selector: 'app-details',
@@ -43,36 +28,16 @@ export class DetailsComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
   private ticketsService = inject(TicketsService);
-
+  
   ticketId: string | null = null;
 
   selectedTabIndex = 0
 
   ticketData = signal<GetTicketByIdResponse | null>(null);
+  allTicketsData = signal<GetAllUserTickets[]>([]);
 
-  ticket: Ticket = {
-    id: 1,
-    title: "Título do evento",
-    date: "00/00/00",
-    time: "00:00",
-    quantity: 5,
-    status: "Em aberto",
-    price: "R$ 00,00",
-    qrCodes: [
-      {
-        id: 1,
-        label: "Ingresso 1",
-        code: "1035016380321",
-        status: "Em aberto",
-      },
-      {
-        id: 2,
-        label: "Ingresso 1",
-        code: "1035016380321",
-        status: "Em aberto",
-      },
-    ],
-  }
+  numberOfTickets = signal<number>(1);
+
 
   ngOnInit(): void {
     const ticketId = this.activatedRoute.snapshot.paramMap.get("id");
@@ -80,6 +45,7 @@ export class DetailsComponent implements OnInit {
     if (ticketId) {
       this.ticketId = ticketId;
       this.getTicketById(ticketId);
+      this.getUserTickets();
     }
   }
 
@@ -91,17 +57,43 @@ export class DetailsComponent implements OnInit {
     this.selectedTabIndex = index
   }
 
+  getUserTickets() {
+    this.ticketsService.getUserTickets().subscribe({
+      next: (res) => {
+        const data = res.data.map((ticket) => ({
+          ...ticket,
+          status: this.translateTicketStatus(ticket.status),
+        }))
+        this.allTicketsData.set(data)
+      }
+    })
+  }
+
   getTicketById(ticketId: any) {
     this.ticketsService.getTicketById(ticketId).subscribe({
       next: (res) => { 
-        
+        console.log(res)
         const data = {
           ...res,
           status: this.translateTicketStatus(res.status)
-        }
-        this.ticketData.set(data)
+        }        
+
+        this.ticketData.set(data);
+        this.calculateNumberOfTickets()
       }
     })
+  }
+
+  calculateNumberOfTickets() {
+    const allTickets = this.allTicketsData();
+    const currentTicket = this.ticketData()?.event.id;
+
+    const compareTicketsId = allTickets.filter((data) => {
+      return data.eventId === currentTicket;
+    })
+
+    this.numberOfTickets.set(compareTicketsId.length);
+   
   }
 
   translateTicketStatus(statusName: string) {

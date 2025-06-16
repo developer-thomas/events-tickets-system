@@ -16,7 +16,7 @@
       <div class="ticket-info">
         <h2 class="ticket-title">{{ ticketData()?.event?.name }}</h2>
         <p class="ticket-date">Data: {{ ticketData()?.event?.eventDate | date: 'dd/MM/yy' }} | {{ ticketData()?.event?.timelineEvent?.[0]?.hourInit }}</p>
-        <p class="ticket-quantity">Quantidade: {{ ticketData()?.event?.numberOfTickets }}</p>
+        <p class="ticket-quantity">Quantidade: {{ numberOfTickets() }}</p>
       </div>
       <div class="ticket-status-price">
         <span class="ticket-status">{{ ticketData()?.status }}</span>
@@ -45,7 +45,9 @@
         <!-- QR Codes Tab -->
         <app-qr-codes-view 
           *ngIf="selectedTabIndex === 0" 
-          [qrCode]="ticketData()?.qrcode">
+          [qrCode]="ticketData()?.qrcode"
+          [eventName]="ticketData()?.event?.name"
+          [eventDate]="ticketData()?.event?.eventDate">
         </app-qr-codes-view>
         
         <!-- Event Details Tab -->
