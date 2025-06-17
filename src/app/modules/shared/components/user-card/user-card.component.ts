@@ -26,7 +26,10 @@ export class UserCardComponent {
   };
 
   logout() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/admin']);
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('permissions');
+    localStorage.removeItem('role');
   }
 
   public username!: string;

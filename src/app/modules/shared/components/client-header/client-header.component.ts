@@ -24,7 +24,7 @@ export class ClientHeaderComponent implements OnInit{
   isAuth!: boolean;
 
   ngOnInit(): void {
-    const authToken = this.storageService.getToken();
+    const authToken = this.storageService.getUserToken();
 
     if(authToken) {
       this.isAuth = true;
