@@ -1,41 +1,34 @@
 <div class="schedule-panel">
-  <!-- Calendar View -->
+  <!-- Calendar Grid -->
   <div class="calendar-container">
-    <!-- Month Navigation -->
     <div class="month-navigation">
       <button class="nav-button" (click)="previousMonth()">
         <mat-icon>chevron_left</mat-icon>
       </button>
-      <h2 class="month-title">{{ currentMonth }}</h2>
+      <h2 class="month-title">{{ getMonthNameInPortuguese(currentMonth) }}</h2>
       <button class="nav-button" (click)="nextMonth()">
         <mat-icon>chevron_right</mat-icon>
       </button>
     </div>
 
-    <!-- Calendar Header -->
     <div class="calendar-header">
-      <div *ngFor="let day of daysOfWeek" class="calendar-header-cell">
-        {{ day }}
-      </div>
+      <div class="calendar-header-cell" *ngFor="let wd of daysOfWeek">{{ wd }}</div>
     </div>
 
-    <!-- Calendar Grid -->
     <div class="calendar-grid">
-      <div 
-        *ngFor="let day of calendarDays" 
+      <div *ngFor="let day of calendarDays"
         class="calendar-day"
         [class.current-month]="day.isCurrentMonth"
+        [class.today]="day.isToday"
         [class.selected]="day.isSelected"
+        [class.has-events]="day.eventTypes.length > 0"
         (click)="selectDay(day)">
-        <span class="day-number">{{ day.date }}</span>
-        <div *ngIf="day.hasEvents" class="event-indicators">
-          <span 
-            *ngFor="let type of day.eventTypes" 
-            class="event-dot"
-            [class.primary]="type === 'primary'"
-            [class.secondary]="type === 'secondary'"
-            [class.tertiary]="type === 'tertiary'">
-          </span>
+        
+        <span class="day-number">{{ day.date || '' }}</span>
+
+        <div class="event-indicators" *ngIf="day.eventTypes.length > 0">
+          <span class="event-dot primary" *ngIf="day.eventTypes.includes('favorite')"></span>
+          <span class="event-dot secondary" *ngIf="day.eventTypes.includes('purchased')"></span>
         </div>
       </div>
     </div>
@@ -43,60 +36,70 @@
 
   <!-- Weekly Schedule View -->
   <div class="schedule-container">
-    <!-- Week Days Header -->
+    <!-- Week Header -->
     <div class="week-header">
-      <div 
-        *ngFor="let day of weekDays" 
-        class="week-day"
-        [class.selected]="day.isSelected">
-        <div class="day-number">{{ day.dayNum }}</div>
-        <div class="day-name">{{ day.dayAbbr }}</div>
+      <div class="week-day" [class.selected]="isSelectedWeekDay(-1)">
+        <span class="day-name">Semana</span>
+      </div>
+      <div class="week-day" 
+           *ngFor="let day of getWeekDays(); let i = index"
+           [class.selected]="isSelectedWeekDay(i)"
+           (click)="selectWeekDay(day.date)">
+        <span class="day-number">{{ day.dayNumber }}</span>
+        <span class="day-name">{{ day.dayName }}</span>
       </div>
     </div>
 
-    <!-- Time Slots -->
+    <!-- Time Slots and Events -->
     <div class="time-slots-container">
+      
+      <!-- Coluna de horários -->
       <div class="time-slots">
         <div *ngFor="let time of timeSlots" class="time-slot">
           <div class="time-label">{{ time }}</div>
           <div class="time-line"></div>
         </div>
       </div>
-
-      <!-- Events -->
+  
+      <!-- Container de eventos -->
       <div class="events-container">
         <div *ngFor="let time of timeSlots" class="event-slot">
-          <div *ngIf="getEventForTimeSlot(time) as event" class="event-card" [class.has-buy-button]="event.canBuy">
-            <div class="event-content">
-              <h3 class="event-title">{{ event.title }}</h3>
-              
-              <!-- Event with location and distance -->
-              <ng-container *ngIf="event.distance">
-                <p class="event-location">{{ event.location }}</p>
-                <p class="event-distance">{{ event.distance }}</p>
-              </ng-container>
-              
-              <!-- Event with date, quantity, and price -->
-              <ng-container *ngIf="event.date">
-                <p class="event-date">Data: {{ event.date }} | {{ event.time }}</p>
-                <p class="event-quantity">Quantidade: {{ event.quantity }}</p>
+          <ng-container *ngIf="hasEventsAtTime(time)">
+            <div *ngFor="let event of eventsByTime[time]" 
+                 class="event-card" 
+                 [class.has-buy-button]="event.canBuy">
+              <div class="event-content">
+                <h3 class="event-title">{{ event.title }}</h3>
+                <p class="event-location" *ngIf="event.location">{{ event.location }}</p>
+                <p class="event-distance" *ngIf="event.distance"> {{ event.distance }} km de você</p>
+                <p class="event-date" *ngIf="event.eventDate">Data: {{ event.eventDate }}</p>
+                <p class="event-quantity" *ngIf="event.quantity">Quantidade: {{ event.quantity }}</p>
+                
                 <div class="event-status-price">
-                  <span class="event-status">{{ event.status }}</span>
-                  <span class="event-price">{{ event.price }}</span>
+                  <span class="event-status" 
+                        [ngClass]="{
+                          'status-purchased': event.isPurchased,
+                          'status-favorite': event.isFavorite,
+                          'status-open': !event.isPurchased && !event.isFavorite
+                        }">
+                    {{ getEventStatusText(event) }}
+                  </span>
+                  <span class="event-price" *ngIf="event.price">{{ event.price }}</span>
                 </div>
-              </ng-container>
+              </div>
+              <button *ngIf="event.canBuy" class="buy-button" (click)="buyTicket(event.id)">
+                {{ event.isPurchased ? 'Comprado' : 'Comprar' }}
+              </button>
             </div>
-            
-            <!-- Buy Button -->
-            <button 
-              *ngIf="event.canBuy" 
-              class="buy-button"
-              (click)="buyTicket(event.id)">
-              Comprar
-            </button>
+          </ng-container>
+          
+          <!-- Debug info para cada time slot -->
+          <div *ngIf="!hasEventsAtTime(time)" class="no-events-debug" style="font-size: 12px; color: #999; padding: 5px;">
+            {{ time }}: No events
           </div>
         </div>
       </div>
+  
     </div>
   </div>
 </div>
