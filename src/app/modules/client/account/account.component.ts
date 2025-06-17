@@ -21,10 +21,6 @@ export class AccountComponent implements OnInit {
 
   routes: ISidenavRoute[] = [
     { label: 'inicio', route: 'inicio', icon: 'tv' },
-    // { label: 'ingressos', route: 'ingressos', icon: 'receipt_long' },
-    // { label: 'favoritos', route: 'favoritos', icon: 'favorite' },
-    // { label: 'meus pedidos', route: 'meus-pedidos', icon: 'person' },
-    // { label: 'minha agenda', route: 'minha-agenda', icon: 'calendar_month' },
     { label: 'ajuda', route: 'ajuda', icon: 'help' }, 
   ];
 

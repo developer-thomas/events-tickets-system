@@ -4,6 +4,7 @@ import { LocationDetailsComponent } from './list/location-details/location-detai
 import { EventDetailsComponent } from './list/location-details/event-details/event-details.component';
 import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 import { CheckoutComponent } from './shopping-cart/checkout/checkout.component';
+import { loggedUserGuard } from '../../../../../core/guards/logged-user.guard';
 
 
 
@@ -22,10 +23,12 @@ export const routes: Routes = [
   },
   {
     path: 'cart',
-    component: ShoppingCartComponent
+    component: ShoppingCartComponent,
+    canActivate: [loggedUserGuard]
   },
   {
     path: 'cart/checkout',
-    component: CheckoutComponent
+    component: CheckoutComponent,
+    canActivate: [loggedUserGuard]
   }
 ];
