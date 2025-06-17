@@ -15,6 +15,7 @@ export interface ISidenavRoute {
   label: string;
   route: string;
   icon: string;
+  permission?: string;
 }
 
 @Component({
