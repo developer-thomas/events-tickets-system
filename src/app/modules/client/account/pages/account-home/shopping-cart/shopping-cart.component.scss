@@ -1,8 +1,9 @@
 .cart-container {
-  max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
   font-family: Arial, sans-serif;
+  min-height: 100vh;
+  height: 100%;
 }
 
 .cart-header {

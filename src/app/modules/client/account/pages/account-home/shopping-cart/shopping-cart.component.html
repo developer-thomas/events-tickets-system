@@ -8,21 +8,27 @@
     </button>
   </div>
 
-  <div class="cart-content">
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="loading-container">
+    <div class="spinner"></div>
+    <p>Carregando carrinho...</p>
+  </div>
+
+  <div class="cart-content" *ngIf="!loading()">
     <!-- Left Column: Cart Items -->
     <div class="cart-items-container">
       <div class="cart-section-header">
         <h2 class="section-title">Ingressos</h2>
-        <button class="remove-all-button" (click)="removeAllItems()" [disabled]="cartItems.length === 0">
+        <button class="remove-all-button" (click)="removeAllItems()" [disabled]="cartItems().length === 0">
           <mat-icon>delete</mat-icon>
           REMOVER TODOS OS PRODUTOS
         </button>
       </div>
 
       <div class="cart-items-list">
-        <div *ngFor="let item of cartItems" class="cart-item">
+        <div *ngFor="let item of cartItems()" class="cart-item">
           <div class="item-image">
-            <img [src]="item.image" alt="{{ item.title }}">
+            <img [src]="item.image" [alt]="item.title">
           </div>
           
           <div class="item-details">
@@ -53,24 +59,30 @@
         </div>
 
         <!-- Empty cart message -->
-        <div *ngIf="cartItems.length === 0" class="empty-cart">
+        <div *ngIf="cartItems().length === 0" class="empty-cart">
+          <mat-icon>shopping_cart</mat-icon>
           <p>Seu carrinho está vazio</p>
+          <button class="continue-shopping-empty" (click)="continueShopping()">
+            BUSCAR EVENTOS
+          </button>
         </div>
       </div>
 
       <!-- Coupon Section -->
-      <div class="coupon-section">
+      <!-- <div class="coupon-section" *ngIf="cartItems().length > 0">
         <div class="coupon-label">Cupom de desconto</div>
         <div class="coupon-input-container">
           <input type="text" class="coupon-input" [(ngModel)]="couponCode" placeholder="Digite seu cupom">
-          <button class="coupon-button" (click)="applyCoupon()">APLICAR CUPOM</button>
+          <button class="coupon-button" (click)="applyCoupon()" [disabled]="!couponCode.trim()">
+            APLICAR CUPOM
+          </button>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <!-- Right Column: Summary -->
-    <div class="cart-summary-container">
-      <p class="text-gray-500 mb-5 text-sm">
+    <div class="cart-summary-container" *ngIf="cartItems().length > 0">
+      <p class="disclaimer mb-5">
         Essa compra é uma parceria com a casa. O ingresso é válido até 30min antes do horário do evento e deverá ser trocado na bilheteria da casa.
       </p>
       <h2 class="section-title">Resumo</h2>
@@ -81,24 +93,15 @@
           <span class="summary-value">{{ formattedTotalTicketsValue }}</span>
         </div>
         
-        <!-- <div class="summary-box">
-          <div class="summary-row">
-            <span class="summary-label">Total à prazo:</span>
-            <span class="summary-value">{{ installmentTotal }}</span>
-          </div>
-          <div class="summary-tax">(em até 12x de {{ installmentTax }})</div>
-        </div> -->
-        
         <div class="summary-box highlight">
           <div class="summary-row">
             <span class="summary-label">Total:</span>
-            <span class="summary-value">{{ cashTotal }}</span>
+            <span class="summary-value">{{ totalValue }}</span>
           </div>
-          <div class="summary-tax">(Economize: {{ cashSavings }})</div>
         </div>
         
         <div class="summary-actions">
-          <button class="checkout-button" (click)="checkout()" [disabled]="cartItems.length === 0">
+          <button class="checkout-button" (click)="checkout()" [disabled]="cartItems().length === 0">
             FINALIZAR COMPRA
           </button>
           <button class="continue-button" (click)="continueShopping()">
