@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable, switchMap, tap } from "rxjs";
 import { environment } from "../../../environments/environment.development";
-import { SigninCredentialsResponse } from "../models/auth";
+import { AdminLoginResponse, SigninCredentialsResponse } from "../models/auth";
 import { UserService } from "./user.service";
 
 @Injectable({
@@ -23,13 +23,13 @@ export class AuthService {
         }
       )
       .pipe(tap(
-        (user) => this.userService.decodeAndNotify(user)),
+        (user) => this.userService.decodeAndNotifyUser(user)),
         switchMap(() => this.userService.getLoggedUser())
       );
   }
 
-  adminAuth( email: string, password: string ): Observable<any> {
-    return this.http.post<any>(
+  adminAuth( email: string, password: string ): Observable<AdminLoginResponse > {
+    return this.http.post<AdminLoginResponse >(
         `${this.api}/admin/login`,
         {
           email,

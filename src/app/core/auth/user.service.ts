@@ -1,6 +1,6 @@
 import { Injectable, WritableSignal, inject, signal } from '@angular/core';
 import { StorageService } from './storage.service';
-import { SigninCredentialsResponse } from '../models/auth';
+import { AdminLoginResponse, SigninCredentialsResponse } from '../models/auth';
 import { Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
@@ -12,14 +12,40 @@ import { LoggedUser } from '../../modules/shared/models/LoggedUser.interrface';
 export class UserService {
   private storage = inject(StorageService);
   private http = inject(HttpClient);
-
+  
   private readonly api = environment.api;
+  
+  private _permissions: string[] = [];
 
   protected user: WritableSignal<SigninCredentialsResponse> = signal<SigninCredentialsResponse>({});
 
-  decodeAndNotify(user: SigninCredentialsResponse) {
+  private clearAdminData() {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('role');
+    localStorage.removeItem('permissions');
+  }
+
+  private clearClientData() {
+    localStorage.removeItem('userToken');
+    localStorage.removeItem('role');
+    localStorage.removeItem('userId');
+  }
+
+  decodeAndNotifyUser(user: SigninCredentialsResponse) {
+    this.clearAdminData(); // Limpa dados do admin antes de salvar dados do cliente
+    this.storage.saveUserToken(user?.token);
+    localStorage.setItem('role', 'CLIENT');
+    this.user.set(user);
+  }
+
+  decodeAndNotify(user: AdminLoginResponse) {
+    this.clearClientData(); // Limpa dados do cliente antes de salvar dados do admin
     this.storage.saveToken(user?.token);
-    this.user.set(user.user);
+    localStorage.setItem('role', 'ADMIN');
+    this.user.set(user);
+
+    this._permissions = user.permissions;
+    localStorage.setItem('permissions', JSON.stringify(user.permissions));
   }
 
   getLoggedUser():Observable<LoggedUser> {
@@ -29,4 +55,12 @@ export class UserService {
       })
     );
   }
+
+  getPermissions(): string[] {
+    if (this._permissions.length) return this._permissions;
+
+    const localPermissions = localStorage.getItem('permissions');
+    return localPermissions ? JSON.parse(localPermissions) : [];
+  }
+  
 }

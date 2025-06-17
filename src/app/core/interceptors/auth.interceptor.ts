@@ -1,23 +1,34 @@
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { StorageService } from "../auth/storage.service";
-import { inject, Injectable } from "@angular/core";
+import { HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { StorageService } from '../auth/storage.service';
+import { Observable } from 'rxjs';
 
-@Injectable()
-export class AuthInterceptor implements HttpInterceptor {
-  private storageService = inject(StorageService);
+export const authInterceptor: HttpInterceptorFn = (
+  request: HttpRequest<unknown>,
+  next: HttpHandlerFn
+): Observable<HttpEvent<unknown>> => {
+  const storageService = inject(StorageService);
+  const role = storageService.getRole();
+  
+  let token: string | null = null;
 
-  intercept( request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const token: string = this.storageService.getToken();
-
-    if (token) {
-      request = request.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    }
-
-    return next.handle(request);
+  if (role === 'ADMIN') {
+    token = storageService.getToken();
+  } else if (role === 'CLIENT') {
+    token = storageService.getUserToken();
   }
-}
+
+  if (token) {
+    const authHeader = `Bearer ${token}`;
+    const modifiedRequest = request.clone({
+      setHeaders: {
+        'Authorization': authHeader,
+        'ngrok-skip-browser-warning': 'true'
+      }
+    });
+
+    return next(modifiedRequest);
+  }
+
+  return next(request);
+};

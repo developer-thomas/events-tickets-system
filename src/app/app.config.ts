@@ -9,6 +9,7 @@ import { bearerTokenInterceptor } from './modules/shared/interceptors/bearer-tok
 import { globalErrorInterceptor } from './modules/shared/interceptors/global-error/global-error.interceptor';
 import { loadingInterceptor } from './modules/shared/interceptors/loading/loading.interceptor';
 import { LOCALE_ID } from '@angular/core';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -29,8 +30,9 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withInterceptors([
         globalErrorInterceptor,
-        bearerTokenInterceptor,
+        // bearerTokenInterceptor,
         loadingInterceptor,
+        authInterceptor
       ]),
     ),
     { provide: LOCALE_ID, useValue: 'pt-BR'}
