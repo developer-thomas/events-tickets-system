@@ -78,8 +78,8 @@ export class EventDetailsGenericComponent implements OnChanges {
     this.activeEvent.emit(this.eventId)
   }
 
-  onBuyTicket() {
-    this.buyTicket.emit(this.eventId)
+  onBuyTicket(event: any) {
+    this.buyTicket.emit(event)
   }
 
   

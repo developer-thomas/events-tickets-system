@@ -54,7 +54,7 @@ export class EventHeaderComponent {
   }
 
   onBuyTicket() {
-    this.buyTicket.emit(this.eventId);
+    this.buyTicket.emit(this.eventData);
   }
 
 
