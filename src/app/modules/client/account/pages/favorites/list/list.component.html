@@ -9,7 +9,8 @@
         type="text" 
         class="border-none py-3 px-4 text-sm focus:outline-none rounded-l-lg" 
         placeholder="O que você procura?"
-        [(ngModel)]="searchQuery"
+        [value]="searchQuery()"
+        (input)="onSearchInput($event)"
         (keyup.enter)="filterEvents()">
       <button class="px-4 text-gray-400 hover:text-gray-700">
         <mat-icon>search</mat-icon>
@@ -29,14 +30,14 @@
       <ng-container *ngFor="let category of categories(); let last = last">
         <div 
           class="category-item"
-          [class.active]="selectedCategory === category.id"
+          [class.active]="selectedCategory() === category.id"
           (click)="toggleCategory(category.id)">
           <div class="category-icon">
             <img [src]="category.imageIcon" alt="ícone da categoria">
           </div>
         </div>
 
-        <div *ngIf="last" style="min-width: 1rem;"></div> <!-- espaçador -->
+        <div *ngIf="last" style="min-width: 1rem;"></div> 
       </ng-container>
     </div>
   </div>
@@ -55,7 +56,8 @@
         <img 
           [src]="event.image" 
           alt="{{ event.name }}" 
-          class="w-full h-full object-cover">
+          class="w-full h-full object-cover"
+        >
       </div>
       
       <!-- Event Info -->
