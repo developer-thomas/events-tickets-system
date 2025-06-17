@@ -37,6 +37,7 @@ export class ClientHeaderComponent implements OnInit{
   getUserInfo() {
     this.userService.getLoggedUser().subscribe({
       next: (res) => {
+        console.log(res)
         this.userData.set(res);
       }
     })
@@ -45,7 +46,12 @@ export class ClientHeaderComponent implements OnInit{
   logout() {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userId');
+    localStorage.removeItem('role');
     this.route.navigate(['/login'])
+  }
+
+  goToCart() {
+    this.route.navigate(['client/inicio/cart'])
   }
   
 }

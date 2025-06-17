@@ -3,24 +3,24 @@
     <div class="header-content">
       <!-- Logo -->
       <a routerLink="/" class="logo">
-        @if(isAuth && userData()?.imageUrl) {
-          <img [src]="userData()?.imageUrl" alt="Imagem do usuário">
-        } @else {
-          <img src="assets/images/logo-header.png" alt="Imagem do usuário">
-        }
+        <img src="assets/images/logo-header.png" alt="Imagem do usuário">
       </a>
       
       <!-- Right Side Actions -->
       <div class="header-actions">
                
-        <button mat-icon-button class="action-button">
-          <mat-icon>shopping_cart</mat-icon>
+        <button (click)="goToCart()" mat-icon-button class="action-button">
+          <mat-icon >shopping_cart</mat-icon>
         </button>
         
         <div class="user-menu">
           <div mat-button [matMenuTriggerFor]="userMenu" class="user-button">
             <div class="user-avatar">
-              <mat-icon>person</mat-icon>
+              @if(!userData()?.imageUrl) {
+                <mat-icon>person</mat-icon>
+              } @else {
+                <img class="w-full h-full rounded-full" [src]="userData()?.imageUrl" alt="">
+              }
             </div>
             <div class="user-info text-white">
               @if(isAuth === false) {
