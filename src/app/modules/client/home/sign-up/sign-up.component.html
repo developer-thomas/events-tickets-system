@@ -16,7 +16,7 @@
               type="text" 
               id="fullName" 
               class="form-input" 
-              placeholder="Exemplo preenchido"
+              placeholder="Digite seu nome completo"
               formControlName="fullName">
             <div *ngIf="signUpForm.get('fullName')?.invalid && signUpForm.get('fullName')?.touched" class="error-message">
               Nome completo é obrigatório
@@ -38,7 +38,8 @@
                 formControlName="email">
             </div>
             <div *ngIf="signUpForm.get('email')?.invalid && signUpForm.get('email')?.touched" class="error-message">
-              E-mail inválido
+              <span *ngIf="signUpForm.get('email')?.errors?.['required']">E-mail é obrigatório</span>
+              <span *ngIf="signUpForm.get('email')?.errors?.['email']">E-mail inválido</span>
             </div>
           </div>
           
@@ -50,8 +51,8 @@
                 type="text" 
                 id="birthDate" 
                 class="form-input" 
-                placeholder="00/00/00"
-                mask="00/00/00"
+                placeholder="00/00/0000"
+                mask="00/00/0000"
                 formControlName="birthDate">
               <div *ngIf="signUpForm.get('birthDate')?.invalid && signUpForm.get('birthDate')?.touched" class="error-message">
                 Data de nascimento é obrigatória
@@ -76,19 +77,19 @@
           
           <div class="form-row">
             <!-- CPF -->
-            <!-- <div class="form-field">
+            <div class="form-field">
               <label for="cpf">CPF</label>
               <input 
                 type="text" 
                 id="cpf" 
                 class="form-input" 
-                placeholder="00000000-00"
-                mask="00000000-00"
+                placeholder="000.000.000-00"
+                mask="000.000.000-00"
                 formControlName="cpf">
               <div *ngIf="signUpForm.get('cpf')?.invalid && signUpForm.get('cpf')?.touched" class="error-message">
                 CPF é obrigatório
               </div>
-            </div> -->
+            </div>
             
             <!-- Gender -->
             <div class="form-field">
@@ -97,7 +98,7 @@
                 id="gender" 
                 class="form-select"
                 formControlName="gender">
-                <option value="" disabled selected>Masculino</option>
+                <option value="" disabled selected>Selecione</option>
                 <option *ngFor="let option of genderOptions" [value]="option.value">
                   {{ option.label }}
                 </option>
@@ -143,10 +144,12 @@
             type="password" 
             id="password" 
             class="form-input" 
-            placeholder="Exemplo preenchido"
+            placeholder="Digite sua senha"
             formControlName="password">
           <div *ngIf="signUpForm.get('password')?.invalid && signUpForm.get('password')?.touched" class="error-message">
-            Senha inválida
+            <span *ngIf="signUpForm.get('password')?.errors?.['required']">Senha é obrigatória</span>
+            <span *ngIf="signUpForm.get('password')?.errors?.['minlength']">Senha deve ter no mínimo 8 caracteres</span>
+            <span *ngIf="signUpForm.get('password')?.errors?.['invalidPassword']">Senha deve conter letras maiúsculas, minúsculas e números</span>
           </div>
         </div>
         
@@ -157,10 +160,11 @@
             type="password" 
             id="confirmPassword" 
             class="form-input" 
-            placeholder="Exemplo preenchido"
+            placeholder="Confirme sua senha"
             formControlName="confirmPassword">
           <div *ngIf="signUpForm.get('confirmPassword')?.invalid && signUpForm.get('confirmPassword')?.touched" class="error-message">
-            As senhas não coincidem
+            <span *ngIf="signUpForm.get('confirmPassword')?.errors?.['required']">Confirmação de senha é obrigatória</span>
+            <span *ngIf="signUpForm.get('confirmPassword')?.errors?.['passwordMismatch']">As senhas não coincidem</span>
           </div>
         </div>
       </div>
@@ -183,11 +187,16 @@
       
       <!-- Submit Button -->
       <div class="button-container">
-        <button type="submit" class="submit-button">CRIAR CONTA</button>
+        <button type="submit" class="submit-button" [disabled]="loading">
+          <span *ngIf="!loading">CRIAR CONTA</span>
+          <span *ngIf="loading" class="loading-text">
+            <div class="spinner-small"></div>
+            CRIANDO CONTA...
+          </span>
+        </button>
       </div>
     </form>
   </div>
 </div>
 
 <app-client-footer></app-client-footer>
-

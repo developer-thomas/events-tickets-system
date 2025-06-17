@@ -4,6 +4,7 @@ import { Observable, switchMap, tap } from "rxjs";
 import { environment } from "../../../environments/environment.development";
 import { AdminLoginResponse, SigninCredentialsResponse } from "../models/auth";
 import { UserService } from "./user.service";
+import { RegisterUser } from '../models/register';
 
 @Injectable({
   providedIn: 'root',
@@ -66,5 +67,9 @@ export class AuthService {
       `${this.api}/v1/noAuth/contactUs`,
       contact
     );
+  }
+
+  register(formData: FormData): Observable<any> {
+    return this.http.post(`${this.api}/users/client`, formData)
   }
 }
