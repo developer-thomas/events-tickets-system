@@ -1,10 +1,10 @@
-<div class=" mx-auto py-6 container">
+<div class="mx-auto py-6 container">
   <h1 class="text-2xl font-semibold text-gray-800 mb-6">Favoritos</h1>
-  
+
   <!-- Search and Filters -->
-  <div class="flex flex-wrap items-center gap-4 mb-6">
+  <div class="flex flex-wrap items-center gap-4 mb-7">
     <!-- Search Bar -->
-    <div class="flex bg-white rounded-lg shadow">
+    <div class="flex bg-white rounded-lg shadow-lg border-4 mb-2">
       <input 
         type="text" 
         class="border-none py-3 px-4 text-sm focus:outline-none rounded-l-lg" 
@@ -15,29 +15,32 @@
         <mat-icon>search</mat-icon>
       </button>
     </div>
-    
+
     <!-- Filter Button -->
-    <button 
+    <!-- <button 
       class="w-12 h-12 flex items-center justify-center bg-[#192554] text-white rounded-lg hover:bg-[#131c40]"
       (click)="openFilters()">
       <mat-icon>filter_list</mat-icon>
-    </button>
-    
+    </button> -->
+
     <!-- Category Filters -->
-    <div class="category-filters">
-      <div 
-        *ngFor="let category of categories" 
-        class="category-item"
-        [class.active]="selectedCategory === category.id"
-        (click)="toggleCategory(category)">
-        <div class="category-icon">
-          <!-- <mat-icon>{{ category.icon }}</mat-icon> -->
-           <img [src]="category.icon" alt="ícone da categoria">
+    <!-- Wrapper -->
+    <div class="category-filters-wrapper">
+      <ng-container *ngFor="let category of categories(); let last = last">
+        <div 
+          class="category-item"
+          [class.active]="selectedCategory === category.id"
+          (click)="toggleCategory(category.id)">
+          <div class="category-icon">
+            <img [src]="category.imageIcon" alt="ícone da categoria">
+          </div>
         </div>
-      </div>
+
+        <div *ngIf="last" style="min-width: 1rem;"></div> <!-- espaçador -->
+      </ng-container>
     </div>
   </div>
-  
+
   <!-- Favorites Grid -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     <div 
@@ -61,18 +64,17 @@
           <h2 class="text-lg font-semibold text-gray-800">{{ event.name }}</h2>
           <button 
             class="bg-transparent border-none p-0 cursor-pointer" 
-            (click)="toggleFavorite(event)"
-            >
+            (click)="toggleFavorite(event)">
             <mat-icon 
               [ngClass]="{'text-[#f13b3e]': event.isFavorite, 'text-gray-300': !event.isFavorite}">
               favorite
             </mat-icon>
           </button>
         </div>
-        
+
         <p class="text-sm text-gray-600 mb-2">{{ event.eventLocation }}</p>
         <p class="text-sm text-gray-600 mb-4 line-clamp-3">{{ event.description }}</p>
-        
+
         <button 
           class="bg-[#192554] text-white border-none rounded px-6 py-2 text-sm font-medium cursor-pointer hover:bg-[#131c40]"
           (click)="buyTicket(event.id)">
@@ -80,11 +82,11 @@
         </button>
       </div>
     </div>
-    
+
     <!-- Empty state when no favorites -->
     <div 
       *ngIf="favoriteEvents().length === 0" 
-      class="col-span-full flex flex-col items-center justify-center p-12 text-center bg-white rounded-lg shadow">
+      class="col-span-full flex flex-col items-center justify-center p-12 text-center bg-white rounded-lg shadow empty-favorites">
       <mat-icon class="text-gray-300 text-5xl mb-4">favorite_border</mat-icon>
       <p class="text-lg font-medium text-gray-800 mb-2">Você ainda não tem favoritos</p>
       <p class="text-gray-600">Adicione eventos aos seus favoritos para vê-los aqui</p>

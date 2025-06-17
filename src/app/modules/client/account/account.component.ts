@@ -33,7 +33,7 @@ export class AccountComponent implements OnInit {
   }
 
   isLoggedIn() {
-    const token = this.storageService.getToken();
+    const token = this.storageService.getUserToken();
   
     if (token) {
       const loggedRoutes: ISidenavRoute[] = [

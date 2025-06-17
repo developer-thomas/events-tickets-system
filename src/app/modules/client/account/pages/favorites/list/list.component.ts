@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { FavoritesService } from '../favorites.service';
 import { StorageService } from '../../../../../../core/auth/storage.service';
 import { ToastrService } from 'ngx-toastr';
+import { CategoriesService } from '../../../../../gerencial/pages/categories/categories.service';
+import { GetAllCategories } from '../../../../../gerencial/pages/categories/models/GetAllCategories.interface';
 
 interface Category {
   id: string
@@ -36,24 +38,20 @@ export class ListComponent implements OnInit {
   private router = inject(Router)
   private storageService = inject(StorageService);
   private toastr = inject(ToastrService);
+  private categoriesService = inject(CategoriesService);
 
   userId!: any;
   favoriteEvents = signal<FavoriteEvent[]>([]);
 
   searchQuery = ""
-  selectedCategory = "all"
+  selectedCategory = 0;
 
-  categories: Category[] = [
-    { id: "all", name: "Todos", icon: "assets/map-icons/jm-icon.png" },
-    { id: "theater", name: "Teatro", icon: "assets/map-icons/arena-icon.png" },
-    { id: "music", name: "Música", icon: "assets/map-icons/arte-icon.png" },
-    { id: "dance", name: "Dança", icon: "assets/map-icons/corpo-icon.png" },
-    { id: "art", name: "Arte", icon: "assets/map-icons/rio-icon.png" },
-  ]
+  categories = signal<GetAllCategories[]>([]);
 
   ngOnInit(): void {
     this.getUserId();
     this.getFavorites();
+    this.getAllCategories();
   }
 
   getFavorites() {
@@ -73,18 +71,22 @@ export class ListComponent implements OnInit {
     }
   }
 
-  toggleCategory(category: Category): void {
-    this.selectedCategory = category.id;
+  getAllCategories() {
+    this.categoriesService.getAll().subscribe({
+      next: (res) => {
+        this.categories.set(res);
+      }
+    })
+  }
+
+  toggleCategory(category: number): void {
+    this.selectedCategory = category;
 
     this.filterEvents()
   }
 
   filterEvents(): void {
-    console.log("Filtering events with search:", this.searchQuery)
-    console.log(
-      "Active categories:",
-      this.categories.filter((c) => c.isActive).map((c) => c.name),
-    )
+    
   }
 
   toggleFavorite(event: FavoriteEvent): void {

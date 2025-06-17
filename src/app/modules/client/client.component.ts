@@ -6,7 +6,7 @@ import { ClientFooterComponent } from '../shared/components/client-footer/client
 @Component({
   selector: 'app-client',
   standalone: true,
-  imports: [RouterModule, ClientHeaderComponent, ClientFooterComponent],
+  imports: [RouterModule, ClientFooterComponent],
   templateUrl: './client.component.html',
   styleUrl: './client.component.scss'
 })

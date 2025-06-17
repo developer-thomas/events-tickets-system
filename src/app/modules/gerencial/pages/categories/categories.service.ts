@@ -3,7 +3,6 @@ import { environment } from '../../../../../environments/environment.development
 import { Observable } from 'rxjs';
 import { GetAllCategories } from './models/GetAllCategories.interface';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { CreateCategory } from './models/CreateCategory.interface';
 
 @Injectable({
   providedIn: 'root'
