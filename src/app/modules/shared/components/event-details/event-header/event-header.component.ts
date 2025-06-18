@@ -16,7 +16,7 @@ export class EventHeaderComponent {
   private eventService = inject(EventService);
   
   @Input() eventId: any;
-  @Input() eventData!: GetOneEvent | any;
+  @Input({ required: true }) eventData!: GetOneEvent | any;
   @Input() useActionButtons: boolean = true;
   @Input() useClientButtons: boolean = false;
   @Input() isFavorite: boolean = false;
@@ -27,7 +27,7 @@ export class EventHeaderComponent {
 
   // Ações do usuário client
   @Output() shareEvent = new EventEmitter<any>();
-  @Output() activeEvent = new EventEmitter<any>();
+  @Output() favoriteEvent = new EventEmitter<any>();
   @Output() buyTicket = new EventEmitter<any>();
 
   onDelete(): void {
@@ -50,7 +50,8 @@ export class EventHeaderComponent {
   }
 
   onToggleFavorite() {
-    this.activeEvent.emit(this.eventId);
+    this.isFavorite = !this.isFavorite;
+    this.favoriteEvent.emit(this.eventId);
   }
 
   onBuyTicket() {

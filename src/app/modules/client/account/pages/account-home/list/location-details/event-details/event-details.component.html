@@ -2,9 +2,8 @@
     [eventId]="eventId"
     [useActionButtons]="false"
     [useClientButtons]="true"
-    (buyTicket)="true"
     (favoriteEvent)="toggleFavorite($event)"
-    (shareEvent)="true"
+    (shareEvent)="shareEvent()"
     (buyTicket)="buyTicket($event)"
 >
 </app-event-details-generic>

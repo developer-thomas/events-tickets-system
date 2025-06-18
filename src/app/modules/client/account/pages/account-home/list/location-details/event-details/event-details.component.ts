@@ -8,6 +8,8 @@ import { AccountHomeService } from '../../../account-home.service';
 import { GetOneEvent } from '../../../../../../../gerencial/pages/event/models/GetEventById.interface';
 import { CartRequest } from '../../../models/AddToCart.interface';
 import { ToastrService } from 'ngx-toastr';
+import { FavoritesService } from '../../../../favorites/favorites.service';
+import { StorageService } from '../../../../../../../../core/auth/storage.service';
 
 @Component({
   selector: 'app-event-details',
@@ -21,24 +23,64 @@ export class EventDetailsComponent {
   private router = inject(Router);
   private accountHomeService = inject(AccountHomeService)
   private toastr = inject(ToastrService);
+  private favoriteService = inject(FavoritesService)
+  private storageService = inject(StorageService);
 
-  eventId!: any;
+  eventId!: number;
+  userId!: number;
+  
   isFavorite = false
 
   ngOnInit(): void {
-    this.eventId = this.route.snapshot.paramMap.get("id")
+    this.eventId = Number(this.route.snapshot.paramMap.get("eventId"));
+    this.userId = this.storageService.getItem('userId');
   }
 
   goBack(): void {
     window.history.back()
   }
 
-  toggleFavorite(event: any): void {
-    this.isFavorite = !this.isFavorite
+  toggleFavorite(event: number): void {
+    const userId = this.userId;
+    const eventToFavorite = {
+      eventId: event,
+      userId
+    }
+    this.favoriteService.favoriteAnEvent(eventToFavorite).subscribe({
+      next: (res) => {
+        if(res.status === 'removed') {
+          this.toastr.success('Evento removido dos favoritos');
+          this.isFavorite = !this.isFavorite
+
+        } else if (res.status === 'added') {
+          this.toastr.success('Evento adicionado aos favoritos');
+          this.isFavorite = !this.isFavorite
+        }
+      }, error: (err) => {
+        this.toastr.error('Erro ao adicionar aos favoritos:', err.error.message)
+      }
+    })
   }
 
   shareEvent(): void {
-    console.log("Sharing event:", this.eventId)
+    const url = window.location.href; // Ou gere uma URL específica para o evento
+    const title = 'Confira este evento!';
+    const text = 'Encontrei esse evento incrível e achei que você poderia gostar.';
+  
+    if (navigator.share) {
+      navigator.share({
+        title,
+        text,
+        url,
+      }).then(() => {
+        console.log('Evento compartilhado com sucesso!');
+      }).catch((error) => {
+        console.error('Erro ao compartilhar:', error);
+      });
+    } else {
+      // Fallback para navegadores que não suportam Web Share API
+      this.toastr.info('Compartilhamento não suportado neste dispositivo.');
+    }
   }
 
   static getUserId() {
