@@ -5,7 +5,7 @@ import { CommomTableComponent, TableColumn } from '../../../../../shared/compone
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { BaseButtonComponent } from '../../../../../shared/components/base-button/base-button.component';
-import { AllLocations, GetAllLocations } from '../../models/GetAllLocations.interface';
+import { AllLocations, LocationTableRow } from '../../models/GetAllLocations.interface';
 import { LocationService } from '../../location.service';
 import { map } from 'rxjs';
 import { ConfirmDialogService } from '../../../../../shared/services/confirm-dialog/confirmDialog.service';
@@ -27,7 +27,8 @@ export class LocationListComponent {
   public title = 'Local';
   public pageSession = 'Local';
 
-  public locationsData = signal<AllLocations[]>([]);
+  public allLocationsData = signal<LocationTableRow[]>([]);
+public locationsData = signal<LocationTableRow[]>([]);
 
   // paginação
   public totalItems = signal<number>(0);
@@ -46,10 +47,9 @@ export class LocationListComponent {
     this.getLocations();
   }
 
-  private getLocations(search?: string) {
-    this.locationService.getAllLocations(this.currentPage(), this.pageSize(), this.searchTerm()).pipe(
-      map((res): any[] => {
-        console.log('res', res)
+  private getLocations() {
+    this.locationService.getAllLocations().pipe(
+      map((res): LocationTableRow[] => {
         return res.result.map(loc => ({
           id: loc.id,
           name: loc.name,
@@ -58,14 +58,23 @@ export class LocationListComponent {
         }));
       })
     ).subscribe({
-      next: (transformedLocation) => {
-        this.locationsData.set(transformedLocation); 
+      next: (transformedLocations) => {
+        this.allLocationsData.set(transformedLocations);
+        this.locationsData.set(transformedLocations);
+        this.totalItems.set(transformedLocations.length);
       }
     });
   }
 
   public filter(search: string) {
-    this.getLocations(search);
+    const lowerSearch = search.toLowerCase();
+    const filtered = this.allLocationsData().filter(loc => 
+      loc.name.toLowerCase().includes(lowerSearch) ||
+      loc.description.toLowerCase().includes(lowerSearch) ||
+      loc.categories.some(catName => catName.toLowerCase().includes(lowerSearch))
+    );
+    this.locationsData.set(filtered);
+    this.totalItems.set(filtered.length);
   }
 
   handlePageChange(event: {page: number, size: number}) {
