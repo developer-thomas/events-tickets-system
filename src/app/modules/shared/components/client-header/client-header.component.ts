@@ -44,7 +44,7 @@ export class ClientHeaderComponent implements OnInit{
   }
 
   logout() {
-    localStorage.removeItem('authToken');
+    localStorage.removeItem('userToken');
     localStorage.removeItem('userId');
     localStorage.removeItem('role');
     this.route.navigate(['/login'])

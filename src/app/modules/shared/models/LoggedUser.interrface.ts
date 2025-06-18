@@ -6,6 +6,10 @@ export interface LoggedUser {
     role: string;
     addresses: LoggedUserAddress[];
     favorites: LoggedUserFavorites[];
+    cpf_cnpj: string;
+    gender?: string;
+    dateOfBirth: string;
+    phone: string;
   }
   
 interface LoggedUserAddress {
