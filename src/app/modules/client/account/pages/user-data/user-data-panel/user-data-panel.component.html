@@ -1,7 +1,13 @@
-<div class="max-w-6xl mx-auto px-4 py-8">
+<div class="max-w-6xl mx-auto px-4 py-8 section-container">
   <h1 class="text-2xl font-bold mb-6">Meus dados</h1>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="flex justify-center items-center py-12">
+    <div class="spinner"></div>
+    <span class="ml-3 text-gray-600">Carregando dados...</span>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6" *ngIf="!loading()">
     <!-- Personal Information Section -->
     <div class="bg-white rounded-lg shadow p-6">
       <h2 class="text-xl font-medium mb-4">Meus dados</h2>
@@ -9,12 +15,12 @@
       <!-- Action Buttons -->
       <div class="flex flex-wrap gap-4 mb-6">
         <button 
-          class="border border-gray-300 rounded-full px-6 py-2 text-sm font-medium hover:bg-gray-50"
+          class="border border-gray-300 rounded-full px-6 py-2 text-sm font-medium hover:bg-gray-50 transition-colors"
           (click)="openChangeEmailDialog()">
           ALTERAR EMAIL
         </button>
         <button 
-          class="border border-gray-300 rounded-full px-6 py-2 text-sm font-medium hover:bg-gray-50"
+          class="border border-gray-300 rounded-full px-6 py-2 text-sm font-medium hover:bg-gray-50 transition-colors"
           (click)="openChangePasswordDialog()">
           ALTERAR SENHA
         </button>
@@ -61,19 +67,6 @@
           </div>
         </div>
         
-        <!-- Gender -->
-        <div>
-          <label class="block text-sm text-gray-500 mb-1">Sexo</label>
-          <div class="relative">
-            <input 
-              type="text" 
-              class="w-full bg-gray-100 rounded p-3 pr-10 text-gray-700" 
-              [value]="userData.gender" 
-              disabled>
-            <mat-icon class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">lock</mat-icon>
-          </div>
-        </div>
-        
         <!-- Birth Date -->
         <div>
           <label class="block text-sm text-gray-500 mb-1">Data de nascimento</label>
@@ -106,7 +99,7 @@
       
       <!-- Save Button -->
       <button 
-        class="w-full mt-6 bg-[#192554] text-white py-3 rounded font-medium hover:bg-[#131c40]"
+        class="w-full mt-6 bg-[#192554] text-white py-3 rounded font-medium hover:bg-[#131c40] transition-colors"
         (click)="saveChanges()">
         SALVAR ALTERAÇÕES
       </button>
@@ -116,22 +109,30 @@
     <div class="bg-white rounded-lg shadow p-6">
       <h2 class="text-xl font-medium mb-4">Endereços</h2>
       
-      <div class="bg-gray-100 rounded-lg p-4 mb-4 relative">
+      <div class="bg-gray-100 rounded-lg p-4 mb-4 relative" *ngIf="userAddress.street; else noAddress">
         <h3 class="font-medium mb-1">Endereço</h3>
         <p class="text-sm text-gray-700">{{ userAddress.street }}</p>
-        <p class="text-sm text-gray-700">{{ userAddress.number }}, {{ userAddress.complement }}</p>
+        <p class="text-sm text-gray-700">{{ userAddress.number }}<span *ngIf="userAddress.complement">, {{ userAddress.complement }}</span></p>
         <p class="text-sm text-gray-700">CEP {{ userAddress.zipCode }} - {{ userAddress.city }}, {{ userAddress.state }}</p>
         
         <button 
-          class="absolute top-4 right-4 text-sm text-gray-700 hover:text-gray-900"
+          class="absolute top-4 right-4 text-sm text-gray-700 hover:text-gray-900 transition-colors"
           (click)="openEditAddressDialog()">
           Editar
         </button>
       </div>
-      
-      <div class="text-sm text-gray-700">
-        <p>De acordo com a legislação, para importar os produtos medicinal, o endereço cadastrado no pedido deve ser obrigatoriamente o mesmo do comprovante de residência enviado.</p>
-      </div>
+
+      <ng-template #noAddress>
+        <div class="bg-gray-50 rounded-lg p-4 mb-4 text-center">
+          <mat-icon class="text-gray-400 text-3xl mb-2">location_off</mat-icon>
+          <p class="text-gray-600 mb-4">Nenhum endereço cadastrado</p>
+          <button 
+            class="bg-[#192554] text-white px-6 py-2 rounded font-medium hover:bg-[#131c40] transition-colors"
+            (click)="openEditAddressDialog()">
+            Adicionar Endereço
+          </button>
+        </div>
+      </ng-template>
     </div>
   </div>
 </div>

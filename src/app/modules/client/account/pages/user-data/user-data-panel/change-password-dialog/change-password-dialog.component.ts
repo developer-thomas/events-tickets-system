@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -24,18 +24,16 @@ import { MatInputModule } from '@angular/material/input';
   styleUrl: './change-password-dialog.component.scss'
 })
 export class ChangePasswordDialogComponent {
+  private fb = inject(FormBuilder)
+  public dialogRef = inject(MatDialogRef<ChangePasswordDialogComponent>)
+
   passwordForm: FormGroup
-  hideCurrentPassword = true
   hideNewPassword = true
   hideConfirmPassword = true
 
-  constructor(
-    public dialogRef: MatDialogRef<ChangePasswordDialogComponent>,
-    private fb: FormBuilder,
-  ) {
+  constructor() {
     this.passwordForm = this.fb.group(
       {
-        currentPassword: ["", Validators.required],
         newPassword: ["", [Validators.required, Validators.minLength(6)]],
         confirmPassword: ["", Validators.required],
       },
@@ -56,7 +54,9 @@ export class ChangePasswordDialogComponent {
 
   onSubmit(): void {
     if (this.passwordForm.valid) {
-      this.dialogRef.close(true)
+      // Retorna apenas a nova senha como string
+      const newPassword = this.passwordForm.get("newPassword")?.value
+      this.dialogRef.close(newPassword)
     }
   }
 }
