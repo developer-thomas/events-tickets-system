@@ -1,11 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { NgxMaskDirective } from 'ngx-mask';
+import { AddressService } from '../../../../../../../../core/services/address.service';
+import { ToastrService } from 'ngx-toastr';
+import { debounceTime, distinctUntilChanged, filter, switchMap, catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-step-one',
@@ -14,7 +17,10 @@ import { NgxMaskDirective } from 'ngx-mask';
   templateUrl: './step-one.component.html',
   styleUrl: './step-one.component.scss'
 })
-export class StepOneComponent implements OnInit{
+export class StepOneComponent implements OnInit {
+  private addressService = inject(AddressService);
+  private toastr = inject(ToastrService);
+
   @Input() formGroup!: FormGroup
   @Input() categories: any[] = []
 
@@ -56,16 +62,35 @@ export class StepOneComponent implements OnInit{
   ]
 
   ngOnInit(): void {
-    // Verificar se já existe uma categoria selecionada
     const categoryId = this.getFormControl("categoryIds").value
     if (categoryId && Array.isArray(categoryId) && categoryId.length > 0) {
       this.selectedCategories = categoryId
     }
 
-    // Definir SP como estado padrão se não estiver definido
     if (!this.getFormControl("uf").value) {
       this.getFormControl("uf").setValue("SP")
     }
+
+    // Escuta mudanças no CEP e busca endereço
+  this.getFormControl('cep').valueChanges
+  .pipe(
+    debounceTime(300),
+    distinctUntilChanged(),
+    filter(value => value && value.length === 9),
+    switchMap((cep) => this.addressService.getAddress(cep)),
+    catchError((error) => {
+      console.error('Erro ao buscar CEP:', error);
+      return of(null); // Evita quebrar o fluxo
+    })
+  )
+  .subscribe((data) => {
+    if (data) {
+      this.getFormControl('street').setValue(data.street || '');
+      this.getFormControl('neighborhood').setValue(data.neighborhood || '');
+      this.getFormControl('city').setValue(data.city || '');
+      this.getFormControl('uf').setValue(data.state || '');
+    }
+  });
   }
 
   // Helper method to get form control with proper typing
@@ -127,5 +152,24 @@ export class StepOneComponent implements OnInit{
   // Método para preview da imagem (opcional)
   getImagePreview(file: File): string {
     return URL.createObjectURL(file)
+  }
+
+  fetchAddressByCEP(cep: string): void {
+    cep = cep?.replace(/\D/g, '');
+
+    if (!cep || cep.length !== 8) return;
+  
+    this.addressService.getAddress(cep).subscribe({
+      next: (data) => {
+        this.getFormControl('street').setValue(data.street || '');
+        this.getFormControl('neighborhood').setValue(data.neighborhood || '');
+        this.getFormControl('city').setValue(data.city || '');
+        this.getFormControl('uf').setValue(data.state || '');
+      },
+      error: (err) => {
+        this.toastr.error("Erro ao buscar endereço")
+        console.error('Erro ao buscar endereço:', err);
+      }
+    });
   }
 }

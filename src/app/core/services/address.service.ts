@@ -10,8 +10,9 @@ export class AddressService {
   constructor(private http: HttpClient) {}
 
   getAddress(zipCode: string): Observable<AddressReponse> {
+    zipCode = zipCode.replace(/\D/g, '');
     return this.http.get<AddressReponse>(
-      `https://viacep.com.br/ws/${zipCode}/json/`
+      `https://brasilapi.com.br/api/cep/v1/${zipCode}`
     );
   }
 }

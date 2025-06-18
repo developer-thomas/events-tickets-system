@@ -62,7 +62,9 @@
           class="form-input"
           placeholder="00000-000"
           mask="00000-000"
-          [formControl]="getFormControl('cep')">
+          [formControl]="getFormControl('cep')"
+          (blur)="fetchAddressByCEP(getFormControl('cep').value)"
+        >
         @if (getFormControl('cep').invalid && getFormControl('cep').touched) {
           <div class="text-red-500 text-sm mt-1">
             CEP é obrigatório
