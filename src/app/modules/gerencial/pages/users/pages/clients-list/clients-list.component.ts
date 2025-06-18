@@ -26,6 +26,7 @@ export class ClientsListComponent implements OnInit {
   public title = 'Clientes';
   public pageSession = 'Clientes';
 
+  public allClients = signal<any[]>([]);
   public clients = signal<any[]>([]);
 
   // paginação
@@ -47,18 +48,30 @@ export class ClientsListComponent implements OnInit {
     this.getClients();
   }
 
-  private getClients(search?: string) {
-    this.clientService.getClients(this.currentPage(), this.pageSize(), this.searchTerm()).subscribe((response) => {
-      console.log(response);
-      
-      this.clients.set(response);
+  private getClients() {
+    this.clientService.getClients(this.currentPage(), this.pageSize()).subscribe((response) => {
+      this.allClients.set(response);
+      this.clients.set(response); 
     });
   }
 
   public filter(search: string) {
     this.currentPage.set(1);
-    this.getClients(search);
+  
+    const term = search.toLowerCase();
+  
+    const filtered = this.allClients().filter((client) => {
+      return (
+        client.name?.toLowerCase().includes(term) ||
+        client.email?.toLowerCase().includes(term) ||
+        client.phone?.toLowerCase().includes(term)
+      );
+    });
+  
+    this.clients.set(filtered);
+    this.totalItems.set(filtered.length); // para paginar corretamente
   }
+  
 
   // Manipular mudanças de página
   public handlePageChange(event: {page: number, size: number}) {
