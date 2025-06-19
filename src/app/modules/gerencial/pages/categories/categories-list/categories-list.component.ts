@@ -1,4 +1,4 @@
-import { Component, computed, Inject, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, Inject, inject, OnInit, signal } from '@angular/core';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
 import { FilterTableComponent } from '../../../../shared/components/filter-table/filter-table.component';
 import { BaseButtonComponent } from '../../../../shared/components/base-button/base-button.component';
@@ -27,13 +27,8 @@ export class CategoriesListComponent implements OnInit{
   public title = 'Categorias';
   public pageSession = 'Categorias';
   
-  public categoryData = signal<GetAllCategories[]>([]);
-  public filteredCategories = computed(() => {
-    const search = this.searchTerm()?.toLowerCase() ?? "";
-    return this.categoryData().filter(category =>
-      category.name.toLowerCase().includes(search)
-    );
-  });
+  public allCategories = signal<GetAllCategories[]>([]);
+  public filteredCategories = signal<GetAllCategories[]>([]);
   
   public displayedColumns: TableColumn[] = [
     { label: 'ID', key: 'id', type: 'text' },
@@ -42,31 +37,48 @@ export class CategoriesListComponent implements OnInit{
   ];
   
   // paginação
-  public totalItems = signal<number>(0)
-  public currentPage = signal<number>(0)
-  public pageSize = signal<number>(10) // Definindo um valor padrão
-  public searchTerm = signal<string | undefined>(undefined)
+  public totalItems = signal<number>(0);
+  public currentPage = signal<number>(1);
+  public pageSize = signal<number>(10);
+  public searchTerm = signal<string | undefined>(undefined);
   
   ngOnInit() {
     this.getCategories();
   }
   
+  public paginatedCategories = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    const end = start + this.pageSize();
+    return this.filteredCategories().slice(start, end);
+  });
+
   private getCategories() {
-    this.categoriesService.getAll(this.currentPage(), this.pageSize()).subscribe({
+    this.categoriesService.getAll().subscribe({
       next: (res) => {
-        this.categoryData.set(res);
+        this.allCategories.set(res);
+        this.filteredCategories.set(res);
+        this.totalItems.set(res.length);
       }
     });
   }
   
   public filter(search: string) {
+    this.currentPage.set(1);
     this.searchTerm.set(search);
+  
+    const term = search.toLowerCase();
+  
+    const filtered = this.allCategories().filter(category =>
+      category.name.toLowerCase().includes(term)
+    );
+  
+    this.filteredCategories.set(filtered);
+    this.totalItems.set(filtered.length);
   }
 
   handlePageChange(event: { page: number; size: number }) {
-    this.currentPage.set(event.page)
-    this.pageSize.set(event.size)
-    this.getCategories()
+    this.currentPage.set(event.page);
+    this.pageSize.set(event.size);
   }
   
   deleteCategory(row: any) {
@@ -98,5 +110,11 @@ export class CategoriesListComponent implements OnInit{
         this.getCategories()
       }
     })
+  }
+
+  public getPaginatedCategories(): GetAllCategories[] {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    const end = start + this.pageSize();
+    return this.filteredCategories().slice(start, end);
   }
 }

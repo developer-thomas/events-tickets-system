@@ -4,7 +4,7 @@
   <app-filter-table (filterText)="filter($event)" [useFilterBtn]="false"></app-filter-table>
 
   <app-commom-table
-    [data]="clients()"
+    [data]="paginatedClients()"
     [displayedColumns]="displayedColumns"
     (detail)="gotoDetailPage($event)"
     (delete)="deleteClient($event)"

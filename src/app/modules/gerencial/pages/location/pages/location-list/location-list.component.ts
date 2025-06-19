@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
 import { FilterTableComponent } from '../../../../../shared/components/filter-table/filter-table.component';
 import { CommomTableComponent, TableColumn } from '../../../../../shared/components/commom-table/commom-table.component';
@@ -28,13 +28,30 @@ export class LocationListComponent {
   public pageSession = 'Local';
 
   public allLocationsData = signal<LocationTableRow[]>([]);
-public locationsData = signal<LocationTableRow[]>([]);
+  public locationsData = signal<LocationTableRow[]>([]);
 
   // paginação
   public totalItems = signal<number>(0);
-  public currentPage = signal<number>(0);
-  public pageSize = signal<number>(0);
+  public currentPage = signal<number>(1); 
+  public pageSize = signal<number>(10);   
   public searchTerm = signal<string | undefined>(undefined);
+
+  public filteredLocationsData = computed(() => {
+    const term = this.searchTerm()?.toLowerCase();
+    if (!term) return this.allLocationsData();
+
+    return this.allLocationsData().filter(loc => 
+      loc.name.toLowerCase().includes(term) ||
+      loc.description.toLowerCase().includes(term) ||
+      loc.categories.some(catName => catName.toLowerCase().includes(term))
+    );
+  });
+
+public paginatedLocationsData = computed(() => {
+  const start = (this.currentPage() - 1) * this.pageSize();
+  const end = start + this.pageSize();
+  return this.filteredLocationsData().slice(start, end);
+});
 
   public displayedColumns: TableColumn[] = [
     { label: 'Nome', key: 'name', type: 'text' },
@@ -60,21 +77,15 @@ public locationsData = signal<LocationTableRow[]>([]);
     ).subscribe({
       next: (transformedLocations) => {
         this.allLocationsData.set(transformedLocations);
-        this.locationsData.set(transformedLocations);
         this.totalItems.set(transformedLocations.length);
       }
     });
   }
 
   public filter(search: string) {
-    const lowerSearch = search.toLowerCase();
-    const filtered = this.allLocationsData().filter(loc => 
-      loc.name.toLowerCase().includes(lowerSearch) ||
-      loc.description.toLowerCase().includes(lowerSearch) ||
-      loc.categories.some(catName => catName.toLowerCase().includes(lowerSearch))
-    );
-    this.locationsData.set(filtered);
-    this.totalItems.set(filtered.length);
+    this.currentPage.set(1); // sempre volta pra primeira página
+    this.searchTerm.set(search);
+    this.totalItems.set(this.filteredLocationsData().length);
   }
 
   handlePageChange(event: {page: number, size: number}) {

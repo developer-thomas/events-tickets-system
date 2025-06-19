@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommomTableComponent, TableColumn } from '../../../../../shared/components/commom-table/commom-table.component';
 import { FilterTableComponent } from '../../../../../shared/components/filter-table/filter-table.component';
@@ -27,7 +27,12 @@ export class ClientsListComponent implements OnInit {
   public pageSession = 'Clientes';
 
   public allClients = signal<any[]>([]);
-  public clients = signal<any[]>([]);
+  
+  public paginatedClients = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    const end = start + this.pageSize();
+    return this.filteredClients().slice(start, end);
+  });
 
   // paginação
   public totalItems = signal<number>(0);
@@ -51,25 +56,14 @@ export class ClientsListComponent implements OnInit {
   private getClients() {
     this.clientService.getClients(this.currentPage(), this.pageSize()).subscribe((response) => {
       this.allClients.set(response);
-      this.clients.set(response); 
+      this.totalItems.set(response.length);
     });
   }
 
   public filter(search: string) {
-    this.currentPage.set(1);
-  
-    const term = search.toLowerCase();
-  
-    const filtered = this.allClients().filter((client) => {
-      return (
-        client.name?.toLowerCase().includes(term) ||
-        client.email?.toLowerCase().includes(term) ||
-        client.phone?.toLowerCase().includes(term)
-      );
-    });
-  
-    this.clients.set(filtered);
-    this.totalItems.set(filtered.length); // para paginar corretamente
+    this.currentPage.set(1); // voltar para primeira página
+    this.searchTerm.set(search); // atualiza a search term
+    this.totalItems.set(this.filteredClients().length); // para paginar corretamente
   }
   
 
@@ -96,5 +90,19 @@ export class ClientsListComponent implements OnInit {
     }
     return
   }
+
+  public filteredClients = computed(() => {
+    const search = this.searchTerm()?.toLowerCase();
+  
+    if (!search) return this.allClients();
+  
+    return this.allClients().filter((client) => {
+      return (
+        client.name?.toLowerCase().includes(search) ||
+        client.email?.toLowerCase().includes(search) ||
+        client.phone?.toLowerCase().includes(search)
+      );
+    });
+  });
 
 }

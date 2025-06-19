@@ -35,11 +35,14 @@
     <!-- <app-filter-table (filter)="filter($event)"></app-filter-table> -->
   
     <app-commom-table
-      [data]="filteredTickets()"
+      [data]="getPaginatedTickets()"
       [displayedColumns]="displayedColumns"
-      [totalItems]="filteredTickets().length"
+      [totalItems]="totalItems()"
       (detail)="gotoDetailPage($event)"
       (delete)="deleteEvent($event)"
+      (pageChange)="handlePageChange($event)"
+      [page]="currentPage()"
+      [size]="pageSize()"
     ></app-commom-table>
   } @else {
     <app-dashboard-view></app-dashboard-view>

@@ -8,9 +8,12 @@
   <app-commom-table
     [data]="filteredAdmins()"
     [displayedColumns]="displayedColumns"
-    (edit)="gotoEdit($event)"
-    (detail)="gotoDetails($event)"
-    [useDeleteBtn]="false"
+    (detail)="gotoEdit($event)"
+    [totalItems]="totalItems()"
+    [page]="currentPage()"
+    [size]="pageSize()"
+    (pageChange)="handlePageChange($event)"
     [useDetailBtn]="false"
-  />
+    [useEditBtn]="false"
+  ></app-commom-table>
 </section>

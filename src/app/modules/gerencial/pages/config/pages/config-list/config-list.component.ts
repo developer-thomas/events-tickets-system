@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BaseButtonComponent } from '../../../../../shared/components/base-button/base-button.component';
 import { CommomTableComponent, TableColumn } from '../../../../../shared/components/commom-table/commom-table.component';
@@ -34,16 +34,23 @@ export class ConfigListComponent implements OnInit {
   public searchTerm = signal<string | undefined>(undefined);
 
   public admins = signal<GetAllCollaborators[]>([]);
-  public filteredAdmins = computed(() =>
-    this.admins().filter((admin) => {
-      const search = this.searchTerm()?.toLowerCase() ?? "";
-      return (
-        admin.name.toLowerCase().includes(search) ||
-        admin.email.toLowerCase().includes(search) ||
-        admin.role.toLowerCase().includes(search)
-      );
-    })
-  );
+  public filteredAdmins = computed(() => {
+    const search = this.searchTerm()?.toLowerCase() ?? "";
+    const filtered = this.admins().filter(admin =>
+      admin.name.toLowerCase().includes(search) ||
+      admin.email.toLowerCase().includes(search) ||
+      admin.role.toLowerCase().includes(search)
+    );
+  
+    const start = (this.currentPage() - 1) * this.pageSize();
+    const end = start + this.pageSize();
+  
+    return filtered.slice(start, end);
+  });
+
+  public currentPage = signal(1);
+  public pageSize = signal(10);
+  public totalItems = signal(0);
 
   public displayedColumns: TableColumn[] = [
     { label: 'ID', key: 'id', type: 'text' },
@@ -51,23 +58,39 @@ export class ConfigListComponent implements OnInit {
     { label: 'E-mail', key: 'email', type: 'text' },
     { label: 'Acessos', key: 'role', type: 'text' },
     { label: 'Status', key: 'active', type: 'status' },
-    { label: '', key: 'menu', type: 'menu' },
+    // { label: '', key: 'menu', type: 'menu' },
   ];
 
   ngOnInit(): void {
     this.getAdmins();
+  
+    effect(() => {
+      const search = this.searchTerm()?.toLowerCase() ?? "";
+      const filtered = this.admins().filter(admin =>
+        admin.name.toLowerCase().includes(search) ||
+        admin.email.toLowerCase().includes(search) ||
+        admin.role.toLowerCase().includes(search)
+      );
+  
+      this.totalItems.set(filtered.length);
+    });
   }
 
-  private getAdmins(search?: string): void {
-    this.configService.getAll(1, 10, search).subscribe({
+  private getAdmins() {
+    this.configService.getAll().subscribe({
       next: (res) => {
-        const data = res;
-        this.admins.set(data.map((admin) => ({
+        this.admins.set(res.map(admin => ({
           ...admin,
           role: admin.role === 'ADMIN' ? 'Admin' : 'Colaborador'
         })));
+        this.totalItems.set(res.length);
       }
-    })
+    });
+  }
+
+  public handlePageChange(event: { page: number; size: number }) {
+    this.currentPage.set(event.page);
+    this.pageSize.set(event.size);
   }
 
   public gotoFormPage(): void {
@@ -84,5 +107,6 @@ export class ConfigListComponent implements OnInit {
 
   public filter(search: string) {
     this.searchTerm.set(search);
+    this.currentPage.set(1); // resetar página ao filtrar
   }
 }

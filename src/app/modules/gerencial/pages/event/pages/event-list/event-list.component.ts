@@ -46,9 +46,15 @@ export class EventListComponent implements OnInit {
   
   // paginação
   public totalItems = signal<number>(0)
-  public currentPage = signal<number>(0)
-  public pageSize = signal<number>(10) // Definindo um valor padrão
+  public currentPage = signal<number>(1);
+  public pageSize = signal<number>(10);
   public searchTerm = signal<string | undefined>(undefined)
+
+  public paginatedEvents = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    const end = start + this.pageSize();
+    return this.filteredEvents().slice(start, end);
+  });
 
   public displayedColumns: TableColumn[] = [
     { label: "Nome", key: "name", type: "text" },
@@ -87,7 +93,9 @@ export class EventListComponent implements OnInit {
   }
 
   public filter(search: string) {
+    this.currentPage.set(1);
     this.searchTerm.set(search);
+    this.totalItems.set(this.filteredEvents().length);
   }
 
   handlePageChange(event: { page: number; size: number }) {

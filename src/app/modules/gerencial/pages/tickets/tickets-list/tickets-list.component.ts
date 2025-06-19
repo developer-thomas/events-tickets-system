@@ -38,68 +38,91 @@ export class TicketsListComponent implements OnInit{
   private activatedRoute = inject(ActivatedRoute);
   private ticketsService = inject(TicketsService);
 
-  viewMode: ViewMode = "list"
+  viewMode: ViewMode = "list";
 
   public searchTerm = signal<string | undefined>(undefined);
 
-  public eventData = signal<GetAllTickets[]>([]);
-  public filteredTickets = computed(() => {
-    const search = this.searchTerm()?.toLowerCase() ?? "";
-    return this.eventData().filter(ticket =>
-      ticket.userName.toLowerCase().includes(search) ||
-      ticket.eventName.toLowerCase().includes(search) ||
-      ticket.eventLocationName.toLowerCase().includes(search) ||
-      ticket.value.toString().toLowerCase().includes(search) ||
-      ticket.status.toLowerCase().includes(search)
-    );
-  });
+  public allTickets = signal<GetAllTickets[]>([]);
+  public filteredTickets = signal<GetAllTickets[]>([]);
+
+  // paginação
+  public totalItems = signal<number>(0);
+  public currentPage = signal<number>(1);
+  public pageSize = signal<number>(10);
 
   public displayedColumns: TableColumn[] = [
-      { label: 'ID', key: 'id', type: 'text' },
-      { label: 'Usuário', key: 'userName', type: 'text' },
-      { label: 'Nome do evento', key: 'eventName', type: 'text' },
-      { label: 'Nome do local', key: 'eventLocationName', type: 'text' },
-      { label: 'Valor', key: 'value', type: 'text' },
-      { label: 'Status', key: 'status', type: 'text' },
-    ];
+    { label: 'ID', key: 'id', type: 'text' },
+    { label: 'Usuário', key: 'userName', type: 'text' },
+    { label: 'Nome do evento', key: 'eventName', type: 'text' },
+    { label: 'Nome do local', key: 'eventLocationName', type: 'text' },
+    { label: 'Valor', key: 'value', type: 'text' },
+    { label: 'Status', key: 'status', type: 'text' },
+  ];
 
   ngOnInit(): void {
     this.getEvents();
   }
 
-  private getEvents(search?: string) {
+  private getEvents() {
     this.ticketsService.getAllTickets().subscribe({
       next: (res) => {
         const data = res.map((ticket) => ({
           ...ticket,
           status: ticket.status === 'VALID' ? "Válido" : "Inválido"
-        }))
+        }));
         
-        this.eventData.set(data);
+        this.allTickets.set(data);
+        this.filteredTickets.set(data);
+        this.totalItems.set(data.length);
       }
-    })
+    });
   }
 
+  public filter(search: string) {
+    this.currentPage.set(1);
+    this.searchTerm.set(search);
+
+    const term = search.toLowerCase();
+
+    const filtered = this.allTickets().filter(ticket =>
+      ticket.userName.toLowerCase().includes(term) ||
+      ticket.eventName.toLowerCase().includes(term) ||
+      ticket.eventLocationName.toLowerCase().includes(term) ||
+      ticket.value.toString().toLowerCase().includes(term) ||
+      ticket.status.toLowerCase().includes(term)
+    );
+
+    this.filteredTickets.set(filtered);
+    this.totalItems.set(filtered.length);
+  }
+
+  public getPaginatedTickets(): GetAllTickets[] {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    const end = start + this.pageSize();
+    return this.filteredTickets().slice(start, end);
+  }
+
+  handlePageChange(event: { page: number; size: number }) {
+    this.currentPage.set(event.page);
+    this.pageSize.set(event.size);
+  }
+    
   public gotoDetailPage(row: any) {
     this.router.navigate([row.id], { relativeTo: this.activatedRoute });
   }
 
   gotoEditPage(row: any) {
-    this.router.navigate(['/admin/clients/edit', row.id])
+    this.router.navigate(['/admin/clients/edit', row.id]);
   }
 
   deleteEvent(row: any) {
+    // implementar delete se quiser
   }
 
   toggleView(mode: ViewMode): void {
-    this.viewMode = mode
+    this.viewMode = mode;
   }
 
-  public filter(search: string) {
-    this.searchTerm.set(search);
-  }
-
-  // Aqui trata o filtro de acordo com o tipo
   applyFilter(tipo: string) {
     console.log('Filtro selecionado:', tipo);
   }

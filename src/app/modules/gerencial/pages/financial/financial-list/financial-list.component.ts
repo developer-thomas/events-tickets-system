@@ -32,69 +32,90 @@ export class FinancialListComponent {
   private activatedRoute = inject(ActivatedRoute);
   private financialService = inject(FinancialService);
 
-  viewMode: ViewMode = "list"
+  viewMode: ViewMode = "list";
 
   public searchTerm = signal<string | undefined>(undefined);
 
-  public financialData = signal<GetAllFinancial[]>([]);
-  public filteredFinancialData = computed(() => {
-    const search = this.searchTerm()?.toLowerCase() ?? "";
-    return this.financialData().filter(item =>
-      item.user?.name?.toLowerCase().includes(search) ||
-      item.payment?.method?.toLowerCase().includes(search) ||
-      item.status?.toLowerCase().includes(search) ||
-      item.value?.toString().includes(search) ||
-      new Date(item.createdAt).toLocaleDateString("pt-BR").includes(search)
-    );
-  });
+  public allFinancialData = signal<GetAllFinancial[]>([]);
+  public filteredFinancialData = signal<GetAllFinancial[]>([]);
+
+  // Paginação
+  public totalItems = signal<number>(0);
+  public currentPage = signal<number>(1);
+  public pageSize = signal<number>(10);
 
   public displayedColumns: TableColumn[] = [
-      { label: 'Data', key: 'createdAt', type: 'date' },
-      { label: 'Usuário', key: 'user', type: 'text' },
-      { label: 'Método de pagamento', key: 'payment', type: 'text' },
-      { label: 'Valor', key: 'value', type: 'currency' },
-      { label: 'Status', key: 'status', type: 'text' },
-    ];
+    { label: 'Data', key: 'createdAt', type: 'date' },
+    { label: 'Usuário', key: 'user', type: 'text' },
+    { label: 'Método de pagamento', key: 'payment', type: 'text' },
+    { label: 'Valor', key: 'value', type: 'currency' },
+    { label: 'Status', key: 'status', type: 'text' },
+  ];
 
   ngOnInit(): void {
     this.getFinancial();
   }
 
-  private getFinancial(search?: string) {
+  private getFinancial() {
     this.financialService.getAll().subscribe({
       next: (res) => {
-        console.log(res)
         const data = res.map((financial: GetAllFinancial) => ({
           ...financial,
           payment: financial.payment !== null ? this.translate(financial.payment.method) : 'N/A',
           user: financial.user.name,
           status: this.translate(financial.status)
-          
-        }))
+        }));
 
-        this.financialData.set(data);
-      
+        this.allFinancialData.set(data);
+        this.filteredFinancialData.set(data);
+        this.totalItems.set(data.length);
       }
-    })
+    });
   }
 
+  public filter(search: string) {
+    this.currentPage.set(1);
+    this.searchTerm.set(search);
+
+    const term = search.toLowerCase();
+
+    const filtered = this.allFinancialData().filter(item =>
+      item.user?.name?.toLowerCase().includes(term) ||       
+      item.payment?.method?.toLowerCase().includes(term) ||   
+      item.status?.toLowerCase().includes(term) ||
+      item.value.toString().includes(term) ||
+      new Date(item.createdAt).toLocaleDateString("pt-BR").includes(term)
+    );
+
+    this.filteredFinancialData.set(filtered);
+    this.totalItems.set(filtered.length);
+  }
+
+  public getPaginatedData(): GetAllFinancial[] {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    const end = start + this.pageSize();
+    return this.filteredFinancialData().slice(start, end);
+  }
+
+  handlePageChange(event: { page: number; size: number }) {
+    this.currentPage.set(event.page);
+    this.pageSize.set(event.size);
+  }
+    
   public gotoDetailPage(row: any) {
     this.router.navigate([row.id], { relativeTo: this.activatedRoute });
   }
 
   gotoEditPage(row: any) {
-    this.router.navigate(['/admin/clients/edit', row.id])
+    this.router.navigate(['/admin/clients/edit', row.id]);
   }
 
   deleteEvent(row: any) {
+    // Implemente a exclusão se quiser
   }
 
   toggleView(mode: ViewMode): void {
-    this.viewMode = mode
-  }
-
-  public filter(search: string) {
-    this.searchTerm.set(search);
+    this.viewMode = mode;
   }
 
   translate(word: string) {

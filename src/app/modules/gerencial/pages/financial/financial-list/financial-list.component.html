@@ -28,11 +28,14 @@
     <!-- <app-filter-table (filter)="filter($event)"></app-filter-table> -->
   
     <app-commom-table
-      [data]="filteredFinancialData()"
+      [data]="getPaginatedData()"
       [displayedColumns]="displayedColumns"
       (detail)="gotoDetailPage($event)"
       (delete)="deleteEvent($event)"
-      [totalItems]="filteredFinancialData().length"
+      [totalItems]="totalItems()"
+      [page]="currentPage()"
+      [size]="pageSize()"
+      (pageChange)="handlePageChange($event)"
     ></app-commom-table>
   } @else {
     <app-dashboard-view></app-dashboard-view>
