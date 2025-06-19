@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FilterTableComponent } from '../../../../../shared/components/filter-table/filter-table.component';
 import { CardsViewComponent } from './components/cards-view/cards-view.component';
@@ -20,7 +19,6 @@ import { LocationMapComponent } from './components/location-map/location-map.com
     PageHeaderComponent, 
     CommonModule, 
     MatIcon, 
-    MatSlideToggle, 
     MatTabsModule, 
     FilterTableComponent, 
     CardsViewComponent, 

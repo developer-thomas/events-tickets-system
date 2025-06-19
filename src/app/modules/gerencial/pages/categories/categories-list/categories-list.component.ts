@@ -1,4 +1,4 @@
-import { Component, Inject, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, Inject, inject, OnInit, signal } from '@angular/core';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
 import { FilterTableComponent } from '../../../../shared/components/filter-table/filter-table.component';
 import { BaseButtonComponent } from '../../../../shared/components/base-button/base-button.component';
@@ -28,6 +28,12 @@ export class CategoriesListComponent implements OnInit{
   public pageSession = 'Categorias';
   
   public categoryData = signal<GetAllCategories[]>([]);
+  public filteredCategories = computed(() => {
+    const search = this.searchTerm()?.toLowerCase() ?? "";
+    return this.categoryData().filter(category =>
+      category.name.toLowerCase().includes(search)
+    );
+  });
   
   public displayedColumns: TableColumn[] = [
     { label: 'ID', key: 'id', type: 'text' },
@@ -45,16 +51,16 @@ export class CategoriesListComponent implements OnInit{
     this.getCategories();
   }
   
-  private getCategories(search?: string) {
-    this.categoriesService.getAll(this.currentPage(), this.pageSize(), this.searchTerm()).subscribe({
+  private getCategories() {
+    this.categoriesService.getAll(this.currentPage(), this.pageSize()).subscribe({
       next: (res) => {
         this.categoryData.set(res);
       }
-    })
+    });
   }
   
   public filter(search: string) {
-    this.getCategories(search)
+    this.searchTerm.set(search);
   }
 
   handlePageChange(event: { page: number; size: number }) {

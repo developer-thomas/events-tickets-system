@@ -33,8 +33,6 @@ export class CommomTableComponent<T> implements OnChanges, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<T>;
 
-  // MUDANÇA PARA SIGNALS
-  // @Input({ required: true }) data!: T[];
   data = input<T[]>();
   @Input({ required: true }) displayedColumns!: TableColumn[];
 

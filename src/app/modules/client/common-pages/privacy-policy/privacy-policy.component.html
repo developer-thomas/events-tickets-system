@@ -1,47 +1,392 @@
 <div class="max-w-7xl mx-auto p-5 font-sans">
-  <!-- Back button -->
-  <div class="flex items-center cursor-pointer mb-10" (click)="goBack()">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-2">
-      <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <span class="text-sm font-medium">VOLTAR</span>
+  <!-- Botão de voltar -->
+  <div class="flex items-center cursor-pointer mb-6" onclick="goBack()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="mr-2">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="text-sm font-medium">VOLTAR</span>
   </div>
 
-  <!-- Title -->
-  <h1 class="text-2xl font-semibold mb-10">Política de privacidade</h1>
+  <!-- Título -->
+  <h1 class="text-2xl font-semibold mb-6">Política de Privacidade</h1>
 
-  <!-- Content -->
-  <div class="max-w-4xl">
-    <p class="text-[#7f7f7f] text-base leading-relaxed mb-6">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-      dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-      ea commodo consequat.
-    </p>
+  <!-- Conteúdo -->
+  <div class="max-w-4xl text-gray-500 text-base leading-relaxed space-y-4">
+      <p>
+          <strong>
+              Bem-vindo ao aplicativo oficial do Festival Cidade da Cultura, o maior festival multiartístico da América
+              Latina!
+          </strong>
+      </p>
 
-    <p class="text-[#7f7f7f] text-base leading-relaxed mb-6">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-      dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-      aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-      consequat, dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-      dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-      ea commodo consequat.
-    </p>
+      <p>
+          Com o app, você acessa toda a programação em um só lugar e vive a experiência completa do Festival: são
+          centenas de eventos espalhados pela cidade, incluindo shows, performances, exposições, vernissages, encontros
+          literários, mostras de cinema, lançamentos de livros, debates e circuitos de arte urbana. O mapa interativo
+          permite que você busque eventos perto de sua localização, de sua casa ou trabalho. Nossa agenda é o local para
+          você organizar seus eventos favoritos não perder nenhuma atração.
+      </p>
 
-    <p class="text-[#7f7f7f] text-base leading-relaxed mb-6">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-      dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-      ea commodo consequat. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-      aliquip ex ea commodo consequat. dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-      incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-      laboris nisi ut aliquip ex ea commodo consequat.
-    </p>
+      <p>
+          Ato Cultural Consultoria e Comércio LTDA - ME, inscrita no CNPJ/MF sob o nº 27.042.346/0001-09, é uma pessoa
+          jurídica de direito privado prestadora de serviços de divulgação de eventos, realizados entre promitentes
+          produtores ("produtores") e promitentes compradores/usuários ("compradores/usuários"), por meio do aplicativo
+          Cidade da Cultura ("Plataforma"). A sede social está localizada no endereço: Rua Leão XIII, 243, Jardim São
+          Bento - São Paulo SP, CEP: 02526-000, com endereço eletrônico: {{ email }}, telefone:
+          +551132892061.
+      </p>
 
-    <p class="text-[#7f7f7f] text-base leading-relaxed mb-6">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-      dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-      ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-      incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-      laboris nisi ut aliquip ex ea commodo consequat.
-    </p>
+      <p>
+          Por intermédio desta Política de Privacidade ("Política de Privacidade"), esclarece aos usuários em geral, aos
+          Produtores e aos Compradores/Usuários (todos em conjunto denominados "Usuários") as suas práticas no que diz
+          respeito à privacidade das informações prestadas pelos Usuários da plataforma Cidade da Cultura, além de
+          demonstrar o nosso comprometimento para resguardar a sua privacidade e proteger seus dados pessoais.
+      </p>
+
+      <p>
+          Todas as informações ou os dados pessoais prestados pelo Usuário de Cidade da Cultura são armazenados em
+          servidores ou meios magnéticos de alta segurança.
+      </p>
+
+      <p>
+          A Cidade da Cultura tomará todas as medidas possíveis para manter a confidencialidade e a segurança descritas
+          nesta cláusula, mas não será responsável por prejuízo que possa ser derivado da violação dessas medidas por
+          parte de terceiros que utilizem de meios indevidos, fraudulentos ou ilegais para acessar as informações
+          armazenadas nos servidores ou nos bancos de dados utilizados pela Cidade da Cultura.
+      </p>
+
+      <h2 class="text-lg font-semibold text-black mt-6">1. Vocabulário</h2>
+      <p>
+          <strong>Armazenamento local:</strong> tecnologia padrão da indústria que permite que um website ou aplicativo
+          armazene e recupere dados do computador, celular ou outro dispositivo de um usuário.
+      </p>
+
+      <p>
+          <strong>Identificador de dispositivo:</strong> códigos que possibilitam a identificação do um dispositivo
+          móvel, seja de maneira persistente ou transitória, tais como o ID de Publicidade ou o ID do sistema
+          operacional.
+      </p>
+
+      <p>
+          <strong>Pixel tag:</strong> pequenos blocos de código em uma página da web que permitem que elas realizem
+          ações como ler e armazenar cookies e transmitir informações para a Cidade da Cultura. A conexão resultante
+          pode incluir informações como o endereço de IP de um dispositivo, a hora em que uma pessoa visualizou o pixel,
+          um identificador associado ao navegador ou dispositivo e o tipo de navegador em uso.
+      </p>
+
+      <p>
+          <strong>Plataforma Cidade da Cultura:</strong> designa a plataforma tecnológica disponível para organizadores
+          e casas de eventos, facilitando a venda de ingressos, inscrição para eventos, cobrança de contribuições para
+          eventos e a gestão de participantes, acessível na plataforma, ou por meio dos nossos aplicativos oficiais.
+      </p>
+
+      <p>
+          <strong>Cidade da Cultura:</strong> Ato Cultural Consultoria e Comércio LTDA - ME, inscrita no CNPJ/MF sob o
+          nº 27.042.346/0001-09, com endereço na Rua Leão XIII, 243, Jardim São Bento - São Paulo SP, CEP: 02526-000.
+      </p>
+
+      <p>
+          <strong>Tratamento de dados pessoais:</strong> toda operação realizada com dados pessoais, como as que se
+          referem a coleta, produção, recepção, classificação, utilização, acesso, reprodução, transmissão,
+          distribuição, processamento, arquivamento, armazenamento, eliminação, avaliação ou controle da informação,
+          modificação, comunicação, transferência, difusão ou extração.
+      </p>
+
+      <h2 class="text-lg font-semibold text-black mt-6">
+          2. A Cidade da Cultura coleta os seguintes dados e informações pessoais de seus Usuários:
+      </h2>
+      <ul class="list-disc ml-6 space-y-1">
+          <li>Nome completo</li>
+          <li>Número de telefone celular</li>
+          <li>Data de nascimento</li>
+          <li>CPF</li>
+          <li>Sexo</li>
+          <li>E-mail</li>
+          <li>Foto</li>
+          <li>Geolocalização com base no endereço IP</li>
+          <li>Endereço IP (Internet Protocol)</li>
+      </ul>
+
+      <h2 class="text-lg font-semibold text-black mt-6">3. Finalidade da coleta</h2>
+      <p>
+          Essas informações são coletadas quando o Usuário as inseri na plataforma e são armazenadas e tratadas pela
+          CIDADE DA CULTURA com as seguintes finalidades:
+      </p>
+      <ul class="list-disc ml-6 space-y-1">
+          <li>Manutenção cadastral necessária para o fornecimento dos serviços de anúncios online</li>
+          <li>Identificação do Usuário na Plataforma e no Aplicativo</li>
+          <li>Viabilizar a utilização pelo Usuário da Plataforma e do Aplicativo</li>
+          <li>Localização de eventos próximos ao Usuário</li>
+          <li>Prevenção de fraudes e implementação de medidas de segurança da plataforma e do aplicativo</li>
+          <li>
+              Comunicação a respeito de pontos que possam ser de interesse do Usuário e que sejam relacionados aos
+              serviços de anúncios da Cidade da Cultura
+          </li>
+          <li>Prestação dos serviços de suporte e atendimento solicitados pelo Usuário</li>
+          <li>
+              Realização de pesquisas de uso e interação da Plataforma e do Aplicativo para aprimoramento dos serviços de
+              venda de ingressos oferecidos pela Cidade da Cultura
+          </li>
+          <li>Geração de relatórios estatísticos a respeito do uso e interação dos Usuários</li>
+          <li>
+              Promoção da Cidade da Cultura para informar o Usuário sobre novidades, funcionalidades, conteúdos, notícias
+              e demais eventos relevantes para a manutenção do relacionamento deste relacionamento
+          </li>
+          <li>Cumprir as obrigações legais e regulatórias aos quais a Cidade da Cultura está sujeita</li>
+          <li>
+              Resguardar a Cidade da Cultura dos seus direitos e obrigações relacionados a Plataforma e ao Aplicativo,
+              conforme disposições da legislação brasileira
+          </li>
+          <li>Colaborar e/ou cumprir ordem judicial ou requisição por autoridade administrativa</li>
+      </ul>
+
+      <h2 class="text-lg font-semibold text-black mt-6">4. Informações coletadas durante navegação</h2>
+      <p>
+          Durante a navegação do Usuário na plataforma Cidade da Cultura, também é coletado as seguintes informações e
+          dados dos Usuários:
+      </p>
+      <ul class="list-disc ml-6 space-y-1">
+          <li>Acesso e ações realizadas pelo Usuário na Plataforma e no Aplicativo</li>
+          <li>Páginas e telas acessadas pelo Usuário na Plataforma e no Aplicativo</li>
+          <li>Datas e horários de cada ação do Usuário na Plataforma e no Aplicativo</li>
+          <li>Informações sobre o dispositivo e o navegador utilizado pelo Usuário</li>
+          <li>Session e User ID, quando disponível</li>
+      </ul>
+
+      <h2 class="text-lg font-semibold text-black mt-6">5. Cookies</h2>
+      <p>
+          Os dados e informações descritos neste item são coletados por meio de cookies. Estes são arquivos que reúnem
+          informações dos Usuários a partir de seu acesso na plataforma.
+      </p>
+
+      <h2 class="text-lg font-semibold text-black mt-6">6. Compartilhamento de dados</h2>
+      <p>
+          Os dados e informações pessoais dos Usuários coletados poderão ser compartilhados com parceiros da Cidade da
+          Cultura quando necessário para as mesmas finalidades descritas acima.
+      </p>
+
+      <h2 class="text-lg font-semibold text-black mt-6">7. Comunicações</h2>
+      <p>A Cidade da Cultura não tem acesso ao conteúdo das ligações ou comunicações entre os Usuários.</p>
+
+      <h2 class="text-lg font-semibold text-black mt-6">8. Retenção de dados</h2>
+      <p>
+          A Cidade da Cultura por motivos legais, manterá em seu banco de dados todas as informações coletadas dos
+          Usuários que excluírem seus cadastros que forem exigidas por lei, tais como itens referentes a notas fiscais.
+      </p>
+
+      <h2 class="text-lg font-semibold text-black mt-6">9. Segurança de senhas</h2>
+      <p>
+          O apelido e a senha de cada Usuário servem para garantir a privacidade e a sua segurança. A Cidade da Cultura
+          recomenda a seus Usuários que não compartilhem essas informações com ninguém. A Cidade da Cultura não se
+          responsabiliza por danos ou prejuízos causados ao Usuário pelo compartilhamento dessas informações.
+      </p>
+
+      <h2 class="text-lg font-semibold text-black mt-6">10. Proteção de informações</h2>
+      <p>Toda informação prestada pelos Usuários da Cidade da Cultura é protegida por empresas especializadas.</p>
+
+      <h2 class="text-lg font-semibold text-black mt-6">11. Coleta e armazenamento</h2>
+      <p>
+          A Cidade da Cultura coleta e guarda todas as informações prestadas por seus usuários durante a utilização de
+          sua plataforma, incluindo no momento do cadastramento, para uso próprio e de seus parceiros comerciais.
+      </p>
+
+      <h2 class="text-lg font-semibold text-black mt-6">12. Requisições de órgãos públicos</h2>
+      <p>
+          A Cidade da Cultura prestará todas as informações requisitadas por órgãos públicos, desde que devidamente
+          justificadas e compatíveis com a lei em vigor.
+      </p>
+
+      <h2 class="text-lg font-semibold text-black mt-6">13. Monitoramento e cookies</h2>
+      <p>
+          A Cidade da Cultura utiliza cookies e softwares de monitoramento de seus Usuários para prover a seus Usuários
+          a melhor navegação possível, baseado em suas necessidades, e para pesquisas internas. Esses cookies não
+          coletam informações pessoais, apenas informam preferências de uso e de navegação de cada Usuário, além de
+          prover a Cidade da Cultura estatísticas e dados para aprimorar seus serviços.
+      </p>
+
+      <h2 class="text-lg font-semibold text-black mt-6">14. Violação de dados</h2>
+      <p>
+          No caso de suspeita ou de efetiva violação de dados pessoais dos Usuários, a Cidade da Cultura se compromete a
+          notificar os Usuários afetados.
+      </p>
+
+      <h2 class="text-lg font-semibold text-black mt-6">15. Alterações na política</h2>
+      <p>
+          No caso de mudanças ou alterações na presente Política Privacidade, a Cidade da Cultura se compromete a
+          notificar os Usuários por meio de sua plataforma.
+      </p>
+
+      <h2 class="text-lg font-semibold text-black mt-6">16. Direitos dos usuários conforme LGPD</h2>
+      <p>De acordo com a Lei Geral de Proteção de Dados – Lei nº 13.709/18, o Usuário, poderá requerer:</p>
+      <ul class="list-disc ml-6 space-y-2">
+          <li>
+              <strong>Acesso aos Dados Pessoais:</strong> garante ao Usuário receber uma cópia de todos os seus Dados em
+              nossa base de dados.
+          </li>
+          <li>
+              <strong>Confirmação de Tratamento de Dados Pessoais:</strong> garante ao Usuário a confirmação de que
+              estamos Tratando de seus Dados pessoais.
+          </li>
+          <li>
+              <strong>Revogação do consentimento:</strong> garante ao Usuário a possibilidade de revogar o consentimento,
+              anteriormente demonstrado.
+          </li>
+          <li>
+              <strong>Da portabilidade:</strong> possibilidade de fornecer ao Usuário ou terceiros que forem indicados
+              pelo Usuário, os Dados Pessoais em formato estruturado, desde que respeitado o segredo comercial de nossos
+              produtos.
+          </li>
+          <li>
+              <strong>Retificação:</strong> possibilita a solicitação, a qualquer momento, da retificação de quaisquer
+              Dados Pessoais, caso encontrem-se incompletos, inexatos ou desatualizados, que estejam aos cuidados da
+              Cidade da Cultura.
+          </li>
+          <li>
+              <strong>Da exclusão:</strong> possibilita a solicitação da exclusão de seus Dados Pessoais, mesmo que o
+              Usuário tenha dado prévio consentimento. Após a aquisição, todos os dados que não forem relevantes para a
+              prestação de nossos serviços (como, por exemplo, Dados que são necessários para cumprimento de obrigação
+              legal), serão excluídos.
+          </li>
+      </ul>
+      <p>
+          A solicitação do exercício dos direitos dos titulares de dados deverá ser requerida pelo e-mail:
+          {{ email }} e nas condições estabelecidas pela Lei Geral de Proteção de Dados, de modo que
+          a Cidade da Cultura se comprometerá a desprender dos melhores esforços para atender os pedidos quando
+          cabíveis.
+      </p>
+
+      <h2 class="text-lg font-semibold text-black mt-6">17. Coleta de cookies</h2>
+      <p>
+          Quando você acessa o nosso site ou plataforma, são coletados dados por meio de Cookies, ferramentas
+          importantes para o perfeito funcionamento de nossos serviços.
+      </p>
+      <p>
+          É possível impedir a recolha e a utilização de dados cookies e endereço de IP pelo Google ao fazer a
+          instalação do plug-in do navegador.
+      </p>
+      <p>
+          Você deve estar ciente de que, caso opte por recusar ou remover os Cookies, poderá ter a disponibilidade e a
+          funcionalidade dos serviços da Cidade da Cultura afetadas.
+      </p>
+
+      <h2 class="text-lg font-semibold text-black mt-6">18. Compartilhamento de dados</h2>
+      <p>
+          A Plataforma Cidade da Cultura poderá compartilhar os dados coletados de seus usuários com parceiros
+          comerciais, fornecedores, prestadores de serviço e outras empresas que colaborem com o oferecimento de seus
+          produtos, serviços e funcionalidades. Esse compartilhamento ocorrerá sempre com a finalidade de viabilizar a
+          plena operação da plataforma, melhorar a experiência do usuário, personalizar conteúdos e ofertas, bem como
+          possibilitar ações de marketing, respeitando os limites estabelecidos nesta Política de Privacidade e em
+          conformidade com a legislação aplicável, especialmente a Lei Geral de Proteção de Dados Pessoais (Lei nº
+          13.709/2018).
+      </p>
+      <p>
+          Em nenhuma hipótese os dados serão comercializados de forma isolada ou repassados para finalidades
+          incompatíveis com aquelas descritas nesta Política.
+      </p>
+
+      <h2 class="text-lg font-semibold text-black mt-6">19. Validade dessa política</h2>
+      <p>
+          Poderemos alterar essa Política a qualquer momento. Mas fique tranquilo, você será notificado caso isso
+          ocorra.
+      </p>
+
+      <h2 class="text-lg font-semibold text-black mt-6">20. Dúvidas sobre essa política</h2>
+      <p>Para assuntos relacionados à Privacidade, você pode:</p>
+      <ul class="list-disc ml-6 space-y-1">
+          <li>No App, acessar a Central de Privacidade disponível no seu perfil pelo menu inicial da sua conta.</li>
+          <li>Caso esta opção esteja indisponível, você pode enviar e-mail para: {{ email }}</li>
+      </ul>
+
+      <h2 class="text-lg font-semibold text-black mt-6">Política de Cookies Cidade da Cultura</h2>
+
+      <h3 class="text-base font-semibold text-black mt-4">1. Considerações sobre cookies</h3>
+      <p>
+          Cookies são arquivos que contém um identificador (uma sequência de letras e números) enviados por um servidor
+          para determinado navegador (browser) que o armazena. O identificador é então enviado de volta ao servidor
+          sempre que o navegador tenta acessar uma página do servidor.
+      </p>
+      <p>
+          Os cookies podem ser "persistentes" ou "de sessão". Um cookie persistente será armazenado por um navegador e
+          permanecerá válido até sua data de validade, salvo se deletado pelo usuário antes desta data. Um cookie de
+          sessão, por outro lado, irá expirar ao final de uma sessão de navegação do usuário, quando o navegador é
+          encerrado.
+      </p>
+      <p>
+          A Cidade da Cultura trata as informações obtidas por meio de cookies e outras tecnologias como informações
+          não-pessoais. Entretanto, na medida em que o endereço IP ou identificadores semelhantes sejam considerados
+          informações pessoais pela legislação aplicável, a Cidade da Cultura tratará esses identificadores como
+          informação pessoal.
+      </p>
+
+      <h3 class="text-base font-semibold text-black mt-4">2. Utilização de cookies</h3>
+      <p>
+          A Cidade da Cultura utiliza cookies e outras tecnologias para que consiga viabilizar a oferta dos ingressos e
+          serviços procurados e aprimorá-los. As informações coletadas podem ser sobre você, sobre o dispositivo
+          utilizado para acesso ou sobre as suas preferências.
+      </p>
+      <p>A Cidade da Cultura poderá utilizar cookies das seguintes categorias:</p>
+      <ul class="list-disc ml-6 space-y-2">
+          <li>
+              <strong>Cookies estritamente necessários:</strong> são utilizados para que o website realize funções
+              básicas, como autenticação do usuário para fornecimento dos recursos apropriados e a viabilização de
+              ferramentas de segurança.
+          </li>
+          <li>
+              <strong>Cookies de desempenho:</strong> possibilitam a coleta de informações sobre a utilização do website
+              pelos usuários, como as páginas visitadas com frequência e a ocorrência de erros.
+          </li>
+          <li>
+              <strong>Cookies de funcionalidade:</strong> permitem que o website forneça as funcionalidades e
+              personalizações melhoradas, como lembrar as preferências do usuário.
+          </li>
+          <li>
+              <strong>Cookies de publicidade:</strong> são utilizados com o objetivo de exibir anúncios a partir da coleta
+              de informações relativas aos hábitos de navegação do usuário.
+          </li>
+      </ul>
+
+      <h3 class="text-base font-semibold text-black mt-4">3. Cookies de terceiros</h3>
+      <p>
+          Os provedores de serviços utilizados pela Cidade da Cultura poderão utilizar cookies e outras tecnologias de
+          sua propriedade para identificar o navegador e dispositivo utilizados, de modo a oferecer publicidade
+          direcionada da Cidade da Cultura quando o usuário acessa websites ou aplicativos de terceiros.
+      </p>
+
+      <h3 class="text-base font-semibold text-black mt-4">4. Tecnologias de rastreamento</h3>
+      <p>
+          A Cidade da Cultura poderá utilizar outras tecnologias de rastreamento, como web beacons (às vezes chamados de
+          "pixels de rastreamento", "pixel tags" ou "gifs nítidos"). Essas tecnologias também ajudam os usuários
+          Organizadores a saber mais sobre o interesse em determinados eventos.
+      </p>
+
+      <h3 class="text-base font-semibold text-black mt-4">5. Disposições gerais</h3>
+      <p>
+          Ao navegar pela plataforma Cidade da Cultura e utilizar suas funcionalidades, os usuários aceitam todo o
+          disposto nesta Política e demais políticas legais que se encontram vigentes na data de acesso.
+      </p>
+      <p>
+          A presente Política de Cookies está sujeita a constante melhoria e aprimoramento. Assim, a Cidade da Cultura
+          se reserva o direito de modificá-la a qualquer momento.
+      </p>
+      <p>
+          A comunicação entre a Cidade da Cultura e o usuário deverá ser realizada pelos canais de atendimento indicados
+          e disponibilizados na plataforma Cidade da Cultura, sobretudo através do e-mail de suporte:
+          {{ email }}
+      </p>
+      <p>
+          Sempre que possível, potenciais divergências entre o usuário e Cidade da Cultura serão resolvidas de forma
+          amigável. Quando todos os esforços neste sentido forem esgotados, você concorda, desde já, que fica eleito o
+          foro da comarca de São Paulo/SP para resolver controvérsias ou queixas oriundas da utilização de nossa
+          plataforma ou relacionadas a esta Política de Cookies.
+      </p>
+
+      <div class="mt-8 p-4 bg-gray-50 rounded-lg">
+          <p class="font-semibold text-black">Política de Privacidade atualizada em 13/06/2025.</p>
+          <p class="font-semibold text-black mt-2">
+              AO CLICAR EM "ACEITO", VOCÊ RECONHECE EXPRESSAMENTE QUE LEU, COMPREENDEU E TOMOU AS MEDIDAS PARA CONSIDERAR
+              SERIAMENTE AS CONSEQUÊNCIAS DESTE ACORDO, EM QUE SE COMPROMETE A FICAR OBRIGADO PELOS TERMOS E CONDIÇÕES DO
+              ACORDO, E QUE É LEGALMENTE COMPETENTE PARA CELEBRAR ESTE ACORDO COM A CIDADE DA CULTURA.
+          </p>
+      </div>
   </div>
 </div>

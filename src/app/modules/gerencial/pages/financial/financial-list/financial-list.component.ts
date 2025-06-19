@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -15,7 +15,15 @@ type ViewMode = "list" | "dashboard"
 @Component({
   selector: 'app-financial-list',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, PageHeaderComponent, DashboardViewComponent, CommomTableComponent],
+  imports: [
+    CommonModule, 
+    MatButtonModule, 
+    MatIconModule, 
+    PageHeaderComponent, 
+    DashboardViewComponent, 
+    CommomTableComponent,
+    FilterTableComponent
+  ],
   templateUrl: './financial-list.component.html',
   styleUrl: './financial-list.component.scss'
 })
@@ -26,7 +34,19 @@ export class FinancialListComponent {
 
   viewMode: ViewMode = "list"
 
+  public searchTerm = signal<string | undefined>(undefined);
+
   public financialData = signal<GetAllFinancial[]>([]);
+  public filteredFinancialData = computed(() => {
+    const search = this.searchTerm()?.toLowerCase() ?? "";
+    return this.financialData().filter(item =>
+      item.user?.name?.toLowerCase().includes(search) ||
+      item.payment?.method?.toLowerCase().includes(search) ||
+      item.status?.toLowerCase().includes(search) ||
+      item.value?.toString().includes(search) ||
+      new Date(item.createdAt).toLocaleDateString("pt-BR").includes(search)
+    );
+  });
 
   public displayedColumns: TableColumn[] = [
       { label: 'Data', key: 'createdAt', type: 'date' },
@@ -74,7 +94,7 @@ export class FinancialListComponent {
   }
 
   public filter(search: string) {
-    this.getFinancial(search);
+    this.searchTerm.set(search);
   }
 
   translate(word: string) {

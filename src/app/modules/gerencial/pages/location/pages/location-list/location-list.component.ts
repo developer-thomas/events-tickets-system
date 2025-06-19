@@ -5,7 +5,7 @@ import { CommomTableComponent, TableColumn } from '../../../../../shared/compone
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { BaseButtonComponent } from '../../../../../shared/components/base-button/base-button.component';
-import { AllLocations, LocationTableRow } from '../../models/GetAllLocations.interface';
+import { LocationTableRow } from '../../models/GetAllLocations.interface';
 import { LocationService } from '../../location.service';
 import { map } from 'rxjs';
 import { ConfirmDialogService } from '../../../../../shared/services/confirm-dialog/confirmDialog.service';

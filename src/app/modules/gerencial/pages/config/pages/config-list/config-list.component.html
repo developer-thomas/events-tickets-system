@@ -1,16 +1,16 @@
 <app-page-header [title]="title" [pageSession]="pageSession" />
 
 <section>
-  <app-filter-table title="Configurações">
+  <app-filter-table title="Configurações" (filterText)="filter($event)" [useFilterBtn]="false">
     <app-base-button label="Novo Colaborador" routerLink="form"></app-base-button>
   </app-filter-table>
 
   <app-commom-table
-    [data]="admins()"
+    [data]="filteredAdmins()"
     [displayedColumns]="displayedColumns"
     (edit)="gotoEdit($event)"
     (detail)="gotoDetails($event)"
     [useDeleteBtn]="false"
     [useDetailBtn]="false"
-  ></app-commom-table>
+  />
 </section>

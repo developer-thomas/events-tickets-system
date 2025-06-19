@@ -29,40 +29,41 @@ export class ListComponent implements OnInit{
   faqItems: FaqItem[] = [
     {
       id: 1,
-      title: "Título da dúvida",
+      title: "Como posso comprar ingressos para um evento?",
       content:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "Você pode comprar ingressos acessando a página do evento e clicando em 'Comprar ingresso'. Em seguida, escolha o tipo de ingresso, quantidade e prossiga para o pagamento.",
       isExpanded: true,
     },
     {
       id: 2,
-      title: "Título da dúvida",
+      title: "Quais formas de pagamento são aceitas?",
       content:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "Aceitamos cartões de crédito, débito, Pix e boleto bancário. Para Pix, o pagamento deve ser confirmado em até 30 minutos.",
       isExpanded: false,
     },
     {
       id: 3,
-      title: "Título da dúvida",
+      title: "Posso cancelar ou trocar meu ingresso?",
       content:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "Ingressos podem ser cancelados em até 7 dias após a compra, desde que o evento ainda não tenha ocorrido. Trocas não são permitidas.",
       isExpanded: false,
     },
     {
       id: 4,
-      title: "Título da dúvida",
+      title: "Recebi meu ingresso por e-mail?",
       content:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "Sim! Após a confirmação de pagamento, seu ingresso será enviado para o e-mail cadastrado. Você também pode acessá-lo pelo seu painel de usuário.",
       isExpanded: false,
     },
     {
       id: 5,
-      title: "Título da dúvida",
+      title: "O que acontece se o evento for cancelado?",
       content:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "Caso o evento seja cancelado, você receberá 100% do valor pago. O reembolso será feito automaticamente no mesmo método utilizado na compra.",
       isExpanded: false,
     },
   ]
+  
 
   constructor(private router: Router) {}
 

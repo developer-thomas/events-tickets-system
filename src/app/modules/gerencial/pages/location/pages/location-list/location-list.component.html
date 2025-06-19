@@ -1,7 +1,7 @@
 <app-page-header [title]="title" [pageSession]="pageSession" />
 
 <section>
-  <app-filter-table (filterText)="filter($event)">
+  <app-filter-table (filterText)="filter($event)" [useFilterBtn]="false">
     <app-base-button label="Novo Local" routerLink="cadastrar"></app-base-button>
   </app-filter-table>
 

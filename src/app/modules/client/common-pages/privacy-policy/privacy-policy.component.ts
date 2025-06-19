@@ -14,4 +14,6 @@ export class PrivacyPolicyComponent {
   goBack(): void {
     this.router.navigate([".."])
   }
+
+  email: string = 'contato@cidadedacultura.com.br'
 }

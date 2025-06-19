@@ -14,4 +14,6 @@ export class AboutComponent {
   goBack(): void {
     this.router.navigate([".."])
   }
+
+  email = 'contato@cidadedacultura.com.br';
 }

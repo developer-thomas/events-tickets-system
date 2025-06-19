@@ -1,17 +1,17 @@
 <app-page-header [title]="title" [pageSession]="pageSession" />
 
 <section>
-  <app-filter-table (filter)="filter($event)">
+  <app-filter-table (filterText)="filter($event)" [useFilterBtn]="false">
     <app-base-button label="Novo Evento" routerLink="cadastrar"></app-base-button>
   </app-filter-table>
 
   <app-commom-table
-    [data]="eventData()"
+    [data]="filteredEvents()"
     [displayedColumns]="displayedColumns"
     (detail)="gotoDetailPage($event)"
     (delete)="deleteEvent($event)"
     (pageChange)="handlePageChange($event)"
-    [totalItems]="totalItems()"
+    [totalItems]="filteredEvents().length"
     [page]="currentPage()"
     [size]="pageSize()"
   ></app-commom-table>

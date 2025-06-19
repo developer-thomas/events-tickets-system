@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BaseButtonComponent } from '../../../../../shared/components/base-button/base-button.component';
 import { CommomTableComponent, TableColumn } from '../../../../../shared/components/commom-table/commom-table.component';
@@ -31,7 +31,19 @@ export class ConfigListComponent implements OnInit {
   public pageSession = 'Configurações';
 
   // AJUSTAR TIPAGEM NA FASE DE INTEGRAÇÃO
+  public searchTerm = signal<string | undefined>(undefined);
+
   public admins = signal<GetAllCollaborators[]>([]);
+  public filteredAdmins = computed(() =>
+    this.admins().filter((admin) => {
+      const search = this.searchTerm()?.toLowerCase() ?? "";
+      return (
+        admin.name.toLowerCase().includes(search) ||
+        admin.email.toLowerCase().includes(search) ||
+        admin.role.toLowerCase().includes(search)
+      );
+    })
+  );
 
   public displayedColumns: TableColumn[] = [
     { label: 'ID', key: 'id', type: 'text' },
@@ -68,5 +80,9 @@ export class ConfigListComponent implements OnInit {
 
   public gotoDetails(config: any) {
     this.router.navigate(['edit', config.id], { relativeTo: this.activatedRoute });
+  }
+
+  public filter(search: string) {
+    this.searchTerm.set(search);
   }
 }

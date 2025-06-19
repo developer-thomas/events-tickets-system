@@ -2,11 +2,12 @@
 
 <div>
   <div class="flex justify-between items-center mb-6">
-    <button mat-button [matMenuTriggerFor]="filterMenu" class="period-button">
+    <!-- <button mat-button [matMenuTriggerFor]="filterMenu" class="period-button">
       <mat-icon>filter_list</mat-icon>
       <span>Filtrar por</span>
-    </button>
-    
+    </button> -->
+    <app-filter-table class="w-full" (filterText)="filter($event)" [useFilterBtn]="false"></app-filter-table>
+
     <mat-menu #filterMenu="matMenu">
       <button mat-menu-item (click)="applyFilter('local')">Local</button>
       <button mat-menu-item (click)="applyFilter('evento')">Evento</button>
@@ -14,7 +15,7 @@
       <button mat-menu-item (click)="applyFilter('datas')">Datas</button>
     </mat-menu>
     
-    <div class="view-toggle">
+    <!-- <div class="view-toggle">
       <button 
         class="view-button" 
         [class.active]="viewMode === 'list'"
@@ -27,15 +28,16 @@
         (click)="toggleView('dashboard')">
         <mat-icon>dashboard</mat-icon>
       </button>
-    </div>
+    </div> -->
   </div>
   
   @if (viewMode === 'list') {
     <!-- <app-filter-table (filter)="filter($event)"></app-filter-table> -->
   
     <app-commom-table
-      [data]="eventData()"
+      [data]="filteredTickets()"
       [displayedColumns]="displayedColumns"
+      [totalItems]="filteredTickets().length"
       (detail)="gotoDetailPage($event)"
       (delete)="deleteEvent($event)"
     ></app-commom-table>

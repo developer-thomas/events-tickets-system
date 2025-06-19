@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CommomTableComponent, TableColumn } from '../../../../../shared/components/commom-table/commom-table.component';
@@ -36,7 +36,14 @@ export class EventListComponent implements OnInit {
   public pageSession = "Evento"
 
   public eventData = signal<EventTableData[]>([])
-
+  public filteredEvents = computed(() => {
+    const search = this.searchTerm()?.toLowerCase() ?? "";
+    return this.eventData().filter(event =>
+      event.name.toLowerCase().includes(search) ||
+      event.location?.toLowerCase().includes(search)
+    );
+  });
+  
   // paginação
   public totalItems = signal<number>(0)
   public currentPage = signal<number>(0)
@@ -57,11 +64,7 @@ export class EventListComponent implements OnInit {
     this.getEvents()
   }
 
-  private getEvents(search?: string) {
-    if (search) {
-      this.searchTerm.set(search)
-    }
-
+  private getEvents() {
     this.eventService.getAllEvents(this.currentPage(), this.pageSize(), this.searchTerm()).subscribe({
       next: (res) => {
         // Mapear os dados para incluir o nome da localização como uma propriedade separada
@@ -84,7 +87,7 @@ export class EventListComponent implements OnInit {
   }
 
   public filter(search: string) {
-    this.getEvents(search)
+    this.searchTerm.set(search);
   }
 
   handlePageChange(event: { page: number; size: number }) {

@@ -2,12 +2,13 @@
 
 <div>
   <div class="flex justify-between items-center mb-6">
-    <button class="period-button">
+    <app-filter-table class="w-full" (filterText)="filter($event)" [useFilterBtn]="false"></app-filter-table>
+    <!-- <button class="period-button">
       <mat-icon>calendar_today</mat-icon>
       <span>Período</span>
-    </button>
+    </button> -->
     
-    <div class="view-toggle">
+    <!-- <div class="view-toggle">
       <button 
         class="view-button" 
         [class.active]="viewMode === 'list'"
@@ -20,17 +21,18 @@
         (click)="toggleView('dashboard')">
         <mat-icon>dashboard</mat-icon>
       </button>
-    </div>
+    </div> -->
   </div>
   
   @if (viewMode === 'list') {
     <!-- <app-filter-table (filter)="filter($event)"></app-filter-table> -->
   
     <app-commom-table
-      [data]="financialData()"
+      [data]="filteredFinancialData()"
       [displayedColumns]="displayedColumns"
       (detail)="gotoDetailPage($event)"
       (delete)="deleteEvent($event)"
+      [totalItems]="filteredFinancialData().length"
     ></app-commom-table>
   } @else {
     <app-dashboard-view></app-dashboard-view>

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { DashboardViewComponent } from './dashboard-view/dashboard-view.component';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,13 +10,25 @@ import { ToastrService } from 'ngx-toastr';
 import { MatMenuModule } from '@angular/material/menu';
 import { TicketsService } from '../tickets.service';
 import { GetAllTickets } from '../models/GetAllTickets.interface';
+import { FilterTableComponent } from '../../../../shared/components/filter-table/filter-table.component';
 
 type ViewMode = "list" | "dashboard"
 
 @Component({
   selector: 'app-tickets-list',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, PageHeaderComponent, DashboardViewComponent, CommomTableComponent, MatMenuModule, MatButtonModule, MatIconModule],
+  imports: [
+    CommonModule, 
+    MatButtonModule, 
+    MatIconModule, 
+    PageHeaderComponent, 
+    DashboardViewComponent, 
+    CommomTableComponent, 
+    MatMenuModule, 
+    MatButtonModule, 
+    MatIconModule,
+    FilterTableComponent
+  ],
   templateUrl: './tickets-list.component.html',
   styleUrl: './tickets-list.component.scss'
 })
@@ -28,7 +40,19 @@ export class TicketsListComponent implements OnInit{
 
   viewMode: ViewMode = "list"
 
+  public searchTerm = signal<string | undefined>(undefined);
+
   public eventData = signal<GetAllTickets[]>([]);
+  public filteredTickets = computed(() => {
+    const search = this.searchTerm()?.toLowerCase() ?? "";
+    return this.eventData().filter(ticket =>
+      ticket.userName.toLowerCase().includes(search) ||
+      ticket.eventName.toLowerCase().includes(search) ||
+      ticket.eventLocationName.toLowerCase().includes(search) ||
+      ticket.value.toString().toLowerCase().includes(search) ||
+      ticket.status.toLowerCase().includes(search)
+    );
+  });
 
   public displayedColumns: TableColumn[] = [
       { label: 'ID', key: 'id', type: 'text' },
@@ -72,7 +96,7 @@ export class TicketsListComponent implements OnInit{
   }
 
   public filter(search: string) {
-    this.getEvents(search);
+    this.searchTerm.set(search);
   }
 
   // Aqui trata o filtro de acordo com o tipo

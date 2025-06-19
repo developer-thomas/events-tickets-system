@@ -1,16 +1,16 @@
 <app-page-header [title]="title" [pageSession]="pageSession" />
 
 <section>
-  <app-filter-table (filter)="filter($event)">
+  <app-filter-table (filterText)="filter($event)" [useFilterBtn]="false">
     <app-base-button label="Nova Categoria" (click)="newCategory()"></app-base-button>
   </app-filter-table>
 
   <app-commom-table
-    [data]="categoryData()"
+    [data]="filteredCategories()"
+    [totalItems]="filteredCategories().length"
     [displayedColumns]="displayedColumns"
     (delete)="deleteCategory($event)"
     (pageChange)="handlePageChange($event)"
-    [totalItems]="totalItems()"
     [page]="currentPage()"
     [size]="pageSize()"
   ></app-commom-table>
