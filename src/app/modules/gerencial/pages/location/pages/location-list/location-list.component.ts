@@ -99,7 +99,7 @@ public paginatedLocationsData = computed(() => {
   }
 
   gotoEditPage(row: any) {
-    this.router.navigate(['/admin/clients/edit', row.id])
+    this.router.navigate(['gerencial/local/editar', row.id])
   }
 
   deleteLocation(row: any) {
@@ -119,4 +119,5 @@ public paginatedLocationsData = computed(() => {
         }
       });
   }
+
 }

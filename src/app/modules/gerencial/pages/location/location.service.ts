@@ -96,4 +96,15 @@ export class LocationService {
   deleteLocation(locationId: number): Observable<any> {
     return this.http.delete<any>(`${this.api}/places/${locationId}`)
   }
+
+  /**
+   * @param id id do local
+   */
+  editLocation(locationId: number, data: FormData): Observable<any> {
+    return this.http.put<any>(`${this.api}/places/${locationId}`, data)
+  }
+
+  // editRepresentative(representativeId: number, data: any): Observable<any> {
+  //   return this.http.put<any>(`${this.api}/`)
+  // }
 }

@@ -67,6 +67,12 @@ export class StepOneComponent implements OnInit {
       this.selectedCategories = categoryId
     }
 
+    this.getFormControl('categoryIds').valueChanges.subscribe(value => {
+      if (value && Array.isArray(value)) {
+        this.selectedCategories = value;
+      }
+    })
+
     if (!this.getFormControl("uf").value) {
       this.getFormControl("uf").setValue("SP")
     }

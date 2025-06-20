@@ -20,6 +20,12 @@ export interface GetOneLocationAddress {
     lat: number;
     lng: number;
     placeId: string;
+    number?: string;
+    neighborhood?: string;
+    street?: string;
+    cep?: string;
+    city?: string;
+    uf?: string;
 }
 
 export interface GetOneLocationCategory {
