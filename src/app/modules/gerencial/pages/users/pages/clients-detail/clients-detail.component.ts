@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -11,6 +11,7 @@ import { FinancialTabComponent } from './tabs/financial-tab/financial-tab.compon
 import { TicketsTabComponent } from './tabs/tickets-tab/tickets-tab.component';
 import { NgxMaskPipe } from 'ngx-mask';
 import { CommonModule } from '@angular/common';
+import { Client } from '../../models/GetOneClient.interface';
 
 @Component({
   selector: 'app-clients-detail',
@@ -39,7 +40,7 @@ export class ClientsDetailComponent implements OnInit {
   public title = 'Clientes';
   public pageSession = 'Detalhes do cliente';
   
-  public client?:  | any;
+  public client = signal<Client | null>(null);
 
   ngOnInit(): void {
     this.getClient();
@@ -47,7 +48,7 @@ export class ClientsDetailComponent implements OnInit {
 
   private getClient(): void {   
     this.clientService.getClientById(this.id).subscribe((client) => {
-      this.client = client.result;
+      this.client.set(client.result);
     });
   }
 

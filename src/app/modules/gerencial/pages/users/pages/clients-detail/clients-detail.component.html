@@ -6,19 +6,19 @@
       <div class="text-right">
         <mat-slide-toggle
           color="primary"
-          [checked]="client?.active"
+          [checked]="client()?.active"
           (change)="changeStatus()"
         />
       </div>
       <div class="grid md:grid-cols-[auto_1fr_1fr_1fr] gap-3">
         <div class="rounded-full h-24 w-24 overflow-hidden md:row-span-2">
-          <img [src]="client?.avatar" alt="">
+          <img [src]="client()?.imageUrl" alt="">
         </div>
-        <app-label-and-info label="Nome" [info]="client?.name"></app-label-and-info>
-        <app-label-and-info label="Nascimento" [info]="client?.dateOfBirth | date: 'dd/MM/yyyy'"></app-label-and-info>
-        <app-label-and-info label="Status" [info]="client?.active | booleanStatus"></app-label-and-info>
-        <app-label-and-info label="Email" [info]="client?.email"></app-label-and-info>
-        <app-label-and-info label="Telefone" [info]="client?.phone | mask: '(00) 00000-0000' "></app-label-and-info>
+        <app-label-and-info label="Nome" [info]="client()?.name"></app-label-and-info>
+        <app-label-and-info label="Nascimento" [info]="client()?.dateOfBirth | date: 'dd/MM/yyyy'"></app-label-and-info>
+        <app-label-and-info label="Status" [info]="client()?.active | booleanStatus"></app-label-and-info>
+        <app-label-and-info label="Email" [info]="client()?.email"></app-label-and-info>
+        <app-label-and-info label="Telefone" [info]="client()!.cpf_cnpj | mask: '(00) 00000-0000' "></app-label-and-info>
       </div>
     </mat-card-content>
   </mat-card>
