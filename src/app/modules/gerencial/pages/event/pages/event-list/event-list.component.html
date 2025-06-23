@@ -10,10 +10,10 @@
     [displayedColumns]="displayedColumns"
     (detail)="gotoDetailPage($event)"
     (delete)="deleteEvent($event)"
+    (edit)="editEvent($event)"
     (pageChange)="handlePageChange($event)"
     [totalItems]="filteredEvents().length"
     [page]="currentPage()"
     [size]="pageSize()"
-    [useEditBtn]="false"
   ></app-commom-table>
 </section>

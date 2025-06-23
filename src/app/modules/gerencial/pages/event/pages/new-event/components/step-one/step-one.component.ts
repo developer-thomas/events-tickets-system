@@ -9,10 +9,6 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { EventService } from '../../../../event.service';
 import { GetLocationsNames, GetCategoriesNames } from '../../../../models/CreateEvent.interface';
 
-interface Location {
-  id: number
-  name: string
-}
 
 @Component({
   selector: 'app-step-one',
@@ -42,6 +38,19 @@ export class StepOneComponent implements OnInit{
   ngOnInit(): void {
     this.loadLocations()
     this.loadCategories()
+
+    // Escutar mudanças no campo categories para atualizar selectedCategories
+    this.getFormControl('categories').valueChanges.subscribe(value => {
+      if (value && Array.isArray(value)) {
+        this.selectedCategories = value;
+      }
+    })
+
+    // Inicializar selectedCategories com o valor atual se existir
+    const categoryId = this.getFormControl("categories").value
+    if (categoryId && Array.isArray(categoryId) && categoryId.length > 0) {
+      this.selectedCategories = categoryId
+    }
   }
 
   loadLocations(): void {

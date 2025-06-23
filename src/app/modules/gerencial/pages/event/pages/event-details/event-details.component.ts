@@ -3,7 +3,7 @@ import { Component, inject, Input, OnChanges, OnInit, signal, SimpleChanges } fr
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EventDetailsGenericComponent } from '../../../../../shared/components/event-details/event-details.component';
 
 @Component({
@@ -21,6 +21,7 @@ import { EventDetailsGenericComponent } from '../../../../../shared/components/e
 })
 export class EventDetailsComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
   
   eventId!: string | number;
 
@@ -36,7 +37,7 @@ export class EventDetailsComponent implements OnInit {
   }
 
   editEvent(id: number): void {
-    console.log("Edit event:", id)
+    this.router.navigate(['/gerencial/evento/editar', id]);
   }
 
   changeEventStatus(id: any): void {

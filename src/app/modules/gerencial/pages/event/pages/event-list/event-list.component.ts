@@ -129,4 +129,8 @@ export class EventListComponent implements OnInit {
         }
       });
   }
+
+  editEvent(row: any) {
+    this.router.navigate(['/gerencial/evento/editar', row.id]);
+  }
 }

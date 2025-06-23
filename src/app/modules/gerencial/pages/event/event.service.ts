@@ -114,4 +114,12 @@ export class EventService {
     return this.http.get<GetOneEvent>(`${this.api}/events/${eventId}`);
   }
 
+  /**
+   * @param eventId id do evento
+   * @data formData de edição
+   */
+  updateEvent(eventId: number, data: FormData): Observable<any> {
+    return this.http.put<FormData>(`${this.api}/events/${eventId}`, data);
+  }
+
 }
