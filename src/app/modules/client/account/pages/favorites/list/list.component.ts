@@ -9,6 +9,10 @@ import { StorageService } from '../../../../../../core/auth/storage.service';
 import { ToastrService } from 'ngx-toastr';
 import { CategoriesService } from '../../../../../gerencial/pages/categories/categories.service';
 import { GetAllCategories } from '../../../../../gerencial/pages/categories/models/GetAllCategories.interface';
+import { GetOneEvent } from '../../../../../gerencial/pages/event/models/GetEventById.interface';
+import { EventDetailsComponent } from '../../account-home/list/location-details/event-details/event-details.component';
+import { CartRequest } from '../../account-home/models/AddToCart.interface';
+import { AccountHomeService } from '../../account-home/account-home.service';
 
 interface Category {
   id: string
@@ -50,6 +54,7 @@ export class ListComponent implements OnInit {
   private storageService = inject(StorageService)
   private toastr = inject(ToastrService)
   private categoriesService = inject(CategoriesService)
+  private accountHomeService = inject(AccountHomeService)
 
   userId!: any
   allFavoriteEvents = signal<FavoriteEvent[]>([])
@@ -140,8 +145,22 @@ export class ListComponent implements OnInit {
     })
   }
 
-  buyTicket(eventId: number): void {
-    console.log("Buy ticket for event:", eventId)
+  buyTicket(ticket: any): void {
+    console.log(ticket)
+  
+    const payload: CartRequest = {
+      item: {
+        eventId: ticket.id,
+        quantity: 1,
+        value: ticket.value
+      }
+    }
+    this.accountHomeService.addItemsToCart(payload).subscribe({
+      next: (res) => {
+        this.toastr.success("Ingresso adicionado ao carrinho");
+      }
+    })
+    this.router.navigate(['client/inicio/cart']);
   }
 
   viewEventDetails(eventId: number): void {
