@@ -43,6 +43,8 @@ export class LocationEditComponent implements OnInit {
   locationId: number | null = null;
   isLoading = false;
 
+  representativeId: number | null = null;
+
   constructor() {
     this.locationForm = this.fb.group({
       name: ["", Validators.required],
@@ -131,9 +133,15 @@ export class LocationEditComponent implements OnInit {
     }
     const formData = this.prepareLocationFormData();
     this.locationService.editLocation(this.locationId, formData).subscribe({
-      next: () => {
+      next: (res: any) => {
+        console.log('OI', res.result.representative.id)
         this.toastr.success('Local atualizado com sucesso');
-        this.router.navigate(['/gerencial/local']);
+        // mudar o step para o step 2 de representante
+        // pegar a id do representante e armazenar no this.representativeId
+        // Depois fazer a requisição para pegar os dados do representante pelo id
+        // preencher os campos do form com os dados do representante
+        // ao clicar em salvar fazer a requisição para atualizar o representante
+        
       },
       error: (err) => {
         this.toastr.error('Erro ao atualizar local');

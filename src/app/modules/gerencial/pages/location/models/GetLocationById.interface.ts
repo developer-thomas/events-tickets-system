@@ -14,6 +14,9 @@ export interface GetOneLocation {
     addressLocation: GetOneLocationAddress;
     categories: GetOneLocationCategory[]; // está vindo vazio, mas é uma lista
     event: GetOneLocationEvent[];
+    representative?: {
+        id: number;
+    }
 }
 
 export interface GetOneLocationAddress {

@@ -31,6 +31,7 @@ export interface GetAllLocations {
   }
   
   export interface CreateRepresentante {
+    id?: number
     name: string
     email: string
     password: string

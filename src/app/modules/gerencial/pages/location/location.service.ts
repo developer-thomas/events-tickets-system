@@ -7,6 +7,7 @@ import { GetCategoriesNames } from './models/GetCategories.interface';
 import { CreateRepresentante } from './models/CreateRepresentante.interface';
 import { CreateLocation } from './models/CreateLocation.interface'
 import { GetOneLocationResponse } from './models/GetLocationById.interface';
+import { GetRepresentativeByIdResponse } from './models/GetRepresentativeById.interface';
 @Injectable({
   providedIn: 'root'
 })
@@ -69,6 +70,27 @@ export class LocationService {
       phone: data.phone,
     }
     return this.http.post<CreateRepresentante>(`${this.api}/users/representative`, payload)
+  }
+
+  /**
+   * Método do segundo step para editar um representante
+   */
+  updateRepresentante(data: CreateRepresentante): Observable<any> {
+    const payload = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      cpf_cnpj: data.cpf_cnpj,
+    }
+    return this.http.patch<CreateRepresentante>(`${this.api}/users/representative/${data.id}`, payload)
+  }
+
+  /**
+   * Método para pegar um representante pelo ID
+   * @param representativeId id do representanteq
+   */
+  getRepresentativeById(representativeId: number): Observable<GetRepresentativeByIdResponse> {
+    return this.http.get<GetRepresentativeByIdResponse>(`${this.api}/users/representative/${representativeId}`);
   }
 
   /**

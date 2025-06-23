@@ -131,31 +131,36 @@ export class EventEditComponent implements OnInit {
     // Converter data para formato ISO
     const eventDate = this.parseDateToISO(formValue.startDate);
 
-    // Criar objeto data com todos os campos
-    const data: any = {
-      placeId: formValue.locationId || '',
-      numberOfTickets: formValue.ticketQuantity || '',
-      eventDate: eventDate,
-      name: formValue.eventName || '',
-      description: formValue.description || '',
-      categoryIds: formValue.categories || []
-    };
+    // Adicionar campos diretamente ao FormData
+    formData.append('placeId', formValue.locationId || '');
+    formData.append('numberOfTickets', formValue.ticketQuantity || '');
+    formData.append('eventDate', eventDate);
+    formData.append('name', formValue.eventName || '');
+    formData.append('description', formValue.description || '');
+
+    // Adicionar categorias
+    const categories = formValue.categories || [];
+    if (Array.isArray(categories) && categories.length > 0) {
+      categories.forEach((categoryId: any) => {
+        formData.append('categoryIds', categoryId);
+      });
+    } else {
+      // Ensure at least one categoryIds is sent
+      formData.append('categoryIds', '1'); // Default category ID
+    }
 
     // Tratar o valor do preço
     const priceValue = formValue.price;
     if (priceValue) {
       if (typeof priceValue === "string" && priceValue.includes("R$")) {
         const formattedPrice = priceValue.replace("R$ ", "").replace(/\./g, "").replace(",", ".");
-        data.value = formattedPrice;
+        formData.append('value', formattedPrice);
       } else {
-        data.value = priceValue.toString();
+        formData.append('value', priceValue.toString());
       }
     } else {
-      data.value = '0.00';
+      formData.append('value', '0.00');
     }
-
-    // Adicionar o objeto data como JSON string
-    formData.append('data', JSON.stringify(data));
 
     // Adicionar arquivo separadamente se existir
     if (this.eventFile) {
