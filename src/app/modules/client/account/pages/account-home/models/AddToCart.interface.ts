@@ -1,5 +1,5 @@
 export interface CartRequest {
-    userId: number;
+    userId?: number;
     item: CartItem;
   }
   

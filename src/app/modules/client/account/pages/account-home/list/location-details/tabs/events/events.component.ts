@@ -30,7 +30,9 @@ export class EventsComponent implements OnInit, OnChanges {
   @Output() filterChange = new EventEmitter<string>()
   @Output() favoriteToggle = new EventEmitter<Event>()
 
-  allEvents: GetOneLocationEvent[] = [] // guarda a lista completa
+  public allEvents: GetOneLocationEvent[] = [];
+  public eventsWithFavorites: GetOneLocationEvent[] | undefined = [];
+
 
   ngOnInit(): void {
     const userId = localStorage.getItem('userId');
@@ -43,14 +45,14 @@ export class EventsComponent implements OnInit, OnChanges {
     if(isAuth) {
       this.isAuth = true;
     }
-
-    this.getUserFavoriteEvents()
+  
   }
   
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['events'] && this.events) {
       this.allEvents = [...this.events]; // salva os eventos originais para poder filtrar
     }
+    this.getUserFavoriteEvents()
   }
 
   onFilter(searchTerm: string): void {
@@ -109,7 +111,8 @@ export class EventsComponent implements OnInit, OnChanges {
   }
 
   getUserFavoriteEvents() {
-    this.favoritesService.getFavorites(this.userId).subscribe({
+    const userId = this.userId.toString();
+    this.favoritesService.getFavorites(userId).subscribe({
       next: (res) => {
         const favoriteIds = res.map((fav: any) => fav.id);
   

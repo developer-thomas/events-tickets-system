@@ -24,7 +24,7 @@
             (error)="onImgError($event)">
           <button class="favorite-button" (click)="toggleFavorite(event.id); $event.stopPropagation()">
             <mat-icon [ngClass]="event.isFavorite ? 'filled-heart' : 'outlined-heart'">
-              {{ event.isFavorite ? 'favorite' : 'favorite' }}
+              {{ eventsWithFavorites ? 'favorite' : 'favorite' }}
             </mat-icon>
           </button>
         </div>

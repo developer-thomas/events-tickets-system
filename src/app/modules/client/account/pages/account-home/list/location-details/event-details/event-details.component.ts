@@ -23,47 +23,73 @@ export class EventDetailsComponent {
   private router = inject(Router);
   private accountHomeService = inject(AccountHomeService)
   private toastr = inject(ToastrService);
-  private favoriteService = inject(FavoritesService)
+  private favoritesService = inject(FavoritesService)
   private storageService = inject(StorageService);
 
   eventId!: number;
   userId!: number;
+  isAuth: boolean = false;
   
-  isFavorite = false
+  isFavorite = false;
 
   ngOnInit(): void {
     this.eventId = Number(this.route.snapshot.paramMap.get("eventId"));
     this.userId = this.storageService.getItem('userId');
+    const isAuth = localStorage.getItem('authToken');
+
+    if(isAuth) {
+      this.isAuth = true;
+    }
+
+    this.getUserFavoriteEvents()
   }
 
   goBack(): void {
     window.history.back()
   }
 
-  toggleFavorite(event: number): void {
-    const userId = this.userId;
-    const eventToFavorite = {
-      eventId: event,
-      userId
-    }
-    this.favoriteService.favoriteAnEvent(eventToFavorite).subscribe({
+  getUserFavoriteEvents() {
+    const userId = this.userId.toString();
+    this.favoritesService.getFavorites(userId).subscribe({
       next: (res) => {
-        if(res.status === 'removed') {
-          this.toastr.success('Evento removido dos favoritos');
-          this.isFavorite = !this.isFavorite
-
-        } else if (res.status === 'added') {
-          this.toastr.success('Evento adicionado aos favoritos');
-          this.isFavorite = !this.isFavorite
+        const favoriteIds = res.filter((fav: any) => fav.id === this.eventId);
+        if(favoriteIds[0].isFavorite === true) {
+          this.isFavorite = true;
         }
-      }, error: (err) => {
-        this.toastr.error('Erro ao adicionar aos favoritos:', err.error.message)
+        
+      },
+      error: (err: any) => {
+        console.error('Erro ao buscar favoritos', err);
       }
-    })
+    });
+  }
+
+  toggleFavorite(id: any): void {
+    const eventId = id;
+    const userId = this.userId;
+  
+    if (userId) {
+      this.favoritesService.favoriteAnEvent({ eventId, userId }).subscribe({
+        next: (res) => { 
+          if (res.status === 'added') {
+            this.toastr.success('Evento adicionado aos favoritos');
+            this.isFavorite = true;
+          } else if (res.status === 'removed') {
+            this.isFavorite = false;
+            this.toastr.success('Evento removido dos favoritos');
+          }
+        },
+        error: (err) => {
+          this.toastr.error('Erro ao adicionar/remover dos favoritos');
+        }
+      });
+    } else {
+      alert("Você precisa estar logado");
+    }
   }
 
   shareEvent(): void {
-    const url = window.location.href; // Ou gere uma URL específica para o evento
+    const url = window.location.href;
     const title = 'Confira este evento!';
     const text = 'Encontrei esse evento incrível e achei que você poderia gostar.';
   

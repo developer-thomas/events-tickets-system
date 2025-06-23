@@ -83,4 +83,8 @@ export class AccountHomeService {
   remoteItemFromCart(data: CartRequest): Observable<any> {
     return this.http.post<CartRequest>(`${this.api}/cart/item/remove`, data);
   }
+
+  generatePaymentLink(): Observable<any> {
+    return this.http.post<any>(`${this.api}/payment/paymentlink`, {})
+  }
 }

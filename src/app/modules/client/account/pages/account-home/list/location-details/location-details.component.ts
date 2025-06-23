@@ -78,7 +78,6 @@ export class LocationDetailsComponent implements OnInit{
 
   // MEXER AQUI
   // PRECISO FAZER A COMPARAÇÃO ENTRE AS DISTÂNCIAS
-  
   getUserLocation(eventLat: number, eventLng: number) {
     const userLat = Number(localStorage.getItem('userLat'));
     const userLng = Number(localStorage.getItem('userLng'));
