@@ -26,6 +26,7 @@ export class EventDetailsGenericComponent implements OnChanges {
   @Input() eventId!: string | number;
   @Input() useActionButtons = true;
   @Input() useClientButtons = false;
+  @Input() isFavorite = false;
 
   // Eventos para o usuário client
   @Output() buyTicket = new EventEmitter<any>();
