@@ -27,6 +27,7 @@ export class LocationListComponent {
   public title = 'Local';
   public pageSession = 'Local';
 
+  public userRole = signal<string | null>(null);
   public allLocationsData = signal<LocationTableRow[]>([]);
   public locationsData = signal<LocationTableRow[]>([]);
 
@@ -61,7 +62,12 @@ public paginatedLocationsData = computed(() => {
   ];
 
   ngOnInit() {
-    this.getLocations();
+    this.getUserRole();
+    if(this.userRole() === 'ADMIN') {
+      this.getLocations();
+    } else {
+      this.getLocationsByRepresentative();
+    }
   }
 
   private getLocations() {
@@ -78,6 +84,28 @@ public paginatedLocationsData = computed(() => {
       next: (transformedLocations) => {
         this.allLocationsData.set(transformedLocations);
         this.totalItems.set(transformedLocations.length);
+      }
+    });
+  }
+
+  // VOU PRECISAR DA ROTA DOS LOCAIS DO REPRESENTANTE
+  private getLocationsByRepresentative() {
+    this.locationService.getAllLocations().pipe(
+      map((res): LocationTableRow[] => {
+        return res.result.map(loc => ({
+          id: loc.id,
+          name: loc.name,
+          description: loc.description,
+          categories: loc.categories.map(cat => cat.name)
+        }));
+      })
+    ).subscribe({
+      next: (transformedLocations) => {
+        const adminId = Number(localStorage.getItem('adminId'));
+        const representativeLocal = transformedLocations.filter(loc => loc.id === adminId);
+        this.allLocationsData.set(representativeLocal);
+        this.totalItems.set(transformedLocations.length);
+        console.log('oi')
       }
     });
   }
@@ -118,6 +146,11 @@ public paginatedLocationsData = computed(() => {
           });
         }
       });
+  }
+
+  getUserRole() {
+    const role = localStorage.getItem('role');
+    this.userRole.set(role);
   }
 
 }
