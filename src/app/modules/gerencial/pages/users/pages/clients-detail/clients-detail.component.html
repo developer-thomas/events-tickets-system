@@ -18,7 +18,7 @@
         <app-label-and-info label="Nascimento" [info]="client()?.dateOfBirth | date: 'dd/MM/yyyy'"></app-label-and-info>
         <app-label-and-info label="Status" [info]="client()?.active | booleanStatus"></app-label-and-info>
         <app-label-and-info label="Email" [info]="client()?.email"></app-label-and-info>
-        <app-label-and-info label="Telefone" [info]="client()!.cpf_cnpj | mask: '(00) 00000-0000' "></app-label-and-info>
+        <app-label-and-info label="Telefone" [info]="(client()?.cpf_cnpj || '') | mask: '(00) 00000-0000' "></app-label-and-info>
       </div>
     </mat-card-content>
   </mat-card>

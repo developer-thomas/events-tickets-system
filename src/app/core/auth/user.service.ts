@@ -33,7 +33,7 @@ export class UserService {
   }
 
   decodeAndNotifyUser(user: SigninCredentialsResponse) {
-    this.clearAdminData(); // Limpa dados do admin antes de salvar dados do cliente
+    this.clearAdminData(); 
     this.storage.saveUserToken(user?.token);
     localStorage.setItem('role', 'CLIENT');
     this.user.set(user);
