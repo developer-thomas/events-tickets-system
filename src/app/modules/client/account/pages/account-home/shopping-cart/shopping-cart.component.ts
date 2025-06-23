@@ -195,9 +195,11 @@ export class ShoppingCartComponent {
   }
 
   checkout(): void {
-    if (this.cartItems().length === 0) return
-    // TODO: Implementar checkout
-    console.log("Proceeding to checkout with items:", this.cartItems())
-    // this.router.navigate(["/ato-cultural/cart/checkout"])
+    this.accountHomeService.generatePaymentLink().subscribe({
+      next:(res) => {
+        console.log(res.message)
+        window.location.href = res.message;
+      }
+    })
   }
 }
