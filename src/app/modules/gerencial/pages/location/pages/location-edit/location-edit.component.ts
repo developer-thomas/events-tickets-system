@@ -9,7 +9,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { LocationService } from '../../location.service';
 import { ToastrService } from 'ngx-toastr';
-import { StepOneComponent } from '../../pages/new-event/components/step-one/step-one.component';
+import { StepOneComponent } from '../new-event/components/step-one/step-one.component';
+import { StepTwoComponent } from '../new-event/components/step-two/step-two.component';
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
 
 @Component({
@@ -24,6 +25,7 @@ import { PageHeaderComponent } from '../../../../../shared/components/page-heade
     MatIconModule,
     MatRadioModule,
     StepOneComponent,
+    StepTwoComponent,
     PageHeaderComponent,
   ],
   templateUrl: './location-edit.component.html',
@@ -36,17 +38,19 @@ export class LocationEditComponent implements OnInit {
   private locationService = inject(LocationService);
   private toastr = inject(ToastrService);
 
+  currentStep = 1;
+  totalSteps = 2;
   locationForm: FormGroup;
   categories: any[] = [];
   coverImage: File | null = null;
   logoImage: File | null = null;
   locationId: number | null = null;
-  isLoading = false;
-
   representativeId: number | null = null;
+  isLoading = false;
 
   constructor() {
     this.locationForm = this.fb.group({
+      // Dados do Local
       name: ["", Validators.required],
       description: ["", Validators.required],
       categoryIds: [[]],
@@ -59,7 +63,7 @@ export class LocationEditComponent implements OnInit {
       active: [true],
       coverImage: [null],
       logoImage: [null],
-      locationLink: [""]
+      locationLink: [""],
     });
   }
 
@@ -103,9 +107,6 @@ export class LocationEditComponent implements OnInit {
           active: true, // ou loc.active se existir
           locationLink: '' // ajuste se existir no backend
         });
-        // Se desejar mostrar preview das imagens:
-        // this.coverImageUrl = loc.fileCoverUrl;
-        // this.logoImageUrl = loc.fileLogoUrl;
         this.isLoading = false;
       },
       error: () => {
@@ -125,23 +126,62 @@ export class LocationEditComponent implements OnInit {
     this.locationForm.patchValue({ logoImage: file });
   }
 
-  submit(): void {
-    if (!this.locationId) return;
-    if (this.locationForm.invalid) {
-      this.locationForm.markAllAsTouched();
-      return;
+  nextStep(): void {
+    if (this.currentStep < this.totalSteps) {
+      if (this.validateCurrentStep()) {
+        if (this.currentStep === 1) {
+          this.submitLocationData();
+        } else {
+          this.currentStep++;
+        }
+      }
+    } else {
+      this.submitRepresentativeData();
     }
+  }
+
+  previousStep(): void {
+    if (this.currentStep > 1) {
+      this.currentStep--;
+    }
+  }
+
+  validateCurrentStep(): boolean {
+    if (this.currentStep === 1) {
+      const step1Controls = ["name", "description", "street", "number", "neighborhood", "cep", "city", "uf"];
+      return this.validateControls(step1Controls);
+    } else if (this.currentStep === 2) {
+      const representativeGroup = this.locationForm.get("representative") as FormGroup;
+      return representativeGroup ? representativeGroup.valid : false;
+    }
+    return true;
+  }
+
+  validateControls(controlNames: string[]): boolean {
+    let valid = true;
+    for (const name of controlNames) {
+      const control = this.locationForm.get(name);
+      if (control && control.invalid) {
+        control.markAsTouched();
+        valid = false;
+      }
+    }
+    return valid;
+  }
+
+  submitLocationData(): void {
+    if (!this.locationId) return;
+    
     const formData = this.prepareLocationFormData();
     this.locationService.editLocation(this.locationId, formData).subscribe({
       next: (res: any) => {
-        console.log('OI', res.result.representative.id)
+        console.log('Location updated, representative ID:', res.result.representative.id);
+        this.representativeId = res.result.representative.id;
         this.toastr.success('Local atualizado com sucesso');
-        // mudar o step para o step 2 de representante
-        // pegar a id do representante e armazenar no this.representativeId
-        // Depois fazer a requisição para pegar os dados do representante pelo id
-        // preencher os campos do form com os dados do representante
-        // ao clicar em salvar fazer a requisição para atualizar o representante
         
+        // Mudar para o step 2 e carregar dados do representante
+        this.currentStep = 2;
+        this.loadRepresentativeData();
       },
       error: (err) => {
         this.toastr.error('Erro ao atualizar local');
@@ -150,9 +190,74 @@ export class LocationEditComponent implements OnInit {
     });
   }
 
+  loadRepresentativeData(): void {
+    if (!this.representativeId) return;
+    
+    this.locationService.getRepresentativeById(this.representativeId).subscribe({
+      next: (res) => {
+        const representative = res.result;
+        
+        // Inicializar o grupo representative se não existir
+        if (!this.locationForm.get("representative")) {
+          const representativeGroup = this.fb.group({
+            name: ["", Validators.required],
+            taxId: ["", Validators.required],
+            email: ["", [Validators.required, Validators.email]],
+            password: ["", [Validators.required, Validators.minLength(6)]],
+            phone: ["", Validators.required],
+          });
+          this.locationForm.setControl("representative", representativeGroup);
+        }
+        
+        // Preencher os dados do representante
+        this.locationForm.patchValue({
+          representative: {
+            name: representative.name,
+            taxId: representative.cpf_cnpj,
+            email: representative.email,
+            password: '', // Não preencher senha por segurança
+            phone: '', // Campo será preenchido pelo usuário
+          }
+        });
+      },
+      error: () => {
+        this.toastr.error('Erro ao carregar dados do representante');
+      }
+    });
+  }
+
+  submitRepresentativeData(): void {
+    if (!this.representativeId || !this.locationId) return;
+    
+    const representativeData = this.locationForm.get("representative")?.value;
+    if (!representativeData) return;
+    
+    const payload = {
+      id: this.representativeId,
+      name: representativeData.name,
+      email: representativeData.email,
+      password: representativeData.password,
+      cpf_cnpj: representativeData.taxId,
+      placeId: this.locationId,
+      phone: representativeData.phone,
+    };
+    
+    this.locationService.updateRepresentante(payload).subscribe({
+      next: () => {
+        this.toastr.success('Representante atualizado com sucesso');
+        this.router.navigate(['/gerencial/local']);
+      },
+      error: (err) => {
+        this.toastr.error('Erro ao atualizar representante');
+        console.error(err);
+      }
+    });
+  }
+
   prepareLocationFormData(): FormData {
     const formValue = this.locationForm.value;
     const formData = new FormData();
+    
     formData.append('name', formValue.name || '');
     formData.append('description', formValue.description || '');
     formData.append('street', formValue.street || '');
@@ -162,18 +267,29 @@ export class LocationEditComponent implements OnInit {
     formData.append('city', formValue.city || '');
     formData.append('uf', formValue.uf || '');
     formData.append('active', formValue.active ? 'true' : 'false');
+    
     if (formValue.locationLink) {
       formData.append('locationLink', formValue.locationLink);
     }
+    
     if (formValue.categoryIds && formValue.categoryIds.length > 0) {
-      formData.append('categoryIds', formValue.categoryIds);
+      formValue.categoryIds.forEach((categoryId: any) => {
+        formData.append('categoryIds', categoryId);
+      });
     }
+    
     if (this.coverImage) {
       formData.append('coverImage', this.coverImage, this.coverImage.name);
     }
+    
     if (this.logoImage) {
       formData.append('logoImage', this.logoImage, this.logoImage.name);
     }
+    
     return formData;
+  }
+
+  cancel(): void {
+    this.router.navigate(['/gerencial/local']);
   }
 }

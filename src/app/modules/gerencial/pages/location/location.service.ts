@@ -82,7 +82,7 @@ export class LocationService {
       password: data.password,
       cpf_cnpj: data.cpf_cnpj,
     }
-    return this.http.patch<CreateRepresentante>(`${this.api}/users/representative/${data.id}`, payload)
+    return this.http.patch<CreateRepresentante>(`${this.api}/admin/representative/${data.id}`, payload)
   }
 
   /**
