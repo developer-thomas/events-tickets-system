@@ -23,6 +23,7 @@ export class UserService {
     localStorage.removeItem('authToken');
     localStorage.removeItem('role');
     localStorage.removeItem('permissions');
+    localStorage.removeItem('adminId');
   }
 
   private clearClientData() {
@@ -39,9 +40,10 @@ export class UserService {
   }
 
   decodeAndNotify(user: AdminLoginResponse) {
-    this.clearClientData(); // Limpa dados do cliente antes de salvar dados do admin
+    this.clearClientData(); 
     this.storage.saveToken(user?.token);
-    localStorage.setItem('role', 'ADMIN');
+    localStorage.setItem('role', user.role);
+    localStorage.setItem('adminId', user.id.toString());
     this.user.set(user);
 
     this._permissions = user.permissions;
