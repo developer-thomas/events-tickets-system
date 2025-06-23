@@ -18,7 +18,11 @@
       [class.active]="selectedCategory === category.id"
       (click)="selectCategory(category)">
       <div class="category-icon flex justify-center ">
-         <img class="icon-image" [src]="category.imageIcon" alt="ícone da categoria">
+        @if(category.imageIcon) {
+          <img class="icon-image" [src]="category.imageIcon" alt="ícone da categoria">
+        } @else {
+          <img class="icon-image" src="assets/images/no-image.jpg" alt="ícone da categoria">
+        }
       </div>
     </div>
   </div>
