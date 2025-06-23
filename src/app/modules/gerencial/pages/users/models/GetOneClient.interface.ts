@@ -14,4 +14,7 @@ export interface Client {
   gender: string
   phone: string;
   dateOfBirth: string;   
+  active: boolean;
+  cpf_cnpj: string;
+  imageUrl: string;
 }

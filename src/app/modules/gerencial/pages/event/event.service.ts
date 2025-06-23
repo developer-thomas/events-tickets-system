@@ -5,6 +5,8 @@ import { environment } from "../../../../../environments/environment.development
 import { GetCategoriesNames, GetLocationsNames, CreateEventResponse, CreateEventTimeline, CreateEventTimelines, CreateSponsor } from "./models/CreateEvent.interface"
 import { GetAllEvents } from "./models/GetAllEvents.interface"
 import { GetOneEvent } from "./models/GetEventById.interface"
+import { UpdateEventTimeline } from "./models/UpdateEventTimeline.interface"
+import { UpdateEventSponsor } from "./models/UpdateEventSponsor.interface"
 
 @Injectable({
   providedIn: 'root'
@@ -121,5 +123,19 @@ export class EventService {
   updateEvent(eventId: number, data: FormData): Observable<any> {
     return this.http.put<FormData>(`${this.api}/events/${eventId}`, data);
   }
+  
+  /**
+   * Método para atualizar um cronograma de um evento
+   * @param timelineId id do cronograma
+   */
+  updateEventTimeline(timelineId: number, data: UpdateEventTimeline ): Observable<any> {
+    return this.http.patch<UpdateEventTimeline>(`${this.api}/timelines/${timelineId}`, data);
+  }
 
+  /**
+   * @param sponsorId id do patrocinador
+   */
+  updateEventSponsor(sponsorId: number, data: UpdateEventSponsor ): Observable<any> {
+    return this.http.patch<UpdateEventSponsor>(`${this.api}/admin/sponsor/${sponsorId}`, data);
+  }
 }
