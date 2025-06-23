@@ -10,10 +10,10 @@
     [totalItems]="totalItems()"
     [displayedColumns]="displayedColumns"
     (delete)="deleteCategory($event)"
+    (edit)="editCategory($event)"
     (pageChange)="handlePageChange($event)"
     [page]="currentPage()"
     [size]="pageSize()"
-    [useEditBtn]="false"
     [useDetailBtn]="false"
   ></app-commom-table>
 </section>

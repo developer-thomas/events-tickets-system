@@ -10,6 +10,7 @@ import { NewCategoryComponent } from '../new-category/new-category.component';
 import { GetAllCategories } from '../models/GetAllCategories.interface';
 import { CategoriesService } from '../categories.service';
 import { ConfirmDialogService } from '../../../../shared/services/confirm-dialog/confirmDialog.service';
+import { EditCategoryComponent } from '../edit-category/edit-category.component';
 
 @Component({
   selector: 'app-categories-list',
@@ -23,6 +24,7 @@ export class CategoriesListComponent implements OnInit{
   private categoriesService = inject(CategoriesService);
   private confirmDialog = inject(ConfirmDialogService);
   private toastr = inject(ToastrService);
+  private router = inject(Router);
 
   public title = 'Categorias';
   public pageSession = 'Categorias';
@@ -103,6 +105,20 @@ export class CategoriesListComponent implements OnInit{
     const dialogRef = this.dialog.open(NewCategoryComponent, {
       width: "800px",
       disableClose: true,
+    })
+    
+    return dialogRef.afterClosed().subscribe({
+      next: (_) => {
+        this.getCategories()
+      }
+    })
+  }
+
+  editCategory(row: any) {
+    const dialogRef = this.dialog.open(EditCategoryComponent, {
+      width: "800px",
+      disableClose: true,
+      data: { categoryId: row.id }
     })
     
     return dialogRef.afterClosed().subscribe({

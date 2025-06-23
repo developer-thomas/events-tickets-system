@@ -3,6 +3,7 @@ import { environment } from '../../../../../environments/environment.development
 import { Observable } from 'rxjs';
 import { GetAllCategories } from './models/GetAllCategories.interface';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { GetOneCategory } from './models/GetOneCategory.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -30,5 +31,13 @@ export class CategoriesService {
 
   delete(categoryId: any): Observable<any> {
     return this.http.delete(`${this.api}/categories/${categoryId}`);
+  }
+
+  updateCategory(categoryId: number, data: any): Observable<any> {
+    return this.http.patch<any>(`${this.api}/categories/${categoryId}`, data);
+  }
+
+  getOneCategory(categoryId: number): Observable<GetOneCategory> {
+    return this.http.get<GetOneCategory>(`${this.api}/categories/${categoryId}`);
   }
 }
