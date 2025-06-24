@@ -181,13 +181,13 @@ export class UserDataPanelComponent implements OnInit {
       height: "600px",
       data: {
         address: this.userAddress,
-        hasAddress: !!this.addressId(),
+        userId: this.userId(),
       },
     })
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.saveAddress(result)
+        this.loadUserAddress(); // Recarregar endereços após salvar
       }
     })
   }
@@ -210,54 +210,6 @@ export class UserDataPanelComponent implements OnInit {
       error: (error) => {
         console.error("Error updating user:", error)
         this.toastr.error("Erro ao atualizar dados")
-        this.loading.set(false)
-      },
-    })
-  }
-
-  saveAddress(addressData: any): void {
-    this.loading.set(true)
-
-    const createAddressData: CreateAddress = {
-      street: addressData.street,
-      number: Number(addressData.number),
-      neighborhood: addressData.neighborhood || "Centro",
-      cep: Number(addressData.zipCode.replace(/\D/g, "")),
-      uf: addressData.state,
-      city: addressData.city,
-      referenceType: addressData.complement || "",
-    }
-
-    // Se já tem endereço, inclui o ID para atualizar
-    if (this.addressId()) {
-      createAddressData.id = this.addressId()!
-    }
-
-    this.userDataService.registerAddress(createAddressData).subscribe({
-      next: (response) => {
-        console.log("Address saved:", response)
-        this.toastr.success("Endereço salvo com sucesso!")
-
-        // Atualizar endereço local
-        this.userAddress = {
-          street: addressData.street,
-          number: addressData.number,
-          complement: addressData.complement,
-          zipCode: addressData.zipCode,
-          city: addressData.city,
-          state: addressData.state,
-        }
-
-        // Se era um novo endereço, salvar o ID retornado
-        if (!this.addressId() && response.id) {
-          this.addressId.set(response.id)
-        }
-
-        this.loading.set(false)
-      },
-      error: (error) => {
-        console.error("Error saving address:", error)
-        this.toastr.error("Erro ao salvar endereço")
         this.loading.set(false)
       },
     })

@@ -1,7 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../../environments/environment.development';
-import { Pagination } from '../../../shared/models/pagination.model';
 import { Observable } from 'rxjs';
 import { GetAllClients } from './models/GetAllClients.interface';
 import { GetClientResponse } from './models/GetOneClient.interface';
