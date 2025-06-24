@@ -9,37 +9,9 @@ import { StorageService } from '../../../../../../core/auth/storage.service';
 import { ToastrService } from 'ngx-toastr';
 import { CategoriesService } from '../../../../../gerencial/pages/categories/categories.service';
 import { GetAllCategories } from '../../../../../gerencial/pages/categories/models/GetAllCategories.interface';
-import { GetOneEvent } from '../../../../../gerencial/pages/event/models/GetEventById.interface';
-import { EventDetailsComponent } from '../../account-home/list/location-details/event-details/event-details.component';
 import { CartRequest } from '../../account-home/models/AddToCart.interface';
 import { AccountHomeService } from '../../account-home/account-home.service';
-
-interface Category {
-  id: string
-  name: string
-  icon: string
-  isActive?: boolean
-}
-
-export interface FavoriteEvent {
-  id: number;
-  name: string;
-  description: string;
-  eventLocation: string;
-  isFavorite: boolean;
-  image: string;
-  date: string; // opcional, se você usar a data no front
-  lat: number;
-  lng: number;
-  value: number;
-  categories: {
-    id: number;
-    name: string;
-    imageCoverUrl: string | null;
-    imageIconUrl: string | null;
-  }[];
-}
-
+import { FavoriteEvent } from '../models/FavoritesEvent.interface';
 
 @Component({
   selector: 'app-list',

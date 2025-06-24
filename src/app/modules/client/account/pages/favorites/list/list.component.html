@@ -77,11 +77,19 @@
         <p class="text-sm text-gray-600 mb-2">{{ event.eventLocation }}</p>
         <p class="text-sm text-gray-600 mb-4 line-clamp-3">{{ event.description }}</p>
 
-        <button 
-          class="bg-[#192554] text-white border-none rounded px-6 py-2 text-sm font-medium cursor-pointer hover:bg-[#131c40]"
-          (click)="buyTicket(event)">
-          Comprar
-        </button>
+        @if(event.value > 0) {
+          <button 
+            class="bg-[#192554] text-white border-none rounded px-6 py-2 text-sm font-medium cursor-pointer hover:bg-[#131c40]"
+            (click)="buyTicket(event)">
+            Comprar
+          </button>
+        } @else {
+          <button 
+            class="bg-[#192554] text-white border-none rounded px-6 py-2 text-sm font-medium cursor-pointer hover:bg-[#131c40]"
+            (click)="buyTicket(event)">
+            Reservar
+          </button>
+        }
       </div>
     </div>
 
