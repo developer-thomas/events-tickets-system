@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -19,17 +19,13 @@ import { UserService } from '../../../../core/auth/user.service';
 export class UserCardComponent {
   private router = inject(Router);
   private userService = inject(UserService);
+  private usersService = inject(UserService);
 
-  public user: any | null = {
-    name: 'Paulo Ricardo',
-    imageUrl: 'assets/png/default-user.jpg',
-  };
+  public user = signal<{name: string, imageUrl: string} | null>(null);
 
   logout() {
     this.router.navigate(['/admin']);
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('permissions');
-    localStorage.removeItem('role');
+    this.usersService.clearAdminData();
   }
 
   public username!: string;
@@ -37,10 +33,12 @@ export class UserCardComponent {
   ngOnInit(): void {
     this.userService.getLoggedUser().subscribe({
       next: (res) => {
-        this.user = {
+        const user = {
           name: res.name,
           imageUrl: res.imageUrl
         }
+        
+        this.user.set(user);
       }
     })
   }
