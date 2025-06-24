@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FilterModalComponent } from '../filter-modal/filter-modal.component';
 import { MapViewComponent } from './map-view/map-view.component';
 import { AccountHomeService } from '../account-home.service';
-import { GetAllLocation, UserLocation } from '../models/GetAllLocations.interface';
+import { GetAllLocation, LocationListResponse, UserLocation } from '../models/GetAllLocations.interface';
 import { CategoriesService } from '../../../../../gerencial/pages/categories/categories.service';
 import { GetAllCategories } from '../../../../../gerencial/pages/categories/models/GetAllCategories.interface';
 
@@ -62,7 +62,7 @@ export class MapComponent implements OnInit {
   // OBTÉM TODOS OS LOCAIS SEM PAGINAÇÃO
   getAllLocations() {
     this.accountHomeService.getAll().subscribe({
-      next: (res) => {
+      next: (res: LocationListResponse) => {
         this.allLocations.set(res.result);
         this.locationsData.set(res.result); // inicialmente, mostra todos
       }

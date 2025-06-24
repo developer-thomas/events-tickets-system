@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,7 +18,7 @@ import { StorageService } from '../../../../../../../../core/auth/storage.servic
   templateUrl: './event-details.component.html',
   styleUrl: './event-details.component.scss'
 })
-export class EventDetailsComponent {
+export class EventDetailsComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private accountHomeService = inject(AccountHomeService)
@@ -115,7 +115,7 @@ export class EventDetailsComponent {
 
   buyTicket(ticket: GetOneEvent): void {
     const userId = Number(EventDetailsComponent.getUserId());
-  
+    
     const payload: CartRequest = {
       userId,
       item: {
@@ -124,12 +124,20 @@ export class EventDetailsComponent {
         value: ticket.value
       }
     }
-    this.accountHomeService.addItemsToCart(payload).subscribe({
-      next: (res) => {
-        console.log('ingresso adicionado:', res)
-        this.toastr.success("Ingresso adicionado ao carrinho");
-      }
-    })
-    this.router.navigate(['client/inicio/cart']);
+
+    // if(ticket.value === 0 ) {
+    //   this.accountHomeService.addItemsToCart(payload).subscribe({
+    //     next: (_) => {
+    //       this.toastr.success("Ingresso adquirido com sucesso");
+    //     }
+    //   })
+    // } else {
+      this.accountHomeService.addItemsToCart(payload).subscribe({
+        next: (_) => {
+          this.toastr.success("Ingresso adicionado ao carrinho");
+          this.router.navigate(['client/inicio/cart']);
+        }
+      })
+    // }
   }
 }

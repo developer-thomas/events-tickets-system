@@ -19,14 +19,14 @@ export class UserService {
 
   protected user: WritableSignal<SigninCredentialsResponse> = signal<SigninCredentialsResponse>({});
 
-  private clearAdminData() {
+  public clearAdminData() {
     localStorage.removeItem('authToken');
     localStorage.removeItem('role');
     localStorage.removeItem('permissions');
     localStorage.removeItem('adminId');
   }
 
-  private clearClientData() {
+  public clearClientData() {
     localStorage.removeItem('userToken');
     localStorage.removeItem('role');
     localStorage.removeItem('userId');
