@@ -217,30 +217,5 @@ Altere a constante `maxDistance` no método `filterByProximity()`:
 const maxDistance = 3000; // km
 ```
 
-## 📝 Contribuição
 
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
 
-## 📄 Licença
-
-Este projeto está sob a licença [MIT](LICENSE).
-
-## 👥 Equipe
-
-- **Desenvolvimento**: Equipe de desenvolvimento
-- **Design**: Equipe de design
-- **QA**: Equipe de qualidade
-
-## 📞 Suporte
-
-Para suporte, entre em contato através de:
-- Email: [email@exemplo.com]
-- Issues: [GitHub Issues]
-
----
-
-**Ato Cultural Web** - Conectando pessoas através da cultura 🎭
