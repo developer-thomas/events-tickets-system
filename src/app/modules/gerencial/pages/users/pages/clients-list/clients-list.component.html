@@ -8,10 +8,6 @@
     [displayedColumns]="displayedColumns"
     (detail)="gotoDetailPage($event)"
     (delete)="deleteClient($event)"
-    (pageChange)="handlePageChange($event)"
-    [totalItems]="totalItems()"
-    [page]="currentPage()"
-    [size]="pageSize()"
     [useEditBtn]="false"
     [useDeleteBtn]="false"
   ></app-commom-table>
