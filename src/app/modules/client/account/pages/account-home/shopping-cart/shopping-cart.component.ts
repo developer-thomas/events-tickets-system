@@ -198,7 +198,8 @@ export class ShoppingCartComponent {
     this.accountHomeService.generatePaymentLink().subscribe({
       next:(res) => {
         console.log(res.message)
-        window.location.href = res.message;
+        window.open(res.message, '_blank');
+
       }
     })
   }
