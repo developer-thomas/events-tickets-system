@@ -12,6 +12,8 @@ import { AccountHomeService } from '../account-home.service';
 import { GetAllLocation, LocationListResponse, UserLocation } from '../models/GetAllLocations.interface';
 import { CategoriesService } from '../../../../../gerencial/pages/categories/categories.service';
 import { GetAllCategories } from '../../../../../gerencial/pages/categories/models/GetAllCategories.interface';
+import { LoggedUser } from '../../../../../shared/models/LoggedUser.interrface';
+import { UserService } from '../../../../../../core/auth/user.service';
 
 @Component({
   selector: 'app-map',
@@ -32,44 +34,37 @@ export class MapComponent implements OnInit {
   private dialog = inject(MatDialog);
   private accountHomeService = inject(AccountHomeService);
   private categoriesService = inject(CategoriesService);
+  private userService = inject(UserService);
 
   viewMode: "map" | "list" = "map"
-    
   selectedCategory = 0;
     
-  // Armazena todas as categorias 
   categories = signal<GetAllCategories[]>([]);
-
-  // Armazena todos os eventos que vem do backend
   locationsData = signal<GetAllLocation[]>([]);
-
-  // Armazena os locais em cachê através do método do service
   allLocations = signal<GetAllLocation[]>([]);
-
-  // Armazena a lat lng do usuário que entra
   userLocation = signal<UserLocation | null>(null);
+  loggedUser = signal<LoggedUser | null>(null);
 
   ngOnInit(): void {
     this.getAllLocations();
     this.getUserLocation();
     this.getAllCategories();
+    this.getLoggedUser();
   }
 
   toggleView(): void {
     this.viewMode = this.viewMode === "map" ? "list" : "map"
   }
 
-  // OBTÉM TODOS OS LOCAIS SEM PAGINAÇÃO
   getAllLocations() {
     this.accountHomeService.getAll().subscribe({
       next: (res: LocationListResponse) => {
         this.allLocations.set(res.result);
-        this.locationsData.set(res.result); // inicialmente, mostra todos
+        this.locationsData.set(res.result);
       }
     })
   }
   
-  // SOLICITA A LOCALIZAÇÃO DO USUÁRIO
   getUserLocation() {
     this.accountHomeService.getUserLocation().subscribe({
       next: (res) => {
@@ -78,7 +73,6 @@ export class MapComponent implements OnInit {
     })
   }
 
-  // PEGA TODAS AS CATEGORIAS
   getAllCategories() {
     this.categoriesService.getAll().subscribe({
       next: (res) => {
@@ -87,26 +81,28 @@ export class MapComponent implements OnInit {
     })
   }
 
-  // FILTRA PELA CATEGORIA SELECIONADA
+  getLoggedUser() {
+    this.userService.getLoggedUser().subscribe({
+      next: (user) => this.loggedUser.set(user),
+      error: () => this.loggedUser.set(null)
+    });
+  }
+
   selectCategory(category: GetAllCategories): void {
     if (this.selectedCategory === category.id) {
       this.selectedCategory = 0;
       this.locationsData.set(this.accountHomeService.getCachedLocations());
       return;
     }
-  
+    
     this.selectedCategory = category.id;
-  
     const allLocations = this.accountHomeService.getCachedLocations();
-  
     const filtered = allLocations.filter(loc =>
       loc.categories?.some(cat => cat.id === category.id)
     );
-  
     this.locationsData.set(filtered);
   }
 
-  // ABRE O FILTRO DO MODAL
   onFilter(searchTerm: string): void {
     const dialogRef = this.dialog.open(FilterModalComponent, {
       width: "90%",
@@ -114,7 +110,7 @@ export class MapComponent implements OnInit {
       maxHeight: '100vh',
       panelClass: "filter-dialog",
     })
-
+    
     dialogRef.afterClosed().subscribe((filters) => {
       if (filters) {
         this.applyFilters(filters);
@@ -122,7 +118,6 @@ export class MapComponent implements OnInit {
     })
   }
 
-  // MÉTODO PARA APLICAR O FILTRO VINDO DO MODAL
   applyFilters(filters: {
     types: number[],
     location: string | null,
@@ -131,64 +126,128 @@ export class MapComponent implements OnInit {
     year: number
   }) {
     const allLocations = this.accountHomeService.getCachedLocations();
-  
-    // Cria array de datas no formato 'YYYY-MM-DD' baseado no filtro de dias, mês e ano
-    const selectedDates = filters.dates.map((day) => {
-      const monthStr = String(filters.month + 1).padStart(2, '0');
-      const dayStr = String(day).padStart(2, '0');
-      return `${filters.year}-${monthStr}-${dayStr}`;
-    });
-  
-    const filtered = allLocations.filter((location) => {
-      let matchesPlace = true;
-      if (filters.location) {
-        if (filters.location === 'home') {
-          matchesPlace = location.name.toLowerCase().includes('casa');
-        } else if (filters.location === 'work') {
-          matchesPlace = location.name.toLowerCase().includes('trabalho');
-        } else if (filters.location === 'current') {
-          matchesPlace = true; 
-        } else {
-          // Caso selecione algo diferente, tenta comparar placeId
-          matchesPlace = location.addressLocation?.placeId === filters.location;
-        }
-      }
-
-      // Filtra eventos dentro da location
-      const matchingEvents = location.event?.filter((event) => {
-        const eventDateISO = new Date(event.eventDate).toISOString().split('T')[0];
-  
-        const matchesDate =
-          filters.dates.length === 0 || selectedDates.includes(eventDateISO);
-  
-        const matchesCategory =
-          filters.types.length === 0 ||
-          event.categories?.some((cat) => filters.types.includes(cat.id));
-  
-        return matchesDate && matchesCategory;
-      });
-  
-      return matchesPlace && matchingEvents?.length > 0;
-    });
-  
+    
+    // Processa filtros de categoria e data
+    let filtered = this.filterByCategoryAndDate(allLocations, filters);
+    
+    // Aplica filtro de proximidade se selecionado
+    if (filters.location) {
+      filtered = this.filterByProximity(filtered, filters.location);
+    }
+    
     this.locationsData.set(filtered);
   }
+
+  private filterByCategoryAndDate(locations: GetAllLocation[], filters: {
+    types: number[],
+    dates: number[],
+    month: number,
+    year: number
+  }): GetAllLocation[] {
+    const selectedDates = this.getSelectedDates(filters.dates, filters.month, filters.year);
+    
+    return locations.filter((location) => {
+      // Filtro por categoria
+      const matchesCategory = filters.types.length === 0 ||
+        location.categories?.some(cat => filters.types.includes(cat.id));
+      
+      // Filtro por data
+      const matchingEvents = location.event?.filter((event) => {
+        const eventDateISO = new Date(event.eventDate).toISOString().split('T')[0];
+        const matchesDate = filters.dates.length === 0 || selectedDates.includes(eventDateISO);
+        return matchesDate && matchesCategory;
+      });
+      
+      return matchingEvents?.length > 0;
+    });
+  }
+
+  private filterByProximity(locations: GetAllLocation[], locationType: string): GetAllLocation[] {
+    const referenceCoords = this.getReferenceCoordinates(locationType);
+    
+    if (!referenceCoords || locations.length === 0) {
+      return locations;
+    }
+
+    // Encontra o local mais próximo
+    let minDistance = Infinity;
+    let closest: GetAllLocation | null = null;
+    
+    locations.forEach(loc => {
+      const distance = this.calculateDistance(
+        referenceCoords.lat,
+        referenceCoords.lng,
+        loc.addressLocation.lat,
+        loc.addressLocation.lng
+      );
+      
+      if (distance < minDistance) {
+        minDistance = distance;
+        closest = loc;
+      }
+    });
+
+    // Retorna o local mais próximo (com raio de 3000km)
+    const maxDistance = 3000;
+    return minDistance <= maxDistance && closest ? [closest] : locations;
+  }
+
+  private getReferenceCoordinates(locationType: string): { lat: number, lng: number } | null {
+    const user = this.loggedUser();
+    
+    switch (locationType) {
+      case 'home':
+        const home = user?.addresses?.find(a => a.type === 'Home');
+        return home ? { lat: home.lat, lng: home.lng } : null;
+        
+      case 'work':
+        const work = user?.addresses?.find(a => a.type === 'Job');
+        return work ? { lat: work.lat, lng: work.lng } : null;
+        
+      case 'current':
+        const userLat = localStorage.getItem('userLat');
+        const userLng = localStorage.getItem('userLng');
+        return userLat && userLng ? 
+          { lat: parseFloat(userLat), lng: parseFloat(userLng) } : null;
+        
+      default:
+        return null;
+    }
+  }
+
+  private getSelectedDates(dates: number[], month: number, year: number): string[] {
+    return dates.map((day) => {
+      const monthStr = String(month + 1).padStart(2, '0');
+      const dayStr = String(day).padStart(2, '0');
+      return `${year}-${monthStr}-${dayStr}`;
+    });
+  }
+
+  private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    const toRad = (value: number): number => (value * Math.PI) / 180;
+    const R = 6371; // Raio da Terra em km
   
-  // FILTRO DE TEXTO
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+  
+    const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  
+    return Number((R * c).toFixed(2));
+  }
+
   onSearchChange(searchTerm: string): void {
     const term = searchTerm.trim().toLowerCase();
-  
+    
     if (!term) {
-      // Se estiver vazio, mostra todos os locais do cache
       this.locationsData.set(this.allLocations());
       return;
     }
-  
-    // Filtra os locais pelo nome
+    
     const filtered = this.allLocations().filter(location =>
       location.name.toLowerCase().includes(term)
     );
-  
+    
     this.locationsData.set(filtered);
   }
 }
