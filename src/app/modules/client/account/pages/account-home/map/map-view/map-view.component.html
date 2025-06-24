@@ -23,9 +23,9 @@
 
 
   <!-- Info Window -->
-  <map-info-window #infoWindow>
-    <div class="p-2">
-      <img class="mx-auto" [src]="selectedMarker?.coverUrl" width="80%" />
+  <map-info-window #infoWindow >
+    <div class="mx-auto cursor-pointer" [routerLink]="['/client/inicio/location/', selectedMarker?.id]">
+      <img class="mb-3 rounded-md" [src]="selectedMarker?.coverUrl" width="100%" />
       <h1 style="font-size: 30px; margin-bottom: 10px;">{{ selectedMarker?.title }}</h1>
       <img [src]="selectedMarker?.iconUrl" width="40" />
     </div>

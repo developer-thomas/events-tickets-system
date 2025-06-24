@@ -2,11 +2,12 @@ import { Component, Input, OnChanges, QueryList, ViewChild, ViewChildren } from 
 import { GoogleMap, GoogleMapsModule, MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { GetAllLocation, UserLocation } from '../../models/GetAllLocations.interface';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-map-view',
   standalone: true,
-  imports: [GoogleMapsModule, CommonModule],
+  imports: [GoogleMapsModule, CommonModule, RouterModule],
   templateUrl: './map-view.component.html',
   styleUrl: './map-view.component.scss'
 })
@@ -73,6 +74,7 @@ export class MapViewComponent implements OnChanges{
         };
         bounds.extend(pos);
         return {
+          id: location.id,
           position: pos,
           title: location.name,
           coverUrl: location.fileCoverUrl,
@@ -100,7 +102,7 @@ export class MapViewComponent implements OnChanges{
   
   openInfo(marker: typeof this.customMarkers[number], index: number) {
     this.selectedMarker = marker;
-  
+
     // Ignora o primeiro marcador (usuário)
     const allMarkers = this.mapMarkers.toArray();
     const ref = allMarkers[index + 1]; // +1 porque o primeiro é do usuário
