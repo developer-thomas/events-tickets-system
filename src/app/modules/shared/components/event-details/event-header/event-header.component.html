@@ -30,7 +30,11 @@
       </div>
       
       <div class="mb-4">
-        <h2 class="text-3xl font-bold text-gray-900">{{ eventData.value | currency: "BRL" }}</h2>
+        @if(eventData.value > 0) { 
+          <h2 class="text-3xl font-bold text-gray-900">{{ eventData.value | currency: "BRL" }}</h2>
+        } @else {
+          <h2 class="text-3xl font-bold text-gray-900">Gratuito</h2>
+        }
         <p class="text-gray-700">{{ eventData.eventDate | date: 'dd/MM/yyyy' }}</p>
       </div>
       
@@ -52,7 +56,11 @@
               <mat-icon>{{ isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
             </button>
           </div>
-          <button class="buy-button" (click)="onBuyTicket()">Check Out</button>
+          @if(eventData.value > 0) {
+            <button class="buy-button" (click)="onBuyTicket()">Comprar</button>
+          } @else {
+            <button class="buy-button" (click)="onBuyTicket()">Reservar</button>
+          }
         </div>
       }
     </div>
