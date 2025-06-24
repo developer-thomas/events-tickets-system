@@ -12,7 +12,7 @@ export class UseTermsComponent {
   constructor(private router: Router) {}
 
   goBack(): void {
-    this.router.navigate([".."])
+    this.router.navigate(['/client/inicio'])
   }
 
   email = 'contato@cidadedacultura.com.br'
