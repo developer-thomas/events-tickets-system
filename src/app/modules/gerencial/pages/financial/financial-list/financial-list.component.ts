@@ -50,6 +50,7 @@ export class FinancialListComponent {
     { label: 'Método de pagamento', key: 'payment', type: 'text' },
     { label: 'Valor', key: 'value', type: 'currency' },
     { label: 'Status', key: 'status', type: 'text' },
+    { label: 'Transação', key: 'transactionId', type: 'text' },
   ];
 
   ngOnInit(): void {
@@ -59,16 +60,18 @@ export class FinancialListComponent {
   private getFinancial() {
     this.financialService.getAll().subscribe({
       next: (res) => {
-        const data = res.map((financial: GetAllFinancial) => ({
-          ...financial,
-          payment: financial.payment !== null ? this.translate(financial.payment.method) : 'N/A',
-          user: financial.user.name,
-          status: this.translate(financial.status)
+        const data = res.data.map((financial: any) => ({
+          createdAt: financial.date,
+          user: financial.username,
+          payment: financial.method ? this.translate(financial.method) : 'N/A',
+          value: financial.value ?? 0,
+          status: financial.status ? this.translate(financial.status) : 'N/A',
+          transactionId: financial.transactionId ?? 'N/A',
         }));
 
         this.allFinancialData.set(data);
         this.filteredFinancialData.set(data);
-        this.totalItems.set(data.length);
+        this.totalItems.set(res.data.length); // ou use res.metadata.totalPages*pageSize
       }
     });
   }
@@ -80,10 +83,10 @@ export class FinancialListComponent {
     const term = search.toLowerCase();
 
     const filtered = this.allFinancialData().filter(item =>
-      item.user?.name?.toLowerCase().includes(term) ||       
-      item.payment?.method?.toLowerCase().includes(term) ||   
-      item.status?.toLowerCase().includes(term) ||
-      item.value.toString().includes(term) ||
+      (typeof item.user === 'string' ? item.user : (item.user?.name ?? '')).toLowerCase().includes(term) ||
+      (typeof item.payment === 'string' ? item.payment : (item.payment?.method ?? '')).toLowerCase().includes(term) ||
+      (item.status ?? '').toLowerCase().includes(term) ||
+      (item.value ?? '').toString().includes(term) ||
       new Date(item.createdAt).toLocaleDateString("pt-BR").includes(term)
     );
 
