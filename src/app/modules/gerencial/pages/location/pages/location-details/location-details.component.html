@@ -44,9 +44,11 @@
     </div>
     
     <div class="action-buttons gap-3">
-      <button mat-raised-button color="primary" class="bg-[#192554] rounded-xl p-2 text-white text-sm w-40" (click)="createNewEvent()">
-        NOVO EVENTO
-      </button>
+      @if(role() === 'ADMIN') {
+        <button mat-raised-button color="primary" class="bg-[#192554] rounded-xl p-2 text-white text-sm w-40" (click)="createNewEvent()">
+          NOVO EVENTO
+        </button>
+      }
       <button mat-icon-button class="ml-2" [class.active-view]="currentView === 'cards'" (click)="switchView('cards')">
         <mat-icon>view_module</mat-icon>
       </button>
@@ -73,7 +75,7 @@
       
       <!-- View Components -->
       <app-cards-view style="cursor: pointer;" *ngIf="currentView === 'cards'" [events]="locationData()?.event"></app-cards-view>
-      <app-dashboard-view *ngIf="currentView === 'dashboard'" [events]="events"></app-dashboard-view>
+      <!-- <app-dashboard-view *ngIf="currentView === 'dashboard'" [events]="events"></app-dashboard-view> -->
     </div>
   </div>
   

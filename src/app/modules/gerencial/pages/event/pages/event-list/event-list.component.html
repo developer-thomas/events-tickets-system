@@ -2,7 +2,9 @@
 
 <section>
   <app-filter-table (filterText)="filter($event)" [useFilterBtn]="false">
-    <app-base-button label="Novo Evento" routerLink="cadastrar"></app-base-button>
+    @if(adminRole() === 'ADMIN') {
+      <app-base-button label="Novo Evento" routerLink="cadastrar"></app-base-button>
+    }
   </app-filter-table>
 
   <app-commom-table
@@ -15,5 +17,7 @@
     [totalItems]="filteredEvents().length"
     [page]="currentPage()"
     [size]="pageSize()"
+    [useEditBtn]="adminRole() === 'ADMIN' ? true : false"
+    [useDeleteBtn]="adminRole() === 'ADMIN' ? true : false"
   ></app-commom-table>
 </section>

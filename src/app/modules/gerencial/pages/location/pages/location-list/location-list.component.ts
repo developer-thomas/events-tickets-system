@@ -28,6 +28,7 @@ export class LocationListComponent {
   public pageSession = 'Local';
 
   public userRole = signal<string | null>(null);
+  public adminId = signal<number | null>(null);
   public allLocationsData = signal<LocationTableRow[]>([]);
   public locationsData = signal<LocationTableRow[]>([]);
 
@@ -48,11 +49,11 @@ export class LocationListComponent {
     );
   });
 
-public paginatedLocationsData = computed(() => {
-  const start = (this.currentPage() - 1) * this.pageSize();
-  const end = start + this.pageSize();
-  return this.filteredLocationsData().slice(start, end);
-});
+  public paginatedLocationsData = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    const end = start + this.pageSize();
+    return this.filteredLocationsData().slice(start, end);
+  });
 
   public displayedColumns: TableColumn[] = [
     { label: 'Nome', key: 'name', type: 'text' },
@@ -63,6 +64,10 @@ public paginatedLocationsData = computed(() => {
 
   ngOnInit() {
     this.getUserRole();
+    this.loadLocations();
+  }
+
+  private loadLocations() {
     if(this.userRole() === 'ADMIN') {
       this.getLocations();
     } else {
@@ -88,24 +93,23 @@ public paginatedLocationsData = computed(() => {
     });
   }
 
-  // VOU PRECISAR DA ROTA DOS LOCAIS DO REPRESENTANTE
   private getLocationsByRepresentative() {
-    this.locationService.getAllLocations().pipe(
-      map((res): LocationTableRow[] => {
-        return res.result.map(loc => ({
-          id: loc.id,
-          name: loc.name,
-          description: loc.description,
-          categories: loc.categories.map(cat => cat.name)
-        }));
-      })
-    ).subscribe({
-      next: (transformedLocations) => {
-        const adminId = Number(localStorage.getItem('adminId'));
-        const representativeLocal = transformedLocations.filter(loc => loc.id === adminId);
-        this.allLocationsData.set(representativeLocal);
-        this.totalItems.set(transformedLocations.length);
-        console.log('oi')
+    this.locationService.getLocationsByRepresentative(this.adminId()!).subscribe({
+      next: (res) => {
+        // Mapeia os dados do local do representante
+        const locationData: LocationTableRow = {
+          id: res.id,
+          name: res.name,
+          description: res.description,
+          categories: [] // Não disponível no retorno atual, mas pode ser adicionado se necessário
+        };
+        
+        this.allLocationsData.set([locationData]);
+        this.totalItems.set(1);
+      },
+      error: (err) => {
+        console.error("Erro ao buscar local do representante:", err);
+        this.toastr.error('Erro ao carregar local');
       }
     });
   }
@@ -119,7 +123,7 @@ public paginatedLocationsData = computed(() => {
   handlePageChange(event: {page: number, size: number}) {
     this.currentPage.set(event.page);
     this.pageSize.set(event.size);
-    this.getLocations();
+    this.loadLocations();
   }
 
   public gotoDetailPage(row: any) {
@@ -137,10 +141,10 @@ public paginatedLocationsData = computed(() => {
           this.locationService.deleteLocation(row.id).subscribe({
             next: () => {
               this.toastr.success('Local deletado com sucesso');
-              this.getLocations();
+              this.loadLocations();
             },
             error: (err) => {
-              console.error('Erro ao excluir evento:', err);
+              console.error('Erro ao excluir local:', err);
               this.toastr.error('Erro ao excluir local');
             }
           });
@@ -150,7 +154,8 @@ public paginatedLocationsData = computed(() => {
 
   getUserRole() {
     const role = localStorage.getItem('role');
+    const adminId = localStorage.getItem('adminId');
     this.userRole.set(role);
+    this.adminId.set(adminId ? Number(adminId) : null);
   }
-
 }

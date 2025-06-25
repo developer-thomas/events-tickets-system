@@ -45,9 +45,9 @@ export class StorageService {
     
     try {
       const parsedRole = JSON.parse(role);
-      return parsedRole === 'ADMIN' || parsedRole === 'CLIENT' ? parsedRole : null;
+      return parsedRole === 'ADMIN' || parsedRole === 'CLIENT' || parsedRole === 'REPRESENTATIVE' ? parsedRole : null;
     } catch {
-      return role === 'ADMIN' || role === 'CLIENT' ? role : null;
+      return role === 'ADMIN' || role === 'CLIENT' || role === 'REPRESENTATIVE' ? role : null;
     }
   }
 

@@ -22,7 +22,7 @@ import { LocationMapComponent } from './components/location-map/location-map.com
     MatTabsModule, 
     FilterTableComponent, 
     CardsViewComponent, 
-    DashboardViewComponent, 
+    
     LocationMapComponent
   ],
   templateUrl: './location-details.component.html',
@@ -34,10 +34,12 @@ export class LocationDetailsComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
 
   locationId: any;
+  public role = signal<string | null>(null);
 
   public locationData = signal<GetOneLocation | undefined>(undefined);
   public locationAddress = signal<GetOneLocationAddress | undefined>(undefined);
 
+  // Mock para tipos de eventos
   eventTypes = ["Tipo do evento", "Tipo do evento", "Tipo do evento"]
 
   // Mock para dashboard
@@ -117,5 +119,9 @@ export class LocationDetailsComponent implements OnInit {
   get backgroundImage(): string {
     const url = this.locationData()?.fileCoverUrl || 'assets/image/no-image.jpg';
     return `url(${url})`;
+  }
+
+  getRole() {
+    this.role.set(localStorage.getItem('role'));
   }
 }

@@ -16,6 +16,8 @@ export const authInterceptor: HttpInterceptorFn = (
     token = storageService.getToken();
   } else if (role === 'CLIENT') {
     token = storageService.getUserToken();
+  } else if (role === 'REPRESENTATIVE') {
+    token = storageService.getToken();
   }
 
   if (token) {

@@ -34,6 +34,8 @@ export class EventListComponent implements OnInit {
 
   public title = "Evento"
   public pageSession = "Evento"
+  public adminRole = signal<string | null>(null)
+  public adminId = signal<number | null>(null)
 
   public eventData = signal<EventTableData[]>([])
   public filteredEvents = computed(() => {
@@ -67,16 +69,26 @@ export class EventListComponent implements OnInit {
   ]
 
   ngOnInit() {
-    this.getEvents()
+    this.getAdminRole();
+    this.loadEvents();
+  }
+
+  private loadEvents() {
+    if(this.adminRole() === 'ADMIN') {
+      this.getEvents()
+      
+    } else {
+      this.getEventsByUser();
+    }
   }
 
   private getEvents() {
-    this.eventService.getAllEvents(this.currentPage(), this.pageSize(), this.searchTerm()).subscribe({
+    this.eventService.getAllEvents().subscribe({
       next: (res) => {
         // Mapear os dados para incluir o nome da localização como uma propriedade separada
         const mappedEvents = res.result.map((event) => ({
           ...event,
-          location: event.eventLocation?.name || "Sem localização", // Adiciona a propriedade location com o nome da localização
+          location: event.eventLocation?.name || "Sem localização", 
           quantity: event.numberOfTickets,
           price: `R$ ${event.value}`,
           period: new Date(event.eventDate).toLocaleDateString("pt-BR"),
@@ -84,7 +96,50 @@ export class EventListComponent implements OnInit {
         }))
 
         this.eventData.set(mappedEvents)
-        this.totalItems.set(res.result.length) // Temporário, ajuste conforme necessário
+        this.totalItems.set(res.result.length) 
+      },
+      error: (err) => {
+        console.error("Erro ao buscar eventos:", err)
+      },
+    })
+  }
+
+  private getEventsByUser() {
+    this.eventService.getEventsByRepresentative(this.adminId()!).subscribe({
+      next: (res) => {
+        // Mapeia os eventos do array 'event' dentro do objeto de localização
+        const mappedEvents = res.event.map((event) => ({
+          id: event.id,
+          name: event.name,
+          description: event.description,
+          value: event.value.toString(),
+          eventDate: event.eventDate,
+          fileUrl: event.fileUrl,
+          numberOfTickets: event.numberOfTickets,
+          active: event.active,
+          categories: [], 
+          timelineEvent: [], 
+          eventLocation: {
+            id: res.id,
+            name: res.name,
+            description: res.description,
+            addressLocation: {
+              lat: 0,
+              lng: 0,
+              placeId: ''
+            }
+          },
+          isFavorite: false, 
+          
+          location: res.name, 
+          quantity: event.numberOfTickets,
+          price: `R$ ${event.value}`,
+          period: new Date(event.eventDate).toLocaleDateString("pt-BR"),
+          status: event.active ? "Ativo" : "Inativo",
+        }))
+        
+        this.eventData.set(mappedEvents)
+        this.totalItems.set(mappedEvents.length)
       },
       error: (err) => {
         console.error("Erro ao buscar eventos:", err)
@@ -101,7 +156,7 @@ export class EventListComponent implements OnInit {
   handlePageChange(event: { page: number; size: number }) {
     this.currentPage.set(event.page)
     this.pageSize.set(event.size)
-    this.getEvents()
+    this.loadEvents();
   }
 
   public gotoDetailPage(row: EventsResult) {
@@ -119,7 +174,7 @@ export class EventListComponent implements OnInit {
           this.eventService.deleteEvent(row.id).subscribe({
             next: () => {
               this.toastr.success('Evento deletado com sucesso');
-              this.getEvents();
+              this.loadEvents();
             },
             error: (err) => {
               console.error('Erro ao excluir evento:', err);
@@ -132,5 +187,10 @@ export class EventListComponent implements OnInit {
 
   editEvent(row: any) {
     this.router.navigate(['/gerencial/evento/editar', row.id]);
+  }
+
+  getAdminRole() {
+    this.adminRole.set(localStorage.getItem('role'));
+    this.adminId.set(Number(localStorage.getItem('adminId')));
   }
 }

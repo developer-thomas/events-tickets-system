@@ -8,6 +8,7 @@ import { CreateRepresentante } from './models/CreateRepresentante.interface';
 import { CreateLocation } from './models/CreateLocation.interface'
 import { GetOneLocationResponse } from './models/GetLocationById.interface';
 import { GetRepresentativeByIdResponse } from './models/GetRepresentativeById.interface';
+import { LocationByRepresentative } from '../event/models/GetEventsByRepresentative.interface';
 @Injectable({
   providedIn: 'root'
 })
@@ -124,6 +125,13 @@ export class LocationService {
    */
   editLocation(locationId: number, data: FormData): Observable<any> {
     return this.http.put<any>(`${this.api}/places/${locationId}`, data)
+  }
+
+  /**
+   * Busca locais por representante
+   */
+  getLocationsByRepresentative(userId: number): Observable<LocationByRepresentative> {
+    return this.http.get<LocationByRepresentative>(`${this.api}/admin/events/resentative/${userId}`);
   }
 
   // editRepresentative(representativeId: number, data: any): Observable<any> {

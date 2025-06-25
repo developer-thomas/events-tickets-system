@@ -7,6 +7,7 @@ import { GetAllEvents } from "./models/GetAllEvents.interface"
 import { GetOneEvent } from "./models/GetEventById.interface"
 import { UpdateEventTimeline } from "./models/UpdateEventTimeline.interface"
 import { UpdateEventSponsor } from "./models/UpdateEventSponsor.interface"
+import { LocationByRepresentative } from "./models/GetEventsByRepresentative.interface"
 
 @Injectable({
   providedIn: 'root'
@@ -15,14 +16,8 @@ export class EventService {
   private readonly api = environment.api
   private http = inject(HttpClient)
 
-  getAllEvents(page = 10, skip = 1, search?: string): Observable<GetAllEvents> {
-    let params = new HttpParams().set("page", page).set("skip", skip)
-
-    if (search) {
-      params = params.set("search", search)
-    }
-
-    return this.http.get<GetAllEvents>(`${this.api}/events`, { params })
+  getAllEvents(): Observable<GetAllEvents> {  
+    return this.http.get<GetAllEvents>(`${this.api}/events`)
   }
 
   deleteEvent(id: number): Observable<any> {
@@ -137,5 +132,9 @@ export class EventService {
    */
   updateEventSponsor(sponsorId: number, data: UpdateEventSponsor ): Observable<any> {
     return this.http.patch<UpdateEventSponsor>(`${this.api}/admin/sponsor/${sponsorId}`, data);
+  }
+
+  getEventsByRepresentative(userId: number): Observable<LocationByRepresentative> {
+    return this.http.get<LocationByRepresentative>(`${this.api}/admin/events/resentative/${userId}`);
   }
 }
