@@ -21,7 +21,7 @@ export class UserCardComponent {
   private userService = inject(UserService);
   private usersService = inject(UserService);
 
-  public user = signal<{name: string, imageUrl: string} | null>(null);
+  public user = signal<{name: string, imageUrl?: string} | null>(null);
 
   logout() {
     this.router.navigate(['/admin']);
@@ -31,15 +31,8 @@ export class UserCardComponent {
   public username!: string;
 
   ngOnInit(): void {
-    this.userService.getLoggedUser().subscribe({
-      next: (res) => {
-        const user = {
-          name: res.name,
-          imageUrl: res.imageUrl
-        }
-        
-        this.user.set(user);
-      }
+    this.user.set({
+      name: localStorage.getItem('name') || '',
     })
   }
 }

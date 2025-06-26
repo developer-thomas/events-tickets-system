@@ -71,7 +71,7 @@ export class FinancialListComponent {
 
         this.allFinancialData.set(data);
         this.filteredFinancialData.set(data);
-        this.totalItems.set(res.data.length); // ou use res.metadata.totalPages*pageSize
+        this.totalItems.set(res.data.length);
       }
     });
   }

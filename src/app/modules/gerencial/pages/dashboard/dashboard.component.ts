@@ -68,19 +68,19 @@ export class DashboardComponent implements AfterViewInit {
   // Informações que devem conter no card
   public dashboardCardData: DashbocardInfos[] = [
     {
-      value: '',
+      value: '0',
       description: 'Faturamento Ingressos',
       icon: 'paid',
       color: '#294153',
     },
     {
-      value: '83.706',
+      value: '0',
       description: 'Faturamento Planos',
       icon: 'person',
       color: '#FBBB01',
     },
     {
-      value: '981.657',
+      value: '0',
       description: 'Usuários',
       icon: 'task',
       color: '#EC6C6D',
