@@ -24,6 +24,7 @@ export class UserService {
     localStorage.removeItem('role');
     localStorage.removeItem('permissions');
     localStorage.removeItem('adminId');
+    localStorage.removeItem('name');
   }
 
   public clearClientData() {
@@ -36,6 +37,7 @@ export class UserService {
     this.clearAdminData(); 
     this.storage.saveUserToken(user?.token);
     localStorage.setItem('role', 'CLIENT');
+    // localStorage.setItem('role', );
     this.user.set(user);
   }
 
@@ -44,6 +46,7 @@ export class UserService {
     this.storage.saveToken(user?.token);
     localStorage.setItem('role', user.role);
     localStorage.setItem('adminId', user.id.toString());
+    localStorage.setItem('name', user.name.toString());
     this.user.set(user);
 
     this._permissions = user.permissions;
