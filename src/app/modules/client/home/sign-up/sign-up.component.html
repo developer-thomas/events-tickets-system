@@ -185,6 +185,17 @@
         </div>
       </div>
       
+      <!-- Terms Agreement Checkbox -->
+      <div class="form-field terms-checkbox">
+        <label>
+          <input class="mr-2"type="checkbox" formControlName="terms" />
+          <span>Eu concordo com os <a href="/#/common/termos-de-uso" target="_blank"> <strong>termos de uso</strong></a>.</span>
+        </label>
+        <div *ngIf="signUpForm.get('termsAccepted')?.invalid && signUpForm.get('termsAccepted')?.touched" class="error-message">
+          Você deve aceitar os termos para continuar
+        </div>
+      </div>
+
       <!-- Submit Button -->
       <div class="button-container">
         <button type="submit" class="submit-button" [disabled]="loading">

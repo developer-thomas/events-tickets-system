@@ -59,6 +59,7 @@ export class SignUpComponent implements OnInit{
         gender: ["", [Validators.required]],
         password: ["", [Validators.required, Validators.minLength(8), this.passwordValidator]],
         confirmPassword: ["", [Validators.required]],
+        terms: [false, [Validators.requiredTrue]],
       },
       {
         validators: this.passwordMatchValidator,
@@ -182,6 +183,7 @@ export class SignUpComponent implements OnInit{
         formData.append("name", formValue.fullName)
         formData.append("email", formValue.email)
         formData.append("password", formValue.password)
+        formData.append("terms", formValue.terms)
         formData.append("cpf", this.formatCPF(formValue.cpf))
         formData.append("phone", this.formatPhone(formValue.phone))
         formData.append("dateOfBirth", this.formatDateToISO(formValue.birthDate))
