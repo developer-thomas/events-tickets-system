@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { ConfirmEmailCodeComponent } from './modules/confirm-email-code/confirm-email-code.component';
 
 export const routes: Routes = [
   {
@@ -20,5 +21,9 @@ export const routes: Routes = [
     // home client
     path: '',
     loadChildren: () => import('./modules/client/client.routes').then(m => m.routes),
+  },
+  {
+    path: 'confirm',
+    loadChildren: () => import('./modules/confirm-email-code/confirm-email-code.routes').then(m => m.routes)
   }
 ];

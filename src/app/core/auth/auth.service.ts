@@ -70,6 +70,10 @@ export class AuthService {
   }
 
   register(formData: FormData): Observable<any> {
-    return this.http.post(`${this.api}/users/client`, formData)
+    return this.http.post(`${this.api}/users/client/web`, formData)
+  }
+
+  confirmEmail(code: string | null): Observable<any> {
+    return this.http.post(`${this.api}/auth/confirm/web`, { hash: code });
   }
 }

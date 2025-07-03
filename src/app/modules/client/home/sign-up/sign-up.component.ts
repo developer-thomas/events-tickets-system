@@ -11,6 +11,7 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { ClientFooterComponent } from '../../../shared/components/client-footer/client-footer.component';
 import { ClientHeaderComponent } from '../../../shared/components/client-header/client-header.component';
 import { AuthService } from '../../../../core/auth/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-sign-up',
@@ -35,6 +36,7 @@ export class SignUpComponent implements OnInit{
   private fb = inject(FormBuilder)
   private router = inject(Router)
   private authService = inject(AuthService)
+  private toastr = inject(ToastrService)
 
   signUpForm!: FormGroup
   profileImage: string | ArrayBuffer | null = null
@@ -202,14 +204,13 @@ export class SignUpComponent implements OnInit{
 
         this.authService.register(formData).subscribe({
           next: (response) => {
-            console.log("Registration successful:", response)
+            this.toastr.success("Confirme o cadastro no seu email!")
             this.loading = false
-            this.router.navigate(["/login"], {
-              queryParams: { message: "Conta criada com sucesso! Faça login para continuar." },
-            })
+            this.router.navigate(["/login"]);
           },
           error: (error) => {
-            console.error("Registration error:", error)
+            this.toastr.error(error.error.message)
+            console.error("Registration error:", error.error.message)
             this.loading = false
           },
         })
