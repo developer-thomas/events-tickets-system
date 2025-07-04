@@ -14,6 +14,7 @@ import { CategoriesService } from '../../../../../gerencial/pages/categories/cat
 import { GetAllCategories } from '../../../../../gerencial/pages/categories/models/GetAllCategories.interface';
 import { LoggedUser } from '../../../../../shared/models/LoggedUser.interrface';
 import { UserService } from '../../../../../../core/auth/user.service';
+import { StorageService } from '../../../../../../core/auth/storage.service';
 
 @Component({
   selector: 'app-map',
@@ -35,6 +36,7 @@ export class MapComponent implements OnInit {
   private accountHomeService = inject(AccountHomeService);
   private categoriesService = inject(CategoriesService);
   private userService = inject(UserService);
+  private storageService = inject(StorageService);
 
   viewMode: "map" | "list" = "map"
   selectedCategory = 0;
@@ -49,7 +51,10 @@ export class MapComponent implements OnInit {
     this.getAllLocations();
     this.getUserLocation();
     this.getAllCategories();
+
+    if(localStorage.getItem('userId')) {
     this.getLoggedUser();
+    }
   }
 
   toggleView(): void {
