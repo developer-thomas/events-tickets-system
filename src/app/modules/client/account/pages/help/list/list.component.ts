@@ -74,7 +74,7 @@ export class ListComponent implements OnInit{
   }
 
   goBack(): void {
-    this.router.navigate(["/home"])
+    this.router.navigate(["/client/inicio"])
   }
 
   search(): void {

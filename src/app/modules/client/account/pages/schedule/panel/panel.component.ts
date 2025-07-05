@@ -6,6 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { ScheduleService } from '../schedule.service';
 import { forkJoin } from 'rxjs';
+import { AccountHomeService } from '../../account-home/account-home.service';
+import { CartRequest } from '../../account-home/models/AddToCart.interface';
+import { ToastrService } from 'ngx-toastr';
 
 interface CalendarDay {
   date: number
@@ -44,7 +47,10 @@ interface ScheduleEvent {
   styleUrl: './panel.component.scss'
 })
 export class PanelComponent implements OnInit {
-  private scheduleService = inject(ScheduleService)
+  private scheduleService = inject(ScheduleService);
+  private router = inject(Router);
+  private accountHomeService = inject(AccountHomeService);
+  private toastr = inject(ToastrService);
 
   daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"]
   monthNamesPortuguese = [
@@ -378,9 +384,21 @@ export class PanelComponent implements OnInit {
     return "Em aberto"
   }
 
-  buyTicket(id: number) {
-    console.log("Buy ticket for event:", id)
-    // Implementar lógica de compra
+  buyTicket(ticket: any) {
+    const payload: CartRequest = {
+      item: {
+        eventId: ticket.id,
+        quantity: 1,
+        value: ticket.value
+      }
+    }
+
+    this.accountHomeService.addItemsToCart(payload).subscribe({
+      next: (_) => {
+        this.toastr.success("Ingresso adicionado ao carrinho");
+        this.router.navigate(['client/inicio']);
+      }
+    })
   }
 
   hasEventsAtTime(time: string): boolean {

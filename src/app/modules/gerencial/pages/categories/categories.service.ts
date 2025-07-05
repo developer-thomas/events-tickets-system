@@ -13,16 +13,8 @@ export class CategoriesService {
   private readonly api = environment.api;
   private http = inject(HttpClient);
 
-  getAll(page = 10, skip = 1, search?: string): Observable<GetAllCategories[]> {
-    let params = new HttpParams()
-    .set('page', page)
-    .set('skip', skip)
-  
-  if(search) {
-    params = params.set('search', search);
-  }
-  
-    return this.http.get<GetAllCategories[]>(`${this.api}/categories`, { params });
+  getAll(): Observable<GetAllCategories[]> {
+    return this.http.get<GetAllCategories[]>(`${this.api}/categories`);
   }
 
   create(formData: any): Observable<any> {

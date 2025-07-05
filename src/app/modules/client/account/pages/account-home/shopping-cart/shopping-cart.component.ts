@@ -48,7 +48,7 @@ export class ShoppingCartComponent {
           eventId: item.eventId,
           title: item.event.name,
           venue: item.event.eventLocation.name,
-          image: "/placeholder.svg?height=80&width=120",
+          fileUrl: item.event.fileUrl,
           price: item.value,
           quantity: item.quantity,
           cartId: cart.id,

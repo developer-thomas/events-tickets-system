@@ -135,7 +135,7 @@ export class EventDetailsComponent implements OnInit {
       this.accountHomeService.addItemsToCart(payload).subscribe({
         next: (_) => {
           this.toastr.success("Ingresso adicionado ao carrinho");
-          this.router.navigate(['client/inicio/cart']);
+          this.router.navigate(['client/inicio']);
         }
       })
     // }

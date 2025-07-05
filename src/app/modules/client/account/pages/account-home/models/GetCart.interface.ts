@@ -17,6 +17,7 @@ export interface CartItem {
   interface Event {
     name: string;
     eventLocation: EventLocation;
+    fileUrl: string
   }
   
   interface EventLocation {
@@ -34,8 +35,8 @@ export interface CartItemDisplay {
     eventId: number
     title: string
     venue: string
-    image: string
     price: number
     quantity: number
     cartId: number
+    fileUrl: string
   }

@@ -87,7 +87,7 @@
                   <span class="event-price" *ngIf="event.price">{{ event.price }}</span>
                 </div>
               </div>
-              <button *ngIf="event.canBuy" class="buy-button" (click)="buyTicket(event.id)">
+              <button *ngIf="event.canBuy" class="buy-button" (click)="buyTicket(event)">
                 {{ event.isPurchased ? 'Comprado' : 'Comprar' }}
               </button>
             </div>
