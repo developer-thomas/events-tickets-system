@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CommomTableComponent, TableColumn } from '../../../../../../../shared/components/commom-table/commom-table.component';
@@ -16,8 +16,12 @@ import { ActivatedRoute } from '@angular/router';
         <mat-card>
           <mat-card-content>
             <app-commom-table
-              [data]="financialData()"
+              [data]="paginatedFinancialData()"
               [displayedColumns]="displayedColumns"
+              (pageChange)="handlePageChange($event)"
+              [totalItems]="totalItems()"
+              [page]="currentPage()"
+              [size]="pageSize()"
             ></app-commom-table>
           </mat-card-content>
         </mat-card>
@@ -30,7 +34,31 @@ export class FinancialTabComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
 
   private userId!: number;
-  financialData = signal<GetUserFinancial[]>([]);
+  public allFinancialData = signal<GetUserFinancial[]>([]);
+  public financialData = signal<GetUserFinancial[]>([]);
+
+  // paginação
+  public totalItems = signal<number>(0);
+  public currentPage = signal<number>(1);
+  public pageSize = signal<number>(10);
+  public searchTerm = signal<string | undefined>(undefined);
+
+  public filteredFinancialData = computed(() => {
+    const term = this.searchTerm()?.toLowerCase();
+    if (!term) return this.allFinancialData();
+
+    return this.allFinancialData().filter(financial => 
+      financial.codeId?.toString().includes(term) ||
+      financial.method?.toLowerCase().includes(term) ||
+      financial.status?.toLowerCase().includes(term)
+    );
+  });
+
+  public paginatedFinancialData = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    const end = start + this.pageSize();
+    return this.filteredFinancialData().slice(start, end);
+  });
 
   public displayedColumns: TableColumn[] = [
     { label: 'Data', key: 'createdAt', type: 'date' },
@@ -63,9 +91,25 @@ export class FinancialTabComponent implements OnInit {
             status: payment.status === 'Paid' ? 'Pago' : 'Não pago',
             method: payment.method === 'CREDIT_CARD' ? 'Cartão de Crédito' : 'Pix',
           }))
-          this.financialData.set(data);
+          this.allFinancialData.set(data);
+          this.totalItems.set(data.length);
+        },
+        error: (error) => {
+          console.error('Erro ao carregar dados financeiros:', error);
         }
       })
     }
+  }
+
+  public filter(search: string) {
+    this.currentPage.set(1); // sempre volta pra primeira página
+    this.searchTerm.set(search);
+    this.totalItems.set(this.filteredFinancialData().length);
+  }
+
+  // Manipular mudanças de página
+  public handlePageChange(event: {page: number, size: number}) {
+    this.currentPage.set(event.page);
+    this.pageSize.set(event.size);
   }
 }

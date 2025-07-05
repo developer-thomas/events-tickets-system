@@ -4,10 +4,14 @@
   <app-filter-table (filterText)="filter($event)" [useFilterBtn]="false"></app-filter-table>
 
   <app-commom-table
-    [data]="paginatedClients()"
+    [data]="paginatedClientsData()"
     [displayedColumns]="displayedColumns"
     (detail)="gotoDetailPage($event)"
     (delete)="deleteClient($event)"
+    (pageChange)="handlePageChange($event)"
+    [totalItems]="totalItems()"
+    [page]="currentPage()"
+    [size]="pageSize()"
     [useEditBtn]="false"
     [useDeleteBtn]="false"
   ></app-commom-table>

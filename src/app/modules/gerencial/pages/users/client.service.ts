@@ -15,19 +15,8 @@ export class ClientService {
   private readonly api = environment.api;
   private http = inject(HttpClient);
 
-  getClients(page?: number, size?: number, search?: string): Observable<GetAllClients[]> {
-    let params = new HttpParams();
-    if (page) {
-      params = params.append('page', page);
-    }
-    if (size) {
-      params = params.append('size', size);
-    }
-    if (search) {
-      params = params.append('search', search);
-    }
-
-    return this.http.get<GetAllClients[]>(`${this.api}/users`, { params });
+  getClients(): Observable<GetAllClients[]> { 
+    return this.http.get<GetAllClients[]>(`${this.api}/users`);
   }
 
   getClientById(id: number):Observable<GetClientResponse> {

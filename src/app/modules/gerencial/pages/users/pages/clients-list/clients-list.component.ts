@@ -5,6 +5,7 @@ import { FilterTableComponent } from '../../../../../shared/components/filter-ta
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
 import { ClientService } from '../../client.service';
 import { ToastrService } from 'ngx-toastr';
+import { GetAllClients } from '../../models/GetAllClients.interface';
 
 @Component({
   selector: 'app-clients-list',
@@ -26,12 +27,24 @@ export class ClientsListComponent implements OnInit {
   public title = 'Clientes';
   public pageSession = 'Clientes';
 
-  public allClients = signal<any[]>([]);
-  
-  public paginatedClients = computed(() => {
+  public allClientsData = signal<GetAllClients[]>([]);
+  public clientsData = signal<GetAllClients[]>([]);
+
+  public filteredClientsData = computed(() => {
+    const term = this.searchTerm()?.toLowerCase();
+    if (!term) return this.allClientsData();
+
+    return this.allClientsData().filter(client => 
+      client.name?.toLowerCase().includes(term) ||
+      client.email?.toLowerCase().includes(term) ||
+      client.phone?.toLowerCase().includes(term)
+    );
+  });
+
+  public paginatedClientsData = computed(() => {
     const start = (this.currentPage() - 1) * this.pageSize();
     const end = start + this.pageSize();
-    return this.filteredClients().slice(start, end);
+    return this.filteredClientsData().slice(start, end);
   });
 
   // paginação
@@ -46,7 +59,6 @@ export class ClientsListComponent implements OnInit {
     { label: 'E-mail', key: 'email', type: 'text' },
     { label: 'Status', key: 'active', type: 'status' },
     { label: '', key: 'menu', type: 'menu' },
-    
   ];
 
   ngOnInit() {
@@ -54,24 +66,28 @@ export class ClientsListComponent implements OnInit {
   }
 
   private getClients() {
-    this.clientService.getClients(this.currentPage(), this.pageSize()).subscribe((response) => {
-      this.allClients.set(response);
-      this.totalItems.set(response.length);
+    this.clientService.getClients().subscribe({
+      next: (response) => {
+        this.allClientsData.set(response);
+        this.totalItems.set(response.length);
+      },
+      error: (error) => {
+        console.error('Erro ao carregar clientes:', error);
+        this.toastr.error('Erro ao carregar clientes');
+      }
     });
   }
 
   public filter(search: string) {
-    this.currentPage.set(1); // voltar para primeira página
-    this.searchTerm.set(search); // atualiza a search term
-    this.totalItems.set(this.filteredClients().length); // para paginar corretamente
+    this.currentPage.set(1); // sempre volta pra primeira página
+    this.searchTerm.set(search);
+    this.totalItems.set(this.filteredClientsData().length);
   }
-  
 
   // Manipular mudanças de página
   public handlePageChange(event: {page: number, size: number}) {
     this.currentPage.set(event.page);
     this.pageSize.set(event.size);
-    this.getClients();
   }
 
   public gotoDetailPage(row: any) {
@@ -91,17 +107,5 @@ export class ClientsListComponent implements OnInit {
     return
   }
 
-  public filteredClients = computed(() => {
-    const search = this.searchTerm()?.toLowerCase();
-  
-    if (!search) return this.allClients();
-  
-    return this.allClients().filter((client) => {
-      return (
-        client.name?.toLowerCase().includes(search) ||
-        client.email?.toLowerCase().includes(search) ||
-        client.phone?.toLowerCase().includes(search)
-      );
-    });
-  });
+
 }
