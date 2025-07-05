@@ -7,7 +7,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { EventService } from '../../../../event.service';
-import { ImagePreviewPipe } from '../../../../../../../shared/pipes/image-preview.pipe';
 import { GetCategoriesNames } from '../../../../models/CreateEvent.interface';
 
 @Component({
@@ -38,8 +37,8 @@ export class StepThreeComponent implements OnInit {
   private eventService = inject(EventService)
 
   ngOnInit(): void {
-    this.loadCategories();
     this.initializeForm();
+    this.loadCategories();
   }
 
   private loadCategories(): void {
@@ -61,6 +60,8 @@ export class StepThreeComponent implements OnInit {
   }
 
   private disableAllCategoryControls(): void {
+    if (!this.sponsorsForm) return;
+    
     const items = this.sponsorItems;
     for (let i = 0; i < items.length; i++) {
       const categoryControl = items.at(i).get('categoryId');
@@ -71,6 +72,8 @@ export class StepThreeComponent implements OnInit {
   }
 
   private enableAllCategoryControls(): void {
+    if (!this.sponsorsForm) return;
+    
     const items = this.sponsorItems;
     for (let i = 0; i < items.length; i++) {
       const categoryControl = items.at(i).get('categoryId');
@@ -81,7 +84,7 @@ export class StepThreeComponent implements OnInit {
   }
 
   private initializeForm(): void {
-    // Initialize sponsors form group if not already done
+    // Ensure the sponsors form group exists
     if (!this.formGroup.get("sponsors")) {
       this.formGroup.addControl(
         "sponsors",
@@ -103,10 +106,19 @@ export class StepThreeComponent implements OnInit {
     if (items.length === 0 && !hasExistingData) {
       items.push(this.createSponsorItem());
     }
+
+    console.log('StepThree: Form initialized', {
+      sponsorsForm: !!this.sponsorsForm,
+      itemsLength: items.length,
+      formGroupKeys: Object.keys(this.formGroup.controls)
+    });
   }
 
   // Helper method to get sponsors items form array
   get sponsorItems(): FormArray {
+    if (!this.sponsorsForm) {
+      return this.fb.array([]) as FormArray;
+    }
     return this.sponsorsForm.get("items") as FormArray
   }
 
@@ -122,6 +134,8 @@ export class StepThreeComponent implements OnInit {
 
   // Add a new sponsor item
   addSponsorItem(): void {
+    if (!this.sponsorsForm) return;
+    
     const newItem = this.createSponsorItem();
     this.sponsorItems.push(newItem);
     
@@ -136,6 +150,8 @@ export class StepThreeComponent implements OnInit {
 
   // Remove a sponsor item
   removeSponsorItem(index: number): void {
+    if (!this.sponsorsForm) return;
+    
     if (this.sponsorItems.length > 1) {
       this.sponsorItems.removeAt(index)
     } else {
@@ -150,6 +166,8 @@ export class StepThreeComponent implements OnInit {
 
   // Upload sponsor logo
   uploadSponsorLogo(event: Event, index: number): void {
+    if (!this.sponsorsForm) return;
+    
     const input = event.target as HTMLInputElement
     if (input.files && input.files.length) {
       const file = input.files[0]
@@ -176,6 +194,8 @@ export class StepThreeComponent implements OnInit {
 
   // Remove sponsor logo
   removeSponsorLogo(index: number): void {
+    if (!this.sponsorsForm) return;
+    
     this.sponsorItems.at(index).get("logoImage")?.setValue(null)
     // Reset file input
     if (this.fileInput) {

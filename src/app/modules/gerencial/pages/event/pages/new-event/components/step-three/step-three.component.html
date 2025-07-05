@@ -5,7 +5,7 @@
     <div class="spinner"></div>
   </div>
   
-  <div [formGroup]="sponsorsForm">
+  <div *ngIf="sponsorsForm && sponsorItems" [formGroup]="sponsorsForm">
     <div formArrayName="items">
       @for (item of sponsorItems.controls; track $index) {
         <div [formGroupName]="$index" class="sponsor-item mb-6 pb-6 border-b border-gray-200 last:border-0">

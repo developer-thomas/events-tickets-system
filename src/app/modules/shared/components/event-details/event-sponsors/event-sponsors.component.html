@@ -1,7 +1,7 @@
 <!-- Sponsors Section -->
 <div>
+  @if(sponsors.length > 0) {
     <h2 class="text-xl font-semibold mb-4">Patrocinadores</h2>
-    @if(sponsors.length > 0) {
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         @for (sponsor of sponsors; track sponsor.id) {
           <div class="sponsor-card p-4 border border-gray-200 rounded-lg">
@@ -19,7 +19,8 @@
         }
       </div>
     } @else {
-      <h3>Não há patrocinadores para este evento</h3>
+      <!-- CLIENTE PEDIU PRA TIRAR -->
+      <!-- <h3>Não há patrocinadores para este evento</h3> -->
     }
   </div>
   
