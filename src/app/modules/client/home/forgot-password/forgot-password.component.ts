@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { SecondStepComponent } from './pages/second-step/second-step.component';
 import { FirstStepComponent } from './pages/first-step/first-step.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-forgot-password',
@@ -9,6 +10,7 @@ import { FirstStepComponent } from './pages/first-step/first-step.component';
   imports: [
     FirstStepComponent,
     SecondStepComponent,
+    CommonModule
   ],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss'

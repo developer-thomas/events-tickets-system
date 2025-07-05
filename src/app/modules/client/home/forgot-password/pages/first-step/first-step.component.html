@@ -6,8 +6,9 @@
   <form class="mb-16" [formGroup]="form" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="outline" class="w-full mb-2">
       <mat-label>E-mail</mat-label>
-      <input matInput required type="email" formControlName="credential">
-      <mat-error>Campo obrigatório</mat-error>
+      <input matInput required type="email" formControlName="email">
+      <mat-error *ngIf="form.get('email')?.hasError('required')">Campo obrigatório</mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('email')">E-mail inválido</mat-error>
     </mat-form-field>
     
     <button mat-flat-button color="primary" class="w-full" [disabled]="form.invalid">Avançar</button>

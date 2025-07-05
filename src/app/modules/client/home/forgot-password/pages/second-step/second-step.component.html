@@ -16,8 +16,8 @@
       <button type="button" class="mr-3" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
         <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
-      <mat-error>Campo obrigatório</mat-error>
-      <mat-error>Senha deve possuir, no mínimo, 8 caracteres</mat-error>
+      <mat-error *ngIf="form.get('password')?.hasError('required')">Campo obrigatório</mat-error>
+      <mat-error *ngIf="form.get('password')?.hasError('minlength')">Senha deve possuir, no mínimo, 8 caracteres</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-full mb-2">
@@ -26,7 +26,7 @@
       <button type="button" class="mr-3" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
         <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
-      <mat-error>Campo obrigatório</mat-error>
+      <mat-error *ngIf="form.get('confirmPassword')?.hasError('required')">Campo obrigatório</mat-error>
     </mat-form-field>
 
     <button mat-flat-button color="primary" class="w-full" [disabled]="form.invalid">Confirmar</button>
