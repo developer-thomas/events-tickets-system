@@ -3,7 +3,7 @@ import { Injectable, inject } from "@angular/core"
 import { Observable, map } from "rxjs"
 import { environment } from "../../../../../environments/environment.development"
 import { GetCategoriesNames, GetLocationsNames, CreateEventResponse, CreateEventTimeline, CreateEventTimelines, CreateSponsor } from "./models/CreateEvent.interface"
-import { GetAllEvents } from "./models/GetAllEvents.interface"
+import { EventsResult, GetAllEvents } from "./models/GetAllEvents.interface"
 import { GetOneEvent } from "./models/GetEventById.interface"
 import { UpdateEventTimeline } from "./models/UpdateEventTimeline.interface"
 import { UpdateEventSponsor } from "./models/UpdateEventSponsor.interface"
@@ -16,8 +16,8 @@ export class EventService {
   private readonly api = environment.api
   private http = inject(HttpClient)
 
-  getAllEvents(): Observable<GetAllEvents> {  
-    return this.http.get<GetAllEvents>(`${this.api}/events`)
+  getAllEvents(): Observable<EventsResult[]> {  
+    return this.http.get<EventsResult[]>(`${this.api}/admin/events`)
   }
 
   deleteEvent(id: number): Observable<any> {

@@ -78,7 +78,7 @@ export class LocationListComponent {
   private getLocations() {
     this.locationService.getAllLocations().pipe(
       map((res): LocationTableRow[] => {
-        return res.result.map(loc => ({
+        return res.map(loc => ({
           id: loc.id,
           name: loc.name,
           description: loc.description,

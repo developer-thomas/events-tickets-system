@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../../environments/environment.development';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import { GetAllLocations } from './models/GetAllLocations.interface';
+import { AllLocations, GetAllLocations } from './models/GetAllLocations.interface';
 import { GetCategoriesNames } from './models/GetCategories.interface';
 import { CreateRepresentante } from './models/CreateRepresentante.interface';
 import { CreateLocation } from './models/CreateLocation.interface'
@@ -16,14 +16,8 @@ export class LocationService {
   private readonly api = environment.api
   private http = inject(HttpClient)
 
-  getAllLocations(page = 10, skip = 1, search?: string): Observable<GetAllLocations> {
-    let params = new HttpParams().set("page", page).set("skip", skip)
-
-    if (search) {
-      params = params.set("search", search)
-    }
-
-    return this.http.get<GetAllLocations>(`${environment.api}/places`, { params })
+  getAllLocations(): Observable<AllLocations[]> {
+    return this.http.get<AllLocations[]>(`${environment.api}/admin/places`);
   }
 
   /**
