@@ -1,15 +1,19 @@
-import { HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
+import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { StorageService } from '../auth/storage.service';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
+import { Router } from '@angular/router';
+import { UserService } from '../auth/user.service';
 
 export const authInterceptor: HttpInterceptorFn = (
   request: HttpRequest<unknown>,
   next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> => {
   const storageService = inject(StorageService);
+  const userService = inject(UserService);
+  const router = inject(Router);
+
   const role = storageService.getRole();
-  
   let token: string | null = null;
 
   if (role === 'ADMIN') {
@@ -20,17 +24,24 @@ export const authInterceptor: HttpInterceptorFn = (
     token = storageService.getToken();
   }
 
-  if (token) {
-    const authHeader = `Bearer ${token}`;
-    const modifiedRequest = request.clone({
-      setHeaders: {
-        'Authorization': authHeader,
-        'ngrok-skip-browser-warning': 'true'
+  const modifiedRequest = token
+    ? request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`,
+          'ngrok-skip-browser-warning': 'true'
+        }
+      })
+    : request;
+
+  return next(modifiedRequest).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 401 || error.status === 403) {
+        userService.clearAdminData();
+        userService.clearClientData();
+        router.navigate(['/login']); 
       }
-    });
 
-    return next(modifiedRequest);
-  }
-
-  return next(request);
+      return throwError(() => error);
+    })
+  );
 };

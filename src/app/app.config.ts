@@ -5,7 +5,6 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideEnvironmentNgxMask } from 'ngx-mask';
 import { provideToastr } from 'ngx-toastr';
 import { routes } from './app.routes';
-import { bearerTokenInterceptor } from './modules/shared/interceptors/bearer-token/bearer-token.interceptor';
 import { globalErrorInterceptor } from './modules/shared/interceptors/global-error/global-error.interceptor';
 import { loadingInterceptor } from './modules/shared/interceptors/loading/loading.interceptor';
 import { LOCALE_ID } from '@angular/core';
@@ -30,7 +29,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withInterceptors([
         globalErrorInterceptor,
-        // bearerTokenInterceptor,
         loadingInterceptor,
         authInterceptor
       ]),
