@@ -38,7 +38,7 @@ export const authInterceptor: HttpInterceptorFn = (
       if (error.status === 401 || error.status === 403) {
         userService.clearAdminData();
         userService.clearClientData();
-        router.navigate(['/login']); 
+        location.reload();
       }
 
       return throwError(() => error);
