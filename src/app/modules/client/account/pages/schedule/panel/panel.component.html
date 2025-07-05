@@ -84,12 +84,18 @@
                         }">
                     {{ getEventStatusText(event) }}
                   </span>
-                  <span class="event-price" *ngIf="event.price">{{ event.price }}</span>
+                  <span class="event-price" *ngIf="event.price">{{ event.price | currency:'BRL' }}</span>
                 </div>
               </div>
-              <button *ngIf="event.canBuy" class="buy-button" (click)="buyTicket(event)">
-                {{ event.isPurchased ? 'Comprado' : 'Comprar' }}
-              </button>
+              @if(event.price === 0) {
+                <button class="buy-button" (click)="buyTicket(event)">
+                  Reservar
+                </button>
+              } @else {
+                <button class="buy-button" (click)="buyTicket(event)">
+                  Comprar
+                </button>
+              }
             </div>
           </ng-container>
           

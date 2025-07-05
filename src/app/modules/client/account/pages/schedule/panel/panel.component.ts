@@ -30,7 +30,7 @@ interface ScheduleEvent {
   date: string // YYYY-MM-DD
   timeSlot: string // HH:mm
   location?: string
-  price?: string
+  price: number
   distance?: number
   eventDate?: string
   quantity?: number
@@ -141,7 +141,7 @@ export class PanelComponent implements OnInit {
               date: dateStr,
               timeSlot: "09:00",
               location: event.eventLocation?.name || "Local não informado",
-              price: `R$ ${Number.parseFloat(event.value).toFixed(2).replace(".", ",")}`,
+              price: Number.parseFloat(event.value),
               distance: this.calculateDistance(event.eventLocation?.addressLocation),
               eventDate: this.formatEventDate(eventDate),
               quantity: event.numberOfTickets,
@@ -169,7 +169,7 @@ export class PanelComponent implements OnInit {
                 date: dateStr,
                 timeSlot: timeSlot,
                 location: event.eventLocation?.name || "Local não informado",
-                price: `R$ ${Number.parseFloat(event.value).toFixed(2).replace(".", ",")}`,
+                price: Number.parseFloat(event.value),
                 distance: this.calculateDistance(event.eventLocation?.addressLocation),
                 eventDate: this.formatEventDate(timelineDate, timeline.hourInit),
                 quantity: event.numberOfTickets,
