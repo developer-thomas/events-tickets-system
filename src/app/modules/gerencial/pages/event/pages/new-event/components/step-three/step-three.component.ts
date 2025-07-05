@@ -44,16 +44,40 @@ export class StepThreeComponent implements OnInit {
 
   private loadCategories(): void {
     this.loading = true;
+    this.disableAllCategoryControls();
+    
     this.eventService.getCategoriesNames().subscribe({
       next: (categories) => {
         this.sponsorCategories = categories;
         this.loading = false;
+        this.enableAllCategoryControls();
       },
       error: (error) => {
         console.error('Erro ao carregar categorias:', error);
         this.loading = false;
+        this.enableAllCategoryControls();
       }
     });
+  }
+
+  private disableAllCategoryControls(): void {
+    const items = this.sponsorItems;
+    for (let i = 0; i < items.length; i++) {
+      const categoryControl = items.at(i).get('categoryId');
+      if (categoryControl) {
+        categoryControl.disable();
+      }
+    }
+  }
+
+  private enableAllCategoryControls(): void {
+    const items = this.sponsorItems;
+    for (let i = 0; i < items.length; i++) {
+      const categoryControl = items.at(i).get('categoryId');
+      if (categoryControl) {
+        categoryControl.enable();
+      }
+    }
   }
 
   private initializeForm(): void {
@@ -70,9 +94,13 @@ export class StepThreeComponent implements OnInit {
     // Set the local sponsorsForm reference
     this.sponsorsForm = this.formGroup.get("sponsors") as FormGroup
 
-    // Ensure there's at least one sponsor item
+    // Ensure there's at least one sponsor item (only for new events)
     const items = this.sponsorsForm.get("items") as FormArray;
-    if (items.length === 0) {
+    
+    // Only add default item if this is a new event (no existing data)
+    const hasExistingData = items.length > 0 && items.at(0).get('name')?.value;
+    
+    if (items.length === 0 && !hasExistingData) {
       items.push(this.createSponsorItem());
     }
   }
@@ -94,7 +122,16 @@ export class StepThreeComponent implements OnInit {
 
   // Add a new sponsor item
   addSponsorItem(): void {
-    this.sponsorItems.push(this.createSponsorItem())
+    const newItem = this.createSponsorItem();
+    this.sponsorItems.push(newItem);
+    
+    // Enable the new item's category control if categories are loaded
+    if (!this.loading) {
+      const categoryControl = newItem.get('categoryId');
+      if (categoryControl) {
+        categoryControl.enable();
+      }
+    }
   }
 
   // Remove a sponsor item
@@ -127,7 +164,6 @@ export class StepThreeComponent implements OnInit {
         if (base64 && base64.length > 0) {
           // Armazenar o base64 completo no formulário (incluindo o prefixo)
           this.sponsorItems.at(index).get("logoImage")?.setValue(base64)
-          console.log(`Logo uploaded and converted to base64 for sponsor at index ${index}:`, file.name)
         } else {
           console.error('Invalid base64 data generated')
         }
@@ -145,7 +181,6 @@ export class StepThreeComponent implements OnInit {
     if (this.fileInput) {
       this.fileInput.nativeElement.value = ''
     }
-    console.log(`Logo removed for sponsor at index ${index}`)
   }
 
   // Helper to get file name for display

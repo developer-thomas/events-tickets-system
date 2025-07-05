@@ -76,7 +76,6 @@ export class EventListComponent implements OnInit {
   private loadEvents() {
     if(this.adminRole() === 'ADMIN') {
       this.getEvents()
-      
     } else {
       this.getEventsByUser();
     }
@@ -86,7 +85,7 @@ export class EventListComponent implements OnInit {
     this.eventService.getAllEvents().subscribe({
       next: (res) => {
         // Mapear os dados para incluir o nome da localização como uma propriedade separada
-        const mappedEvents = res.result.map((event) => ({
+        const mappedEvents = res.map((event) => ({
           ...event,
           location: event.eventLocation?.name || "Sem localização", 
           quantity: event.numberOfTickets,
@@ -96,7 +95,7 @@ export class EventListComponent implements OnInit {
         }))
 
         this.eventData.set(mappedEvents)
-        this.totalItems.set(res.result.length) 
+        this.totalItems.set(res.length) 
       },
       error: (err) => {
         console.error("Erro ao buscar eventos:", err)

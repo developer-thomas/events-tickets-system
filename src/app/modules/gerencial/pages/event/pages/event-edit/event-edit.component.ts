@@ -71,6 +71,7 @@ export class EventEditComponent implements OnInit {
       originalTimelineEvents: [[]],
       originalSponsors: [[]],
     });
+    
   }
 
   ngOnInit(): void {
@@ -96,9 +97,9 @@ export class EventEditComponent implements OnInit {
           locationId: event.eventLocation?.id || '',
           description: event.description,
           startDate: formattedDate,
-          endDate: formattedDate, // Assumindo que é o mesmo dia, ajuste se necessário
+          endDate: formattedDate,
+          ticketQuantity: event.numberOfTickets,
           price: event.value,
-          ticketQuantity: 5000, // Valor padrão, ajuste se necessário
           categories: event.categories?.map(c => c.id) || [],
         });
 
@@ -162,7 +163,7 @@ export class EventEditComponent implements OnInit {
     }
 
     // Adicionar patrocinadores
-    sponsors.forEach(sponsor => {
+    sponsors.forEach((sponsor, index) => {
       const sponsorGroup = this.fb.group({
         name: [sponsor.name, Validators.required],
         categoryId: [sponsor.categoryIds?.[0] || '', Validators.required],
@@ -186,6 +187,10 @@ export class EventEditComponent implements OnInit {
       this.eventFile = input.files[0];
       this.eventForm.patchValue({ coverImage: this.eventFile });
     }
+  }
+
+  onCoverImageSelected(file: File): void {
+    this.eventFile = file;
   }
 
   nextStep(): void {
@@ -377,6 +382,7 @@ export class EventEditComponent implements OnInit {
         if (item.name && item.categoryId && item.description) {
           // Buscar o ID do patrocinador do evento carregado
           const originalSponsor = this.eventForm.get('originalSponsors')?.value?.[i];
+          
           if (originalSponsor?.id) {
             const updateData: UpdateEventSponsor = {
               name: item.name,
@@ -456,7 +462,10 @@ export class EventEditComponent implements OnInit {
     }
 
     // Adicionar arquivo separadamente se existir
-    if (this.eventFile) {
+    const coverImage = formValue.coverImage;
+    if (coverImage instanceof File) {
+      formData.append('file', coverImage, coverImage.name);
+    } else if (this.eventFile) {
       formData.append('file', this.eventFile, this.eventFile.name);
     }
 

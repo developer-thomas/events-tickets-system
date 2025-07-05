@@ -16,6 +16,7 @@ export interface GetOneEvent {
     fileUrl: string;
     value: number;
     timelineEvent: TimelineEvent[];
+    numberOfTickets: number;
   }
   
 export interface QrCode {

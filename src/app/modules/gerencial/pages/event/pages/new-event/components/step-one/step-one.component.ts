@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnInit, Output, EventEmitter, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,6 +26,7 @@ import { GetLocationsNames, GetCategoriesNames } from '../../../../models/Create
 })
 export class StepOneComponent implements OnInit{
   @Input() formGroup!: FormGroup
+  @Output() coverImageSelected = new EventEmitter<File>();
 
   private eventService = inject(EventService)
 
@@ -40,16 +41,19 @@ export class StepOneComponent implements OnInit{
     this.loadCategories()
 
     // Escutar mudanças no campo categories para atualizar selectedCategories
-    this.getFormControl('categories').valueChanges.subscribe(value => {
-      if (value && Array.isArray(value)) {
-        this.selectedCategories = value;
-      }
-    })
+    const categoriesControl = this.getFormControl('categories');
+    if (categoriesControl) {
+      categoriesControl.valueChanges.subscribe(value => {
+        if (value && Array.isArray(value)) {
+          this.selectedCategories = value;
+        }
+      })
 
-    // Inicializar selectedCategories com o valor atual se existir
-    const categoryId = this.getFormControl("categories").value
-    if (categoryId && Array.isArray(categoryId) && categoryId.length > 0) {
-      this.selectedCategories = categoryId
+      // Inicializar selectedCategories com o valor atual se existir
+      const categoryId = categoriesControl.value
+      if (categoryId && Array.isArray(categoryId) && categoryId.length > 0) {
+        this.selectedCategories = categoryId
+      }
     }
   }
 
@@ -76,7 +80,13 @@ export class StepOneComponent implements OnInit{
   }
 
   getFormControl(name: string): FormControl {
-    return this.formGroup.get(name) as FormControl
+    const control = this.formGroup.get(name) as FormControl;
+    if (!control) {
+      console.error(`FormControl '${name}' not found in formGroup`);
+      // Retornar um FormControl vazio como fallback
+      return new FormControl();
+    }
+    return control;
   }
 
   // Método para garantir que as datas tenham o formato correto
@@ -122,6 +132,8 @@ export class StepOneComponent implements OnInit{
     if (input.files && input.files.length) {
       this.coverImageFile = input.files[0]
       this.getFormControl("coverImage").setValue(this.coverImageFile)
+      // Emitir o evento para o componente pai
+      this.coverImageSelected.emit(this.coverImageFile)
     }
   }
 }

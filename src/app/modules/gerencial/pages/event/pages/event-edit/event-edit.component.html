@@ -27,16 +27,28 @@
     
     <!-- Form Steps -->
     <form [formGroup]="eventForm">
-      @if (currentStep === 1) {
-        <app-step-one [formGroup]="eventForm"></app-step-one>
-      }
-      
-      @if (currentStep === 2) {
-        <app-step-two [formGroup]="eventForm"></app-step-two>
-      }
-      
-      @if (currentStep === 3) {
-        <app-step-three [formGroup]="eventForm"></app-step-three>
+      @if (isLoading) {
+        <div class="flex justify-center items-center py-8">
+          <div class="text-center">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+            <p class="mt-2 text-gray-600">Carregando dados do evento...</p>
+          </div>
+        </div>
+      } @else {
+        @if (currentStep === 1) {
+          <app-step-one 
+            [formGroup]="eventForm"
+            (coverImageSelected)="onCoverImageSelected($event)">
+          </app-step-one>
+        }
+        
+        @if (currentStep === 2) {
+          <app-step-two [formGroup]="eventForm"></app-step-two>
+        }
+        
+        @if (currentStep === 3) {
+          <app-step-three [formGroup]="eventForm"></app-step-three>
+        }
       }
       
       <!-- Form Actions -->

@@ -111,11 +111,11 @@
         placeholder="00000000"
         mask="0*"
         [formControl]="getFormControl('ticketQuantity')">
-      @if (getFormControl('ticketQuantity').invalid && getFormControl('ticketQuantity').touched) {
-        <div class="text-red-500 text-sm mt-1">
-          Quantidade de ingressos é obrigatória
-        </div>
-      }
+          @if (getFormControl('ticketQuantity').invalid && getFormControl('ticketQuantity').touched) {
+      <div class="text-red-500 text-sm mt-1">
+        Quantidade de ingressos é obrigatória
+      </div>
+    }
     </div>
   </div>
   
