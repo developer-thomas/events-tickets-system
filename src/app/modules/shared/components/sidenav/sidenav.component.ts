@@ -42,7 +42,8 @@ export class SidenavComponent {
   @Input() routes: ISidenavRoute[] = [];
   @Input() useLogo: boolean = true;
 
-  isHandset$ = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+  // Custom breakpoint para 599px
+  isMobile$ = this.breakpointObserver.observe('(max-width: 640px)').pipe(
     map(result => result.matches),
     shareReplay(),
   );

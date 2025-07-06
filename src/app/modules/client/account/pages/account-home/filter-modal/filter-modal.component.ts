@@ -24,6 +24,9 @@ export class FilterModalComponent implements OnInit {
 
   categories = signal<GetAllCategories[]>([]);
 
+  // Verifica se há userToken no localStorage
+  hasUserToken = signal<boolean>(false);
+
   locations = [
     { id: "home", name: "Casa", icon: "home", selected: false },
     { id: "work", name: "Trabalho", icon: "business", selected: false },
@@ -45,8 +48,23 @@ export class FilterModalComponent implements OnInit {
   weekDays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"]
 
   ngOnInit(): void {
+    this.checkUserToken();
     this.getAllCategories();
     this.generateCalendarDays();
+  }
+
+  checkUserToken(): void {
+    const userToken = localStorage.getItem('userToken');
+    this.hasUserToken.set(!!userToken);
+  }
+
+  // Retorna apenas os locations que devem ser exibidos baseado no userToken
+  getVisibleLocations() {
+    if (this.hasUserToken()) {
+      return this.locations; // Mostra todos os cards
+    } else {
+      return this.locations.filter(location => location.id === 'current'); // Mostra apenas localização atual
+    }
   }
 
   getAllCategories() {

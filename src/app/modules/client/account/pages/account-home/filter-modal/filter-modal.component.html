@@ -25,7 +25,7 @@
   <div class="filter-section">
     <h3>Selecione o local de referência</h3>
     <div class="location-options">
-      @for(location of locations; track location.id) {
+      @for(location of getVisibleLocations(); track location.id) {
         <div 
           class="location-option" 
           [class.selected]="location.selected"

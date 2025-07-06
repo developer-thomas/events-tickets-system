@@ -65,6 +65,23 @@
   }
 }
 
+@media(max-width: 640px) {
+  .view-toggle-button {
+    top: 45rem;
+    left: 1rem;
+    position: fixed;
+  }
+}
+
+@media(max-width: 375px) {
+  .search-filter-container {
+    position: absolute;
+    top: 16px;
+    left: 1px;
+    width: 98%;
+  }
+}
+
 // Category Filters
 .category-filters {
   z-index: 10;

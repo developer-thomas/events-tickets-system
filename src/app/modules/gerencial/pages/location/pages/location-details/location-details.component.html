@@ -15,24 +15,27 @@
 
 <!-- Location Info -->
 <div class="container mx-auto px-4 mt-6">
-  <div class="flex items-center gap-4 mb-4">
-    <div class="w-24 h-24 rounded-full bg-[#f5f5f5] border-4 border-white flex items-center justify-center">
-      <img [src]="locationData()?.fileLogoUrl" class="rounded-full border-green-600 border-4" alt="">
+  <div class="location-profile flex flex-col items-center text-center gap-2 mb-4">
+    <div class="location-avatar mb-2">
+      <img [src]="locationData()?.fileLogoUrl" alt="">
     </div>
-    
-    <div class="flex-1">
-      <h1 class="text-2xl font-bold">{{ locationData()?.name }}</h1>
-      <div class="flex gap-2 mt-2">
-        <div *ngFor="let category of locationData()?.categories" 
-             class="w-6 h-6 rounded-full flex items-center justify-center" 
-             >
-             <img class="h-6 w-20" [src]="category.imageIconUrl" alt="Ícone da categoria" />
-        </div>
+    <h1 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-1">{{ locationData()?.name }}</h1>
+    <div class="location-address text-gray-500 text-sm mb-1">
+      <ng-container *ngIf="locationData()?.addressLocation?.street; else noAddress">
+        {{ locationData()?.addressLocation?.street }}
+        <ng-container *ngIf="locationData()?.addressLocation?.number">, {{ locationData()?.addressLocation?.number }}</ng-container>
+        <ng-container *ngIf="locationData()?.addressLocation?.neighborhood"> - {{ locationData()?.addressLocation?.neighborhood }}</ng-container>
+        <ng-container *ngIf="locationData()?.addressLocation?.city">, {{ locationData()?.addressLocation?.city }}</ng-container>
+        <ng-container *ngIf="locationData()?.addressLocation?.uf">/{{ locationData()?.addressLocation?.uf }}</ng-container>
+        <ng-container *ngIf="locationData()?.addressLocation?.cep"> - {{ locationData()?.addressLocation?.cep }}</ng-container>
+      </ng-container>
+      <ng-template #noAddress>Localização não foi fornecida</ng-template>
+    </div>
+    <p class="text-sm text-gray-900 location-description mb-2">{{ locationData()?.description }}</p>
+    <div class="categories-container flex flex-wrap justify-center gap-2 mt-2">
+      <div *ngFor="let category of locationData()?.categories" class="category-icon w-6 h-6 rounded-full flex items-center justify-center">
+        <img class="h-6 w-6" [src]="category.imageIconUrl" alt="Ícone da categoria" />
       </div>
-    </div>
-    
-    <div class="max-w-md">
-      <p class="text-sm text-gray-900">{{ locationData()?.description }}</p>
     </div>
   </div>
   
@@ -66,8 +69,7 @@
         <app-filter-table (filter)="onFilter($event)"></app-filter-table>
         
         <div class="event-types">
-          <div *ngFor="let type of eventTypes" 
-               class="event-type-chip">
+          <div *ngFor="let type of eventTypes" class="event-type-chip">
             {{ type }}
           </div>
         </div>

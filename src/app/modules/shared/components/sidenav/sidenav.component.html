@@ -1,9 +1,9 @@
 <mat-sidenav-container class="sidenav-container">
   <app-client-header />
   <mat-sidenav #drawer class="sidenav py-7" fixedInViewport
-      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isHandset$ | async) ? 'over' : 'side'"
-      [opened]="(isHandset$ | async) === false">
+      [attr.role]="(isMobile$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isMobile$ | async) ? 'over' : 'side'"
+      [opened]="(isMobile$ | async) === false">
     <mat-toolbar>
       <img *ngIf="useLogo" class="p-5" src="assets/images/logo-home.png" alt="">
     </mat-toolbar>
@@ -19,7 +19,7 @@
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar color="primary" *ngIf="isHandset$ | async">
+    <mat-toolbar *ngIf="isMobile$ | async">
       <button
         type="button"
         aria-label="Toggle sidenav"
@@ -28,10 +28,10 @@
       >
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>Ato Cultural</span>
+      <!-- <span>Ato Cultural</span> -->
     </mat-toolbar>
 
-    <main class="p-5">
+    <main class="p-1">
       <router-outlet></router-outlet>
     </main>
     

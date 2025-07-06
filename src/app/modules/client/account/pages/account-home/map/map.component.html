@@ -11,7 +11,7 @@
     </button>
   
   </div>
-  <div class="category-filters">
+  <div class="category-filters" *ngIf="showCategories$ | async">
     <div 
       *ngFor="let category of categories()" 
       class="category-item  z-5"

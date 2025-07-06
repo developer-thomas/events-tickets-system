@@ -15,6 +15,8 @@ import { GetAllCategories } from '../../../../../gerencial/pages/categories/mode
 import { LoggedUser } from '../../../../../shared/models/LoggedUser.interrface';
 import { UserService } from '../../../../../../core/auth/user.service';
 import { StorageService } from '../../../../../../core/auth/storage.service';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { map, shareReplay } from 'rxjs';
 
 @Component({
   selector: 'app-map',
@@ -36,7 +38,7 @@ export class MapComponent implements OnInit {
   private accountHomeService = inject(AccountHomeService);
   private categoriesService = inject(CategoriesService);
   private userService = inject(UserService);
-  private storageService = inject(StorageService);
+  private breakpointObserver = inject(BreakpointObserver);
 
   viewMode: "map" | "list" = "map"
   selectedCategory = 0;
@@ -46,6 +48,12 @@ export class MapComponent implements OnInit {
   allLocations = signal<GetAllLocation[]>([]);
   userLocation = signal<UserLocation | null>(null);
   loggedUser = signal<LoggedUser | null>(null);
+
+  // Breakpoint para ocultar categorias em telas menores que 880px
+  showCategories$ = this.breakpointObserver.observe('(min-width: 880px)').pipe(
+    map(result => result.matches),
+    shareReplay(),
+  );
 
   ngOnInit(): void {
     this.getAllLocations();
