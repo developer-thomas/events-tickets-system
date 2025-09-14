@@ -1,6 +1,6 @@
-# Ato Cultural Web
+# Sistema de compras de ingressos e gestão de eventos e locais dos eventos
 
-Aplicação web desenvolvida em Angular para gerenciamento e visualização de eventos culturais, com funcionalidades para clientes e administradores.
+Aplicação web desenvolvida em Angular para gerenciamento e visualização de eventos, com funcionalidades para clientes e administradores.
 
 ## 🚀 Tecnologias
 
