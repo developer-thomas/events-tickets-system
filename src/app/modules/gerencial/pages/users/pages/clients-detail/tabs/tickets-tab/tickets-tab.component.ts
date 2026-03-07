@@ -3,7 +3,7 @@ import { MatCardModule } from '@angular/material/card';
 import { CommomTableComponent, TableColumn } from '../../../../../../../shared/components/commom-table/commom-table.component';
 import { ClientService } from '../../../../client.service';
 import { ActivatedRoute } from '@angular/router';
-import { GetUserTicket } from '../../../../models/GetUserTickets.interface';
+import { GetUserTicket } from '../../../../../../../../core/models/users/GetUserTickets.interface';
 
 
 @Component({

@@ -1,11 +1,11 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommomTableComponent, TableColumn } from '../../../../../shared/components/commom-table/commom-table.component';
 import { FilterTableComponent } from '../../../../../shared/components/filter-table/filter-table.component';
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
 import { ClientService } from '../../client.service';
 import { ToastrService } from 'ngx-toastr';
-import { GetAllClients } from '../../models/GetAllClients.interface';
+import { GetAllClients } from '../../../../../../core/models/users/GetAllClients.interface';
 
 @Component({
   selector: 'app-clients-list',
@@ -27,31 +27,15 @@ export class ClientsListComponent implements OnInit {
   public title = 'Clientes';
   public pageSession = 'Clientes';
 
-  public allClientsData = signal<GetAllClients[]>([]);
+  /** Dados da página atual (vindos do servidor) */
   public clientsData = signal<GetAllClients[]>([]);
 
-  public filteredClientsData = computed(() => {
-    const term = this.searchTerm()?.toLowerCase();
-    if (!term) return this.allClientsData();
-
-    return this.allClientsData().filter(client => 
-      client.name?.toLowerCase().includes(term) ||
-      client.email?.toLowerCase().includes(term) ||
-      client.phone?.toLowerCase().includes(term)
-    );
-  });
-
-  public paginatedClientsData = computed(() => {
-    const start = (this.currentPage() - 1) * this.pageSize();
-    const end = start + this.pageSize();
-    return this.filteredClientsData().slice(start, end);
-  });
-
-  // paginação
+  // paginação (tratada no servidor)
   public totalItems = signal<number>(0);
   public currentPage = signal<number>(1);
   public pageSize = signal<number>(10);
   public searchTerm = signal<string | undefined>(undefined);
+  public loading = signal<boolean>(false);
   
   public displayedColumns: TableColumn[] = [
     { label: 'Nome', key: 'name', type: 'text' },
@@ -66,28 +50,35 @@ export class ClientsListComponent implements OnInit {
   }
 
   private getClients() {
-    this.clientService.getClients().subscribe({
+    this.loading.set(true);
+    this.clientService.getClients({
+      page: this.currentPage(),
+      size: this.pageSize(),
+      search: this.searchTerm()
+    }).subscribe({
       next: (response) => {
-        this.allClientsData.set(response);
-        this.totalItems.set(response.length);
+        this.clientsData.set(response.data ?? []);
+        this.totalItems.set(response.totalItems ?? 0);
+        this.loading.set(false);
       },
       error: (error) => {
         console.error('Erro ao carregar clientes:', error);
         this.toastr.error('Erro ao carregar clientes');
+        this.loading.set(false);
       }
     });
   }
 
   public filter(search: string) {
-    this.currentPage.set(1); // sempre volta pra primeira página
     this.searchTerm.set(search);
-    this.totalItems.set(this.filteredClientsData().length);
+    this.currentPage.set(1);
+    this.getClients();
   }
 
-  // Manipular mudanças de página
-  public handlePageChange(event: {page: number, size: number}) {
+  public handlePageChange(event: { page: number; size: number }) {
     this.currentPage.set(event.page);
     this.pageSize.set(event.size);
+    this.getClients();
   }
 
   public gotoDetailPage(row: any) {

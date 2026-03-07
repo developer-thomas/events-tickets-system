@@ -11,7 +11,7 @@ import { FinancialTabComponent } from './tabs/financial-tab/financial-tab.compon
 import { TicketsTabComponent } from './tabs/tickets-tab/tickets-tab.component';
 import { NgxMaskPipe } from 'ngx-mask';
 import { CommonModule } from '@angular/common';
-import { Client } from '../../models/GetOneClient.interface';
+import { Client } from '../../../../../../core/models/users/GetOneClient.interface';
 
 @Component({
   selector: 'app-clients-detail',

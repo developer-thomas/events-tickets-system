@@ -2,7 +2,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CommomTableComponent, TableColumn } from '../../../../../../../shared/components/commom-table/commom-table.component';
-import { GetUserFinancial } from '../../../../models/GetUserFinancial.interface';
+import { GetUserFinancial } from '../../../../../../../../core/models/users/GetUserFinancial.interface';
 import { ClientService } from '../../../../client.service';
 import { ActivatedRoute } from '@angular/router';
 

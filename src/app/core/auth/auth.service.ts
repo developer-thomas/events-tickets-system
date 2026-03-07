@@ -2,9 +2,8 @@ import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable, switchMap, tap } from "rxjs";
 import { environment } from "../../../environments/environment.development";
-import { AdminLoginResponse, SigninCredentialsResponse } from "../models/auth";
+import { AdminLoginResponse, SigninCredentialsResponse } from "../models/auth/auth";
 import { UserService } from "./user.service";
-import { RegisterUser } from '../models/register';
 
 @Injectable({
   providedIn: 'root',

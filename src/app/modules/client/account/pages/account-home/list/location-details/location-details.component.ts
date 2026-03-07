@@ -4,13 +4,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { FilterTableComponent } from '../../../../../../shared/components/filter-table/filter-table.component';
 import { EventsComponent } from './tabs/events/events.component';
 import { AccountHomeService } from '../../account-home.service';
 import { GetOneLocation } from '../../models/GetOneLocations.interface';
 import { haversineDistance } from '../../../../../../shared/utils/haversineDistance';
 import { AddressLocation } from '../../models/GetAllLocations.interface';
-import { EMPTY, Observable, switchMap, tap } from 'rxjs';
 import { LocationComponent } from './tabs/location/location.component';
 
 @Component({

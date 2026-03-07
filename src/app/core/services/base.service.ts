@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../../environments/environment.development';
+
 
 export type Response<T> = {
   data: T[];
@@ -10,6 +11,7 @@ export type Response<T> = {
   itemsPerPage: number;
   page: number;
 };
+
 @Injectable({
   providedIn: 'root',
 })

@@ -1,32 +1,22 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { DashboardViewComponent } from './dashboard-view/dashboard-view.component';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
 import { CommomTableComponent, TableColumn } from '../../../../shared/components/commom-table/commom-table.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { MatMenuModule } from '@angular/material/menu';
 import { TicketsService } from '../tickets.service';
-import { GetAllTickets } from '../models/GetAllTickets.interface';
+import { GetAllTickets } from '../../../../../core/models/tickets/GetAllTickets.interface';
 import { FilterTableComponent } from '../../../../shared/components/filter-table/filter-table.component';
-
-type ViewMode = "list" | "dashboard"
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-tickets-list',
   standalone: true,
   imports: [
     CommonModule, 
-    MatButtonModule, 
     MatIconModule, 
     PageHeaderComponent, 
-    DashboardViewComponent, 
     CommomTableComponent, 
-    MatMenuModule, 
-    MatButtonModule, 
-    MatIconModule,
     FilterTableComponent
   ],
   templateUrl: './tickets-list.component.html',
@@ -38,17 +28,16 @@ export class TicketsListComponent implements OnInit{
   private activatedRoute = inject(ActivatedRoute);
   private ticketsService = inject(TicketsService);
 
-  viewMode: ViewMode = "list";
-
   public searchTerm = signal<string | undefined>(undefined);
 
-  public allTickets = signal<GetAllTickets[]>([]);
+  /** Dados da página atual (vindos do servidor) */
   public filteredTickets = signal<GetAllTickets[]>([]);
 
-  // paginação
+  // paginação (tratada no servidor)
   public totalItems = signal<number>(0);
   public currentPage = signal<number>(1);
   public pageSize = signal<number>(10);
+  public loading = signal<boolean>(false);
 
   public displayedColumns: TableColumn[] = [
     { label: 'ID', key: 'id', type: 'text' },
@@ -57,6 +46,7 @@ export class TicketsListComponent implements OnInit{
     { label: 'Nome do local', key: 'eventLocationName', type: 'text' },
     { label: 'Valor', key: 'value', type: 'text' },
     { label: 'Status', key: 'status', type: 'text' },
+    { label: '', key: 'menu', type: 'menu' },
   ];
 
   ngOnInit(): void {
@@ -64,47 +54,31 @@ export class TicketsListComponent implements OnInit{
   }
 
   private getEvents() {
-    this.ticketsService.getAllTickets().subscribe({
+    this.loading.set(true);
+    this.ticketsService.getAllTickets({
+      page: this.currentPage(),
+      size: this.pageSize(),
+      search: this.searchTerm()
+    }).subscribe({
       next: (res) => {
-        const data = res.map((ticket) => ({
-          ...ticket,
-          status: ticket.status === 'VALID' ? "Válido" : "Inválido"
-        }));
-        
-        this.allTickets.set(data);
-        this.filteredTickets.set(data);
-        this.totalItems.set(data.length);
-      }
+        this.filteredTickets.set(res.data ?? []);
+        this.totalItems.set(res.totalItems ?? 0);
+        this.loading.set(false);
+      },
+      error: () => this.loading.set(false)
     });
   }
 
   public filter(search: string) {
-    this.currentPage.set(1);
     this.searchTerm.set(search);
-
-    const term = search.toLowerCase();
-
-    const filtered = this.allTickets().filter(ticket =>
-      ticket.userName.toLowerCase().includes(term) ||
-      ticket.eventName.toLowerCase().includes(term) ||
-      ticket.eventLocationName.toLowerCase().includes(term) ||
-      ticket.value.toString().toLowerCase().includes(term) ||
-      ticket.status.toLowerCase().includes(term)
-    );
-
-    this.filteredTickets.set(filtered);
-    this.totalItems.set(filtered.length);
-  }
-
-  public getPaginatedTickets(): GetAllTickets[] {
-    const start = (this.currentPage() - 1) * this.pageSize();
-    const end = start + this.pageSize();
-    return this.filteredTickets().slice(start, end);
+    this.currentPage.set(1);
+    this.getEvents();
   }
 
   handlePageChange(event: { page: number; size: number }) {
     this.currentPage.set(event.page);
     this.pageSize.set(event.size);
+    this.getEvents();
   }
     
   public gotoDetailPage(row: any) {
@@ -113,17 +87,5 @@ export class TicketsListComponent implements OnInit{
 
   gotoEditPage(row: any) {
     this.router.navigate(['/admin/clients/edit', row.id]);
-  }
-
-  deleteEvent(row: any) {
-    // implementar delete se quiser
-  }
-
-  toggleView(mode: ViewMode): void {
-    this.viewMode = mode;
-  }
-
-  applyFilter(tipo: string) {
-    console.log('Filtro selecionado:', tipo);
   }
 }

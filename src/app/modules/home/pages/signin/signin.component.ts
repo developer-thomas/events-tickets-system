@@ -47,13 +47,13 @@ export class SigninComponent {
         next: (user) => {
           this.toastr.success('Login realizado com sucesso!');
 
-          const permissions = user.permissions ?? [];
+          const permissions = user.adminPermissions ?? [];
           const redirectPath = this.getFirstAllowedRoute(permissions);
 
           if (redirectPath) {
             this.router.navigate([redirectPath]);
           } else {
-            this.router.navigate(['/sem-permissao']);
+            this.router.navigate(['/gerencial/dashboard']);
           }
         },
         error: () => {

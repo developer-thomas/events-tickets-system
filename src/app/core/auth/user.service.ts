@@ -1,10 +1,10 @@
 import { Injectable, WritableSignal, inject, signal } from '@angular/core';
 import { StorageService } from './storage.service';
-import { AdminLoginResponse, SigninCredentialsResponse } from '../models/auth';
+import { AdminLoginResponse, SigninCredentialsResponse } from '../models/auth/auth';
 import { Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
-import { LoggedUser } from '../../modules/shared/models/LoggedUser.interrface';
+import { LoggedUser } from '../models/logged-user/LoggedUser';
 
 @Injectable({
   providedIn: 'root',
@@ -49,8 +49,8 @@ export class UserService {
     localStorage.setItem('name', user.name.toString());
     this.user.set(user);
 
-    this._permissions = user.permissions;
-    localStorage.setItem('permissions', JSON.stringify(user.permissions));
+    this._permissions = user.adminPermissions;
+    localStorage.setItem('permissions', JSON.stringify(user.adminPermissions));
   }
 
   getLoggedUser():Observable<LoggedUser> {

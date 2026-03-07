@@ -6,7 +6,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { Router, RouterModule } from '@angular/router';
 import { StorageService } from '../../../../core/auth/storage.service';
 import { UserService } from '../../../../core/auth/user.service';
-import { LoggedUser } from '../../models/LoggedUser.interrface';
+import { LoggedUser } from '../../../../core/models/logged-user/LoggedUser';
 
 @Component({
   selector: 'app-client-header',

@@ -5,8 +5,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideEnvironmentNgxMask } from 'ngx-mask';
 import { provideToastr } from 'ngx-toastr';
 import { routes } from './app.routes';
-import { globalErrorInterceptor } from './modules/shared/interceptors/global-error/global-error.interceptor';
-import { loadingInterceptor } from './modules/shared/interceptors/loading/loading.interceptor';
+import { globalErrorInterceptor } from './core/interceptors/global-error.interceptor';
+import { loadingInterceptor } from './core/interceptors/loading.interceptor';
 import { LOCALE_ID } from '@angular/core';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 

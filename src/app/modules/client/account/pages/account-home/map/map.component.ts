@@ -12,7 +12,7 @@ import { AccountHomeService } from '../account-home.service';
 import { GetAllLocation, LocationListResponse, UserLocation } from '../models/GetAllLocations.interface';
 import { CategoriesService } from '../../../../../gerencial/pages/categories/categories.service';
 import { GetAllCategories } from '../../../../../gerencial/pages/categories/models/GetAllCategories.interface';
-import { LoggedUser } from '../../../../../shared/models/LoggedUser.interrface';
+import { LoggedUser } from '../../../../../../core/models/logged-user/LoggedUser';
 import { UserService } from '../../../../../../core/auth/user.service';
 import { StorageService } from '../../../../../../core/auth/storage.service';
 import { BreakpointObserver } from '@angular/cdk/layout';
