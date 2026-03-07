@@ -202,3 +202,5 @@ npm run lint       # Linting com correção automática
 ---
 
 *Este documento serve como referência para manter a consistência arquitetural do projeto.*
+
+

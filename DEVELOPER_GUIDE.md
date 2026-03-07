@@ -374,3 +374,5 @@ export const environment = {
 ---
 
 *Este guia deve ser seguido por todos os desenvolvedores do projeto para manter a consistência e qualidade do código.*
+
+

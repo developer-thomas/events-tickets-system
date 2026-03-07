@@ -166,3 +166,5 @@ graph TB
 ---
 
 *Estes diagramas ilustram a arquitetura e os padrões utilizados no projeto ATO Cultural Web.*
+
+
